@@ -7,16 +7,13 @@ interface InterfazImagenes{
   url: string
 }
 
-interface InterfazVariaciones {
-        arrayImages: InterfazImagenes[]
-        id: string
-    }
 
 interface InterfazArrayRecomendaciones {
         name: String,
-        price: Number
-        variations: InterfazVariaciones[]
-        defaultVariation: InterfazVariaciones[]
+        price: Number,
+        images: InterfazImagenes[],
+        tag: string,
+        id: string
     }
 
 
@@ -57,12 +54,12 @@ const swiper =  new Swiper('.carruselProducto', {
                <div class="relative swiper-slide ">
 
 
-          <img
+          <a href={Valor.tag+"-"+Valor.id}><img
             class="w-full h-full object-contain p-1"
-            src={`${Valor.variations[Valor.variations.findIndex(iteracion => iteracion.id == Valor.defaultVariation[0].id)].arrayImages[0].url}?w=700`}
+            src={`${Valor.images[0].url}?w=700`}
             alt="Mocasines 1"
             loading="lazy"
-          />
+          /></a>
           <p class="text-center p-2 w-full">
             <div>{Valor.name}</div><div
               class="text-xs text-neutral-500"

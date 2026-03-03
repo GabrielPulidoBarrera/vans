@@ -1,7 +1,7 @@
 ---
-import InicioCarrusel from "../components/Inicio/InicioCarrusel.astro"
-import InicioSlider from "../components/Inicio/InicioSlider.astro"
-import Layout from "../layouts/Layout.astro"
+import InicioCarrusel from "@components/Inicio/InicioCarrusel.astro"
+import InicioSlider from "@components/Inicio/InicioSlider.astro"
+import Layout from "@layouts/Layout.astro"
 import spain from "@assets/spain.svg"
 
 
@@ -47,7 +47,6 @@ let myQuery = `query MyQuery {
 let ArrayCategorias = (await fetchApirocket(myQuery)).data.CategoriasIndices;
 
 
-console.log(ArrayCategorias)
 
 
 ---

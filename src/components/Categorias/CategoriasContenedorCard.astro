@@ -24,9 +24,14 @@ interface InterfazArrayCards {
 
 {arrayCards.map((Valor: InterfazArrayCards) => (
 
-<CategoriasCard Nombre={Valor.name} Precio={Valor.price} Colores="2" 
+<CategoriasCard 
+Nombre={Valor.name} 
+Precio={Valor.price} 
+Colores="2" 
   id = {Valor.id}
-  arrayImagenes = {Valor.images} />
+  arrayImagenes = {Valor.images} 
+  tag = {Valor.tag}/>
+
 
 )
 )}

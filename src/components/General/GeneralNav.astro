@@ -1,5 +1,31 @@
 ---
 import HamburguesaNav from "@general/GeneralHamburguesaNav.astro";
+import {fetchProductos} from "@utils/fetchProductos.ts";
+
+
+let respuesta = await fetchProductos();
+//console.log(respuesta)
+let arrayCategorias: any[] = respuesta.data.Categories;
+//console.log(JSON.stringify(arrayCategorias))
+
+let categoriasAnidadas: any = [];
+const nodeMap: any = {};
+
+arrayCategorias.forEach(item => {
+  const node = { category: item, subcategories: [] };
+  nodeMap[item.id] = node;
+
+  if (item.father === null) {
+    categoriasAnidadas.push(node);
+  } else {
+    const parent = nodeMap[item.father];
+    if (parent) parent.subcategories.push(node);
+  }
+});
+
+console.log(categoriasAnidadas)
+
+
 ---
 
 <HamburguesaNav />

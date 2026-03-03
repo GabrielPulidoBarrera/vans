@@ -1,5 +1,5 @@
 ---
-const { ArrayProductos } =
+const { ArrayProductos, id } =
   Astro.props;
 
 
@@ -7,15 +7,21 @@ const { ArrayProductos } =
 
     let ArrayColoresImagenes: any = []
 
-    {ArrayProductos.variations.map((producto: any) => {
-      let objeto = {imagen: producto.arrayImages[0], 
+    {ArrayProductos.map((producto: any) => {
+      let objeto = {imagen: producto.images[0], 
         color: producto.color, id: producto.id}
-      ArrayColoresImagenes.push(objeto);
+        if(producto.id == id){
+          ArrayColoresImagenes.unshift(objeto);
+        }
+        else{
+          ArrayColoresImagenes.push(objeto);
+        }
     })}
 
-    let Precio = ArrayProductos.price;
-    let Nombre = ArrayProductos.name
-    let Descripcion = ArrayProductos.description
+
+    let Precio = ArrayProductos[0].price;
+    let Nombre = ArrayProductos[0].name
+    let Descripcion = ArrayProductos[0].description
     let Categoria = "Zapatilla"
 let ArrayColoresImagenesSegmento1 = ArrayColoresImagenes.splice(0, 9);
 import paypal from "@assets/paypal.svg"

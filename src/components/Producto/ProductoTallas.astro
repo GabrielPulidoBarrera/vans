@@ -1,14 +1,14 @@
 ---
-const {arrayProductos} = Astro.props;
-
-let arrayTallas = arrayProductos.sizes
+const {arrayProductos, price} = Astro.props;
 
 
 interface InterfazTallas {
   price: number;
   availability: boolean;
-  size: string
+  size: string;
+  name: string
 }
+
 
 
 ---
@@ -28,24 +28,24 @@ interface InterfazTallas {
 
   <div class="overflow-y-scroll h-full" id="menuTallas">
     {
-      arrayTallas.map((Talla: InterfazTallas) =>
-        Talla.availability === true ? (
+      arrayProductos.attributes.map((Talla: InterfazTallas) =>
+        //Talla.availability === true ? (
           <button
             type="button"
             class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full hover:bg-gray-50 transition-colors"
           >
-            <div class="talla font-medium">{Talla.size}</div>
-            <div class="precio">{arrayProductos.price}€</div>
-          </button>
-        ) : (
-          <button
-            type="button"
-            class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full bg-gray-50"
-          >
-            <div class="talla font-medium text-gray-500">{Talla.size}</div>
-            <div class="precio text-gray-500 text-sm">Agotado</div>
-          </button>
-        )
+            <div class="talla font-medium">{Talla.name}</div>
+            <div class="precio">{price}€</div>
+         </button>
+        //) : (
+          // <button
+          //   type="button"
+          //   class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full bg-gray-50"
+          // >
+          //   <div class="talla font-medium text-gray-500">{Talla.size}</div>
+          //   <div class="precio text-gray-500 text-sm">Agotado</div>
+          // </button>
+        //)
       )
     }
   </div>

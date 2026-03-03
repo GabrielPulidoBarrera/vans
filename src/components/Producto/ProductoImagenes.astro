@@ -2,7 +2,7 @@
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 
-const { ArrayProductoImagenes } = Astro.props;
+const { ArrayProductoImagenes, id } = Astro.props;
 
 interface interfazImagen {
   url: string;
@@ -10,28 +10,27 @@ interface interfazImagen {
 
 interface interfazVariacion {
 
-  arrayImages: interfazImagen[]
+  images: interfazImagen[]
   color: string
   id: string
 }
 
-//console.log("PRODUCTOIMAGENE"+ArrayProductoImagenes);
 ---
 
 
 <div class="carrusel w-full h-full relative group overflow-hidden">
   <div class="marco w-full h-full overflow-auto">
 {
-  ArrayProductoImagenes.variations.map((variacion: interfazVariacion, index: number) => (
+  ArrayProductoImagenes.map((variacion: interfazVariacion, index: number) => (
     <div
       class={
-        index === 0
+        variacion.id === id
           ? "flex md:grid  md:grid-cols-2 gap-1 md:max-w-7xl mx-auto left productoImagenes"
           : "hidden  md:grid-cols-2 gap-1 md:max-w-7xl mx-auto left productoImagenes"
       }
       id={variacion.id}
     >
-      {variacion.arrayImages.map((imagen: interfazImagen) => (
+      {variacion.images.map((imagen: interfazImagen) => (
         
         <img class="lozad" data-src={`${imagen.url}?w=800&format=auto`} />
       ))}

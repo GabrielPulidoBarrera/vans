@@ -12,6 +12,7 @@
       "@general/*": ["./src/components/General/*"],
       "@categorias/*": ["./src/components/Categorias/*"],
       "@carrito/*": ["./src/components/Carrito/*"],
+      "@utils/*": ["./src/utils/*"],
 
     }
   }

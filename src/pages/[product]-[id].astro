@@ -1,75 +1,67 @@
 ---
-const {product, id} = Astro.params;
+const { product, id } = Astro.params;
 
-
-import GeneralCarrusel from "@general/GeneralCarrusel.astro"
-import Layout from "../layouts/Layout.astro"
+import Layout from "@layouts/Layout.astro";
 import ProductoImagenes from "@producto/ProductoImagenes.astro";
-import ProductoLateral from "@producto/ProductoLateral.astro"
-import ProductoTallas from "@producto/ProductoTallas.astro"
-import GeneralAccordion from "@general/GeneralAccordion.astro"
-import ProductoReview from "@producto/ProductoReview.astro"
-import ProductoCarrusel from "@producto/ProductoCarrusel.astro"
-import {fetchProductos} from "../utils/fetchProductos.ts";
-import { array } from "astro:schema";
+import ProductoLateral from "@producto/ProductoLateral.astro";
+import ProductoTallas from "@producto/ProductoTallas.astro";
+import GeneralAccordion from "@general/GeneralAccordion.astro";
+import ProductoReview from "@producto/ProductoReview.astro";
+import ProductoCarrusel from "@producto/ProductoCarrusel.astro";
+import { fetchProductos } from "@utils/fetchProductos.ts";
 
-
-
-
-interface interfazIteracion{
-    id: string[],
-    tag: string;
+interface interfazTalla {
+  tag: string;
 }
 
-let respuesta = await fetchProductos()
+interface interfazIteracion {
+  id: string[];
+  tag: string;
+  price: number;
+}
+
+let respuesta = await fetchProductos();
 let arrayProductos: interfazIteracion[] = respuesta.data.Products;
 
-
-
-
-
-
-let arrayTexto = respuesta.data.TickerTexts
-
+let arrayTexto = respuesta.data.TickerTexts;
 
 export async function getStaticPaths() {
-let respuesta = await fetchProductos()
-let arrayProductos = respuesta.data.Products;
+  let respuesta = await fetchProductos();
 
+  let arrayProductos = respuesta.data.Products;
 
+  let listaProductos: any = [];
 
-let listaProductos: any = []
-
-    arrayProductos.map((producto: any) => {
-      listaProductos.push({params: {product: producto.name, id: producto.id}})
-    })
-
-    console.table(listaProductos)
-
+  arrayProductos.map((producto: any) => {
+    listaProductos.push({ params: { product: producto.tag, id: producto.id } });
+  });
   return listaProductos;
 }
 
-
-
-
-let tag = arrayProductos.tag; 
-let arrayVariaciones = [];
-
+let tag = product;
+let arrayVariaciones: any = [];
 
 arrayProductos.map((producto: any) => {
-if(producto.tag==tag){
+  if (producto.tag == tag) {
     arrayVariaciones.push(producto);
-}
-})
+  }
+});
+//console.log(respuesta.data.Sizes)
 
-console.log(arrayVariaciones)
+let find = respuesta.data.Sizes.findIndex((e: interfazTalla) => {
+  //console.log(e)
+  return e.tag == product;
+});
 
+//console.log(find)
+
+//console.log("ENPRODUCTO"+arrayVariaciones)
+//console.table(arrayVariaciones)
 ---
 
 <Layout arrayTexto={arrayTexto} mostrarTicker={true}>
-
-    <!-- Boton fixed en responsive que desaparece cuando esta en otro en pantalla, no tengo ni idea de como hacer esto -->
-         <!-- <div class="fixed bottom-0  z-50 bg-white w-full flex items-center justify-center border-t">
+  <!-- Boton fixed en responsive que desaparece cuando esta en otro en pantalla, no tengo ni idea de como hacer esto -->
+  <!-- <div class="fixed bottom-0  z-50 bg-white w-full flex items-center justify-center border-t">
         <button
           type="button"
           class="px-6 py-3 my-5 bg-[rgb(38,36,36)] text-white hover:bg-black transition-all duration-150 text-center hover:cursor-pointer w-9/10"
@@ -78,15 +70,17 @@ console.log(arrayVariaciones)
         </button>
     </div> -->
 
-    <div class="up md:flex md:items-start">
-    <ProductoImagenes ArrayProductoImagenes={arrayProductos}></ProductoImagenes>
-    
-    
-    <ProductoLateral ArrayProductos={arrayProductos}/>
-    <!-- <ProductoTallas arrayProductos={arrayProductos[find]}> -->
-</div>
+  <div class="up md:flex md:items-start">
+    <ProductoImagenes ArrayProductoImagenes={arrayVariaciones} , id={id} />
 
-<div class="mt-8">
+    <ProductoLateral ArrayProductos={arrayVariaciones} , id={id} />
+    <ProductoTallas
+      arrayProductos={respuesta.data.Sizes[find]}
+      price={arrayProductos[0].price}
+    />
+  </div>
+
+  <div class="mt-8">
     <GeneralAccordion
       title="title"
       content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt soluta saepe nemo, fuga impedit cumque quaerat porro accusamus consectetur dolorum, tenetur ratione voluptates blanditiis non voluptas dolor iure! Quas, similique"
@@ -95,38 +89,34 @@ console.log(arrayVariaciones)
       title="title"
       content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt soluta saepe nemo, fuga impedit cumque quaerat porro accusamus consectetur dolorum, tenetur ratione voluptates blanditiis non voluptas dolor iure! Quas, similique"
     />
-        <ProductoCarrusel  ArrayRecomendaciones={arrayProductos}/>
-        <ProductoReview reviews={respuesta.data.Reviews}  id={id}  /> <!-- La puntuacion que hay que mandar es SOBRE 100 -->
-</div>
-    </Layout>
-
+    <ProductoCarrusel ArrayRecomendaciones={arrayProductos} />
+    <ProductoReview reviews={respuesta.data.Reviews} tag={product} />
+    <!-- La puntuacion que hay que mandar es SOBRE 100 -->
+  </div>
+</Layout>
 
 <script>
-if(window.innerWidth<756){
-    document.addEventListener("scroll", transparentarNav)
-    let nav = document.querySelector('nav');
-    
-    if (nav!=null){
-        
-        nav.style.backgroundColor = "transparent"
-        nav.style.position = "sticky"
-        nav.style.color="black"  
-        
-    }
-    function transparentarNav(){
-        if (nav==null){
-            return
-        }
-        
-        if(window.scrollY>nav.clientHeight){
-            nav.style.backgroundColor = "white"
-            nav.style.color="black"
-        }
-        else{
-            nav.style.backgroundColor = "transparent"
-            nav.style.color="black"
-        }
-    }
-}
+  if (window.innerWidth < 756) {
+    document.addEventListener("scroll", transparentarNav);
+    let nav = document.querySelector("nav");
 
+    if (nav != null) {
+      nav.style.backgroundColor = "transparent";
+      nav.style.position = "sticky";
+      nav.style.color = "black";
+    }
+    function transparentarNav() {
+      if (nav == null) {
+        return;
+      }
+
+      if (window.scrollY > nav.clientHeight) {
+        nav.style.backgroundColor = "white";
+        nav.style.color = "black";
+      } else {
+        nav.style.backgroundColor = "transparent";
+        nav.style.color = "black";
+      }
+    }
+  }
 </script>

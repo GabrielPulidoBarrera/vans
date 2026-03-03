@@ -1,6 +1,6 @@
 ---
 import CategoriasMenuSticky from "@components/Categorias/CategoriasMenuSticky.astro";
-import Layout from "../layouts/Layout.astro";
+import Layout from "@layouts/Layout.astro";
 import CategoriasFiltros from "@components/Categorias/CategoriasFiltros.astro";
 import CategoriasFinal from "@components/Categorias/CategoriasFinal.astro";
 import CategoriasContenedorCard from "@components/Categorias/CategoriasContenedorCard.astro";
@@ -33,7 +33,6 @@ let ArrayTallas = [
 
 
 let respuesta = await fetchProductos();
-console.log(respuesta)
 let arrayProductos: any[] = respuesta.data.Products;
 
 

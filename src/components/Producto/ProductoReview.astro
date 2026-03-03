@@ -1,5 +1,5 @@
 ---
-const {reviews, id} = Astro.props;
+const {reviews, tag} = Astro.props;
 
 interface interfazValores{
   id: string
@@ -8,7 +8,8 @@ interface interfazValores{
 interface interfazReview{
   puntuacion: number,
   product: interfazValores[],
-  score: number
+  score: number,
+  tag: string
 }
 
 let puntuacion = 0;
@@ -16,10 +17,9 @@ let contador = 0;
 let total = 0;
 let puntuacionTotal="5";
 
-console.log(reviews)
 
 reviews.map((review: interfazReview)=>{
-  if (review.product[0].id==id){
+  if (review.tag==tag){
     total+=1;
     puntuacion += review.score
   }

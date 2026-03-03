@@ -2,9 +2,9 @@
 import GeneralCarrusel from "@general/GeneralCarrusel.astro";
 
 
-const {Nombre, Colores, Precio, arrayImagenes, id } = Astro.props;
+const {Nombre, Colores, Precio, arrayImagenes, id, Tag } = Astro.props;
 
-let URL = encodeURI(`${Nombre}-${id}`);
+let URL = encodeURI(`${Tag}-${id}`);
 
 //console.log(arrayImagenes);
 
