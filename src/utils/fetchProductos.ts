@@ -4,7 +4,7 @@ export async function fetchProductos(){
 const APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN;
 
 
-let queryCards = `query  MyQuery {
+let queryCards = `query MyQuery {
   Reviews {
     score
     tag
@@ -30,6 +30,9 @@ let queryCards = `query  MyQuery {
     }
     id
     tag
+    category {
+      id
+    }
   }
   Sizes {
     attributes {
@@ -43,8 +46,10 @@ let queryCards = `query  MyQuery {
     name
     id
     father
+    categoryName
   }
 }
+
 
 
 `

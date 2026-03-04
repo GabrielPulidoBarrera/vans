@@ -1,17 +1,23 @@
 ---
+
+const {category, id } = Astro.params;
+
 import CategoriasMenuSticky from "@components/Categorias/CategoriasMenuSticky.astro";
 import Layout from "@layouts/Layout.astro";
 import CategoriasFiltros from "@components/Categorias/CategoriasFiltros.astro";
 import CategoriasFinal from "@components/Categorias/CategoriasFinal.astro";
 import CategoriasContenedorCard from "@components/Categorias/CategoriasContenedorCard.astro";
-
 import categoriaVideo from "@assets/CategoriaVideo.webm";
+import {fetchProductos} from "@utils/fetchProductos.ts";
 
 
-import {fetchProductos} from "../utils/fetchProductos.ts";
 
-let titulo = "Ropa y Calzado para hombre"
-let numeroProductos = 1000
+
+
+
+
+
+
 
 let ArrayTallas = [
     {
@@ -33,12 +39,60 @@ let ArrayTallas = [
 
 
 let respuesta = await fetchProductos();
-let arrayProductos: any[] = respuesta.data.Products;
-
-
+let arrayCategorias: any[] = respuesta.data.Categories;
+let encontrado = (arrayCategorias.find((e:any ) => {
+return e.id == id}))
+let titulo = encontrado.categoryName
 
 let arrayTexto = respuesta.data.TickerTexts
 
+let arrayProductos: any[] = respuesta.data.Products;
+
+
+let arrayProductosCategoria = arrayProductos.filter((e: any)=>{
+  let encontrado = e.category.find((elemento: any) =>{
+    return (elemento.id == id)
+  })
+  return encontrado 
+})
+
+console.log(arrayProductosCategoria)
+
+let numeroProductos = arrayProductosCategoria.length
+
+
+
+
+
+
+
+
+
+
+
+export async function getStaticPaths(){
+
+let respuesta = await fetchProductos();
+//console.log(respuesta)
+let arrayCategorias: any[] = respuesta.data.Categories;
+//console.log(arrayCategorias)
+//console.log(JSON.stringify(arrayCategorias))
+
+let rutas: any = [];
+
+arrayCategorias.map((e: any)=>{
+  rutas.push({ params: { category: e.name, id: e.id } })
+})
+
+return rutas;
+
+}
+
+
+
+
+
+//console.log(arrayProductos)
 
 
 
@@ -50,7 +104,7 @@ let arrayTexto = respuesta.data.TickerTexts
   <CategoriasMenuSticky titulo={titulo}, numeroProductos={numeroProductos} />
   <div class="flex">
     <CategoriasFiltros ArrayTallas={ArrayTallas} arrayColores={respuesta.data.Colors}/>
-    <CategoriasContenedorCard arrayCards={arrayProductos}>
+    <CategoriasContenedorCard arrayCards={arrayProductosCategoria}>
   <video autoplay muted loop class="row-start-1 row-end-1 col-start-2 col-end-2 md:col-start-3 md:col-end-3">
               <source src={categoriaVideo} type="video/webm" />
 
@@ -58,5 +112,5 @@ let arrayTexto = respuesta.data.TickerTexts
 
     </CategoriasContenedorCard>
   </div>
-  <CategoriasFinal numeroProductos={numeroProductos} numeroCards={arrayProductos.length} />
+  <CategoriasFinal numeroProductos={numeroProductos} numeroCards={arrayProductosCategoria.length} />
 </Layout>

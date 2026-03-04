@@ -13,7 +13,7 @@ const { numeroProducto, precio } = Astro.props
     Usa un codigo promocional
     <svg
   class="w-6 h-6 transition-all duration-150"
-  :class="{ '-rotate-90': expanded }"
+  :class="{ '-rotate-90': expanded, 'rotate-90': !expanded }"
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 32 32"
 >
@@ -23,9 +23,9 @@ const { numeroProducto, precio } = Astro.props
   ></path>
 </svg>
   </div>
-  <div x-show="expanded" x-collapse  class="Hidden  *:ms-4 mt-4 ml-4 flex pb-5">
-    <input type="text" placeholder="Código promocional" class="bg-white">
-    <button></button>
+  <div x-show="expanded" x-collapse  class="Hidden  mt-4 ml-4 flex pb-5">
+    <input type="text" placeholder="Código promocional" class="bg-white w-full py-2 border">
+    <button class="border px-6 mx-2 ">Aplicar</button>
   </div>
 </div>
 
