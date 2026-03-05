@@ -1,68 +1,541 @@
 ---
-
+import paypalColor from "@assets/paypalColor.svg";
+import paypalColorSimple from "@assets/paypalColorSimple.svg";
+import paypalP from "@assets/paypalP.svg";
+import visa from "@assets/visa.svg";
+import amex from "@assets/amex.svg";
+import mastercard from "@assets/mastercard.svg";
+import klarna from "@assets/klarna.svg";
 ---
 
-<div class="flex">
-    <button>
-        <div>
-        Punto de recogida
+<div x-data="{categoria: 'recogida', igualar: true, tarjeta: 'tarjeta', factura: false}">
+  <!--Informacion de contacto -->
+
+  <div class="space-y-4">
+    <div class="flex justify-between">
+      <div class="text-xl">Información de contacto</div>
+      <div class="underline text-xs">Inicia Sesion</div>
+    </div>
+    <input
+      type="text"
+      placeholder="Correo electrónico"
+      class="w-full p-2 border border-[rgb(154,154,154)]"
+    />
+    <div class="flex items-start gap-1">
+      <input type="checkbox" name="novedades" />
+
+      <label for="novedades" class="text-xs">
+        <span class="font-bold"
+          >Me gustaría recibir información sobre ofertas, presentaciones de
+          productos y novedades exclusivas de Vans.</span
+        >
+
+        Doy mi consentimiento para el procesamiento de mis datos personales con
+        fines de marketing basados en perfiles, como se describe en la <span
+          class="underline">Politica de privacidad</span
+        > de Vans
+      </label>
+    </div>
+
+    <!--Boton punto de recogida -->
+
+    <div class="flex w-full grow">
+      <button
+        class="border border-[#e5e7eb] w-1/2 p-5 space-y-1"
+        :class="categoria == 'recogida' ? 'border-black border-b-4 bg-[rgb(248,248,248)]' : ''"
+        @click="categoria = 'recogida'"
+      >
+        <div class="flex items-center gap-2">
+          Punto de recogida <svg
+            class="w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            id="collection-point"
+            ><path
+              fill="#000"
+              fill-rule="evenodd"
+              d="M15.136 4.693a2.995 2.995 0 0 1 3.822-.009c.532.44.887 1.05 1.002 1.72a2.82 2.82 0 0 1-.374 1.945l-2.281 3.722a.247.247 0 0 1-.418.003l-2.342-3.682a2.822 2.822 0 0 1-.405-1.956 2.862 2.862 0 0 1 .996-1.743Zm1.956 6.793 2.075-3.38v-.001c.299-.49.41-1.068.312-1.63a2.387 2.387 0 0 0-.845-1.438 2.497 2.497 0 0 0-1.599-.56 2.495 2.495 0 0 0-1.59.585 2.384 2.384 0 0 0-.821 1.45c-.088.564.032 1.14.339 1.625l2.129 3.35Z"
+              clip-rule="evenodd"></path><path
+              fill="#000"
+              fill-rule="evenodd"
+              d="M16.126 6.02a1.31 1.31 0 1 1 1.853 1.853 1.31 1.31 0 0 1-1.853-1.852Zm.306 1.548a.877.877 0 1 0 1.236-1.243.877.877 0 0 0-1.236 1.243Z"
+              clip-rule="evenodd"></path><path
+              stroke="#000"
+              stroke-linecap="round"
+              d="M12.982 7.79H5a1 1 0 0 0-1 1v10.789h16V9.895"></path><path
+              stroke="#000"
+              d="M9.053 19.158v-5.053h5.894v5.053m-2.868-5.053v5.053"
+            ></path></svg
+          >
         </div>
-        <div>
-Entrega de menor Impacto
+        <div class="flex text-xs gap-2">
+          <svg
+            fill="currentColor"
+            class="text-green-900 w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 18 18"
+            id="leaf"
+            ><path
+              d="M11.38 5.794C7.497 8.691 2.427 13.037.123 16.79c-.527.856.79 1.712 1.382.856l1.976-2.83C13.093 17.578 16.12 10.007 17.175 0 13.75 3.687-3.105 1.053 2.03 12.773c2.502-2.568 6.65-5.596 9.35-6.98v.001Z"
+            ></path></svg
+          > Entrega de menor Impacto <svg
+            class="w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            id="info1"
+            ><path
+              fill-rule="evenodd"
+              d="M16 25a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2a11 11 0 1 0 0-22 11 11 0 0 0 0 22Z"
+              clip-rule="evenodd"></path><path
+              fill-rule="evenodd"
+              d="M16 22a1 1 0 0 1-1-1v-7a1 1 0 1 1 2 0v7a1 1 0 0 1-1 1Z"
+              clip-rule="evenodd"></path><path
+              d="M17 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg
+          >
         </div>
-<div class="flex justify-between">
-    <div>Entrega a una Vans Store</div>
-    <div>Gratuito</div>
-</div>
-<div class="flex justify-between">
-    <div>Entrega en un punto de recogida</div>
-    <div>Gratuito</div>
-</div>
-    </button>
-    <button>
-        <div>
-            entrega a domicilio
+        <div class="flex justify-between text-xs">
+          <div>Entrega a una Vans Store</div>
+          <div>Gratuito</div>
+        </div>
+        <div class="flex justify-between text-xs">
+          <div>Entrega en un punto de recogida</div>
+          <div>Gratuito</div>
+        </div>
+      </button>
+      <!--Boton domicilio -->
+
+      <button
+        class="border border-[#e5e7eb] w-1/2 p-5 space-y-1"
+        :class="categoria == 'domicilio' ? 'border-black border-b-4 bg-[rgb(248,248,248)]' : ''"
+        @click="categoria = 'domicilio'"
+      >
+        <div class="flex gap-2 items-center">
+          Entrega a domicilio <svg
+            class="w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            id="shipping"
+            ><path
+              fill-rule="evenodd"
+              d="M19 11H5v12h14V11ZM5 9a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16V11a2 2 0 0 0-2-2H5Z"
+              clip-rule="evenodd"></path><path
+              d="M11 24.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm15 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"
+            ></path><path
+              fill-rule="evenodd"
+              d="M19 15c0-1.1.9-2 2-2h2.71a2 2 0 0 1 1.48.65l4.29 4.72a2 2 0 0 1 .52 1.35V23a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-8Zm4.71 0H21v8h7v-3.28L23.71 15Z"
+              clip-rule="evenodd"></path></svg
+          >
+        </div>
+        <div class="flex justify-between text-xs">
+          <div>Standard Entrega</div>
+          <div>Gratuito</div>
+        </div>
+      </button>
+    </div>
+
+    <!--Punto de recogida cercano-->
+    <div x-show="categoria=='recogida'" class="mb-10">
+      <div class="mb-5">Encuentra tu punto de recogida mas cercano</div>
+
+      <div
+        class="w-full p-2 border border-[rgb(154,154,154)] flex justify-between"
+      >
+        <input
+          type="text"
+          placeholder="Código postal de facturacion"
+          class="w-full"
+        />
+        <span
+          ><svg
+            class="w-6, h-6"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            id="search"
+            ><path d="M19 17.59 26.41 25 25 26.41 17.59 19 19 17.59Z"
+            ></path><path
+              fill-rule="evenodd"
+              d="M14 20a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 2a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"
+            ></path></svg
+          ></span
+        >
+      </div>
+      <div>o <span class="underline">Utiliar mi ubicación</span></div>
+    </div>
+
+    <!-- domicilio -->
+
+    <div x-show="categoria=='domicilio'">
+      <div class="text-xl mb-1">Dirección de envío</div>
+
+      <div class="text-xl space-y-2 *:gap-2 mb-10">
+        <div class="text-xs">* Campos obligatorios</div>
+
+        <div class="flex">
+          <input
+            type="text"
+            placeholder="Nombre *"
+            class="w-full p-2 border border-[rgb(154,154,154)]"
+          />
+          <input
+            type="text"
+            placeholder="Apellido(s) *"
+            class="w-full p-2 border border-[rgb(154,154,154)]"
+          />
+        </div>
+        <input
+          type="text"
+          placeholder="Dirección *"
+          class="w-full p-2 border border-[rgb(154,154,154)]"
+        />
+        <input
+          type="text"
+          placeholder="Dirección"
+          class="w-full p-2 border border-[rgb(154,154,154)]"
+        />
+        <div class="flex">
+          <input
+            type="text"
+            placeholder="Ciudad *"
+            class="w-full p-2 border border-[rgb(154,154,154)]"
+          />
+          <input
+            type="text"
+            placeholder="Código postal de facturación *"
+            class="w-full p-2 border border-[rgb(154,154,154)]"
+          />
+        </div>
+        <div class="flex">
+          <input
+            type="text"
+            placeholder="+34"
+            class="p-2 border border-[rgb(154,154,154)]"
+          />
+
+          <input
+            type="text"
+            placeholder="Telefono móvil"
+            class="w-full p-2 border border-[rgb(154,154,154)]"
+          />
+        </div>
+      </div>
+
+      <!-- Método de envío -->
+
+      <div class="text-xl mb-1">Metodo de envio</div>
+
+      <div class="space-y-3 mb-10">
+        <div
+          class="w-full p-4 border border-[#e5e7eb] focus-within:border-black focus-within:bg-[rgb(248,248,248)] flex"
+        >
+          <input type="radio" name="envio" id="estandar" class="flex mr-2" />
+          <label for="estandar" class="flex grow justify-between">
+            <div>
+              <div>Envío Estándar</div>
+              <div class="text-xs">Llega en 4-5 dias laborales</div>
             </div>
-        <div class="flex justify-between">
-            <div> Standard Entrega</div>
-            <div>Gratuito</div>
+            <div>GRATUITO</div>
+          </label>
         </div>
-    </button>
+
+        <div
+          class="w-full p-4 border border-[#e5e7eb] focus-within:border-black focus-within:bg-[rgb(248,248,248)] flex"
+        >
+          <input type="radio" name="envio" id="expres" class="flex mr-2" />
+          <label for="expres" class="flex grow justify-between">
+            <div>
+              <div>Envío Exprés</div>
+              <div class="text-xs">Llega en 2-4 dias laborales</div>
+            </div>
+            <div>11,00€</div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-xl mb-1">Forma de pago</div>
+
+  <!--Acordeon -->
+  <div
+    class="accordionCarrito bg-[rgb(243,243,243)] mb-5"
+    x-data="{ expanded: false }"
+  >
+    <div
+      @click="expanded = ! expanded"
+      class="Open hover:cursor-pointer productBuy ms-6 px-3 py-2 flex justify-between"
+    >
+      Tarjeta Regalo
+      <svg
+        class="w-6 h-6 transition-all duration-150"
+        :class="{ '-rotate-90': expanded, 'rotate-90': !expanded }"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 32 32"
+      >
+        <path
+          fill="currentColor"
+          d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
+        ></path>
+      </svg>
+    </div>
+    <div x-show="expanded" x-collapse class="Hidden mt-4 p-4 space-y-5">
+      <input
+        type="text"
+        placeholder="Tarjeta regalo"
+        class="bg-white w-full py-2 border"
+      />
+      <button
+        type="button"
+        class="mt-2 px-6 py-3 bg-[rgb(38,36,36)] text-white hover:bg-black transition-all duration-150 space-y-4 min-w-full hover:cursor-pointer"
+        >Aplicar</button
+      >
+    </div>
+  </div>
+
+  <!--Selector tarjeta -->
+
+  <div class="space-y-3">
+    <div
+      class="w-full p-4 border border-[#e5e7eb] flex"
+    :class="tarjeta == 'tarjeta' ? 'border-black bg-[rgb(248,248,248)]' : ''"
+        @click="tarjeta = 'tarjeta'"
+    >
+      <input type="radio" name="formaDePago" id="tarjeta" class="flex" />
+      <label for="tarjeta" class="flex grow justify-between"
+        ><div>Tarjeta de credito</div>
+        <div>
+          <img class="h-4 w-auto inline" src={visa.src} />
+          <img class="h-4 w-auto inline" src={amex.src} />
+          <img class="h-4 w-auto inline" src={mastercard.src} />
+        </div></label
+      >
+    </div>
+    <!--Selector applePay -->
+
+    <div
+      class="w-full p-4 border border-[#e5e7eb] flex"
+    :class="tarjeta == 'applePay' ? 'border-black bg-[rgb(248,248,248)]' : ''"
+        @click="tarjeta = 'applePay'"    >
+      <input type="radio" name="formaDePago" id="applePay" />
+      <label for="applePay" class="flex"
+        ><svg
+          class="w-20 h-5"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 64 27"
+          ><g fill="currentColor"
+            ><path
+              d="M12.331 3.746c.765-1.008 1.284-2.362 1.147-3.746-1.12.059-2.486.779-3.277 1.788-.71.864-1.339 2.275-1.175 3.6 1.257.116 2.513-.662 3.305-1.642"
+            ></path><path
+              d="M13.38 5.407c-1.821-.105-3.37.997-4.239.997-.87 0-2.202-.944-3.642-.919A5.4 5.4 0 0 0 .933 8.162c-1.957 3.254-.516 8.082 1.387 10.733.924 1.312 2.037 2.756 3.505 2.704 1.386-.053 1.93-.867 3.615-.867 1.684 0 2.173.867 3.641.84 1.522-.026 2.474-1.312 3.398-2.624 1.06-1.495 1.494-2.939 1.521-3.018-.027-.026-2.935-1.103-2.962-4.33-.027-2.703 2.283-3.989 2.392-4.068-1.305-1.862-3.343-2.072-4.05-2.125M29.268 1.8C33.237 1.8 36 4.448 36 8.304c0 3.87-2.82 6.531-6.831 6.531h-4.394V21.6H21.6V1.8h7.668Zm-4.493 10.456h3.642c2.764 0 4.337-1.44 4.337-3.938 0-2.497-1.573-3.925-4.323-3.925h-3.656v7.863Zm12.125 4.89c0-2.585 1.987-4.172 5.511-4.37l4.059-.238V11.4c0-1.644-1.114-2.627-2.974-2.627-1.762 0-2.861.843-3.129 2.164h-2.875c.17-2.67 2.452-4.637 6.117-4.637 3.594 0 5.891 1.897 5.891 4.861v10.186h-2.918v-2.43h-.07c-.86 1.643-2.734 2.683-4.679 2.683-2.903 0-4.933-1.798-4.933-4.454Zm9.57-1.334v-1.166l-3.65.224c-1.819.127-2.847.928-2.847 2.192 0 1.293 1.07 2.136 2.706 2.136 2.128 0 3.79-1.462 3.79-3.386Zm5.337 11.119v-2.4c.216.056.703.056.947.056 1.352 0 2.083-.576 2.529-2.057 0-.028.257-.878.257-.891L50.4 7.2h3.165l3.599 11.737h.053L60.816 7.2H63.9l-5.33 15.179C57.353 25.876 55.946 27 52.997 27c-.243 0-.974-.028-1.19-.069Z"
+            ></path></g
+          ></svg
+        >
+
+        <svg
+          class="w-6 h-6"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+          id="info2"
+          ><path
+            fill-rule="evenodd"
+            d="M16 25a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2a11 11 0 1 0 0-22 11 11 0 0 0 0 22Z"
+            clip-rule="evenodd"></path><path
+            fill-rule="evenodd"
+            d="M16 22a1 1 0 0 1-1-1v-7a1 1 0 1 1 2 0v7a1 1 0 0 1-1 1Z"
+            clip-rule="evenodd"></path><path
+            d="M17 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg
+        >
+      </label>
+    </div>
+
+    <!--Selector Klarna -->
+    <div x-show="categoria=='domicilio'">
+      <div
+      class="w-full p-4 border border-[#e5e7eb] flex"
+    :class="tarjeta == 'klarna' ? 'border-black bg-[rgb(248,248,248)]' : ''"
+        @click="tarjeta = 'klarna'"      >
+        <input type="radio" name="formaDePago" id="klarna" /><label
+          for="payPal"
+          class="flex"
+          ><img class="h-4 w-auto inline" src={klarna.src} />
+        </label>
+      </div>
+    </div>
+
+    <!--Selector payPal -->
+
+    <div
+      class="w-full p-4 border border-[#e5e7eb] flex"
+    :class="tarjeta == 'paypal' ? 'border-black bg-[rgb(248,248,248)]' : ''"
+        @click="tarjeta = 'paypal'"    >
+      <input type="radio" name="formaDePago" id="payPal" /><label
+        for="payPal"
+        class="flex"
+        ><img class="h-4 w-auto inline" src={paypalColor.src} />
+
+        <svg
+          class="w-6 h-6"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+          id="info3"
+          ><path
+            fill-rule="evenodd"
+            d="M16 25a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2a11 11 0 1 0 0-22 11 11 0 0 0 0 22Z"
+            clip-rule="evenodd"></path><path
+            fill-rule="evenodd"
+            d="M16 22a1 1 0 0 1-1-1v-7a1 1 0 1 1 2 0v7a1 1 0 0 1-1 1Z"
+            clip-rule="evenodd"></path><path
+            d="M17 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg
+        >
+      </label>
+    </div>
+  </div>
+
+  <div class="w-full border border-[rgb(225,225,225)] my-5"></div>
+
+  <!--Formulario Tarjeta -->
+
+  <div class="space-y-2 *:gap-2 mb-5">
+    <input
+      type="text"
+      placeholder="Número de tarjeta"
+      class="w-full p-2 border border-[rgb(154,154,154)]"
+    />
+    <div class="flex">
+      <input
+        type="text"
+        placeholder="Fecha de vencimiento"
+        class="w-full p-2 border border-[rgb(154,154,154)]"
+      />
+      <input
+        type="text"
+        placeholder="CVC"
+        class="w-full p-2 border border-[rgb(154,154,154)]"
+      />
+    </div>
+  </div>
+  <!--Formulario Facturacion -->
+  <div class="text-xl">Dirección de facturación</div>
+
+  <!-- Checkbox solo para domicilio -->
+  <div x-show="categoria=='domicilio' && tarjeta!='applePay'" class="mb-10">
+    <input type="checkbox" id="igualar" x-model="igualar" />
+    <label for="igualar">Usar la misma dirección de entrega</label>
+  </div>
+
+
+  <!--formulario -->
+<div x-show="tarjeta != 'applePay' && (categoria == 'recogida' || !igualar)" class="mb-10">
+    <div class="text-xl space-y-2 *:gap-2">
+      <div class="text-xs">* Campos obligatorios</div>
+      <input
+        type="text"
+        placeholder="País *"
+        class="w-full p-2 border border-[rgb(154,154,154)]"
+      />
+      <div class="flex">
+        <input
+          type="text"
+          placeholder="Nombre *"
+          class="w-full p-2 border border-[rgb(154,154,154)]"
+        />
+        <input
+          type="text"
+          placeholder="Apellido(s) *"
+          class="w-full p-2 border border-[rgb(154,154,154)]"
+        />
+      </div>
+      <input
+        type="text"
+        placeholder="Dirección *"
+        class="w-full p-2 border border-[rgb(154,154,154)]"
+      />
+      <input
+        type="text"
+        placeholder="Dirección"
+        class="w-full p-2 border border-[rgb(154,154,154)]"
+      />
+      <div class="flex">
+        <input
+          type="text"
+          placeholder="Ciudad *"
+          class="w-full p-2 border border-[rgb(154,154,154)]"
+        />
+        <input
+          type="text"
+          placeholder="Código postal de facturación *"
+          class="w-full p-2 border border-[rgb(154,154,154)]"
+        />
+      </div>
+      <div class="flex">
+        <input
+          type="text"
+          placeholder="+34"
+          class="p-2 border border-[rgb(154,154,154)]"
+        />
+        <input
+          type="text"
+          placeholder="Teléfono móvil"
+          class="w-full p-2 border border-[rgb(154,154,154)]"
+        />
+      </div>
+    </div>
+
+  <div x-show="tarjeta=='klarna'" class="mb-10 mt-2 flex">
+
+    <svg aria-hidden="true" role="img" viewBox="0 0 20 20" height="20" width="20"><g fill="none" fill-rule="evenodd" transform="translate(4, 4) scale(1)"><path class="checkout-icon" d="M10.215 1 4.292 8.558 1.414 5.68 0 7.094l3.676 3.676a.999.999 0 0 0 .707.293l.06-.002c.286-.018.55-.157.727-.381l6.619-8.446L10.215 1Z" fill="#5F6163" style="transition: fill 0.2s ease 0s;"></path></g></svg>
+    <div>
+        3 plazos de <span class="font-bold">161,66€</span> sin intereses (0% TAE) con Klarna <span class="underline">Más información</span>
+    </div>
+
+    </div>
+
+  <div class="w-full border border-[rgb(225,225,225)] my-5"></div>
+
+  
+
+    <div class="mb-5">
+      <input type="checkbox" name="factura" id="factura" />
+      <label for="factura" class="text-xl">¿Necesitas factura?</label>
+    </div>
+    <div class="text-xs">
+      <input type="checkbox" name="ToS" id="ToS" />
+      <label for="ToS"
+        >Al realizar este pedido, aceptas los <span class="underline"
+          >Términos y condiciones</span
+        >, <span class="underline">Política de Devoluciones</span> y la <span
+          class="underline">Política de privacidad</span
+        > de Vans</label
+      >
+    </div>
+  </div>
+
+  <!-- Botón de pago-->
+  <div x-show="tarjeta!='paypal'" class="mb-10 mt-2 flex">
+
+  <button
+    type="button"
+    class="mt-2 px-6 py-3 bg-[rgb(38,36,36)] text-white hover:bg-black transition-all duration-150 space-y-4 min-w-full hover:cursor-pointer"
+    >Pagar Ahora</button
+  >
+</div>
+  <div x-show="tarjeta=='paypal'" class="mb-10 mt-2 flex w-full">
+
+    <div class="flex gap-1">
+  <button
+    type="button"
+    class="mt-2 px-6 py-3 transition-all border duration-150 space-y-4 min-w-full hover:cursor-pointer"
+    ><img class="h-4 w-1/2 inline" src={paypalColorSimple.src} /></button
+  >
+
+    <button
+    type="button"
+    class="mt-2 px-6 py-3 transition-all border duration-150 space-y-4 min-w-full hover:cursor-pointer"
+    ><img class="h-4 w-1/2 inline mr-2" src={paypalP.src} />Paga a plazos</button
+  >
+    </div>
+
+</div>
 </div>
 
-<div>Encuentra tu punto de recogida mas cercano</div>
-
-<input type="text" placeholder="Código postal de facturación"/>
-<div>o <span class="underline">Utiliar mi ubicación</span></div>
-
-<div class="text-xl">Forma de pago</div>
-
-<input type="radio" name="formaDePago" id="tarjeta">
-<input type="radio" name="formaDePago" id="applePay">
-<input type="radio" name="formaDePago" id="payPal">
-
-<div>
-    <input type="text">
-    <input type="text">
-    <input type="text">
-
-</div>
-
-<div class="text-xl">
-    <div class="text-xs">* Campos obligatorios</div>
-
-    <input type="text"/>
-    <input type="text"/>
-    <input type="text"/>
-    <input type="text"/>
-    <input type="text"/>
-    <input type="text"/>
-    <input type="text"/>
-    <input type="text"/>
-</div>
-
-<input type="checkbox" name="factura"> <label for="factura">¿Necesitas factura?</label>
-
-<input type="checkbox" name="ToS"> <label for="ToS">Al realizar este pedido, aceptas los <span class="underline">Términos y condiciones</span> <span class="underline">Política de Devoluciones</span>  y la <span class="underline">Política de privacidad</span> de Vans</label>
-
-<button></button>
+<!--Necesitas factura tiene contenido!!!!! hazlo!!! -->

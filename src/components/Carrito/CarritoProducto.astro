@@ -4,13 +4,15 @@ import GeneralCarrusel from "@general/GeneralCarrusel.astro";
 const { Nombre, Colores, cantidadMaxima, Precio, arrayImagenes, id, imagen, talla } =
   Astro.props;
 
+console.log((cantidadMaxima))
+
 ---
 
-<div class="flex flex-col border-b border-[rgb(225,225,225)]">
-  <div class="text-[rgb(127,89,59)] text-xs">{cantidadMaxima}</div>
+<div class="flex flex-col border-b border-[rgb(225,225,225)]" x-data=`{cantidad: 1, precio: ${Precio}, cantidadMaxima: ${cantidadMaxima},}`>
+  <div class="text-[rgb(127,89,59)] text-xs" x-show="cantidadMaxima <= 5" x-text="'quedan'+cantidadMaxima"></div>
   <div class="flex justify-between">
     <div>{Nombre}</div>
-    <div>{Precio}€</div>
+    <div class="precioValor" x-text="cantidad*precio+'€'"></div>
   </div>
   <div class="flex">
     <img
@@ -24,11 +26,11 @@ const { Nombre, Colores, cantidadMaxima, Precio, arrayImagenes, id, imagen, tall
       <div>{talla}</div>
     </div>
   </div>
-  <div class="flex justify-between">
-    <div class=" *:border *:px-4 flex *:w-10">
-      <button>-</button>
-      <input type="text" value="1"/>
-      <button>+</button>
+  <div class="flex justify-between" >
+    <div class=" *:border *:px-4 flex *:w-20">
+      <button @click="if(cantidad>0) cantidad--">-</button>
+      <input type="number" :value="cantidad"/>
+      <button @click="if (cantidad<cantidadMaxima) cantidad++">+</button>
     </div>
     <div class="underline text-xs">Guardar para despues</div>
   </div>
