@@ -3,11 +3,23 @@ import HamburguesaNav from "@general/GeneralHamburguesaNav.astro";
 import {fetchProductos} from "@utils/fetchProductos.ts";
 const {botonIA, mostrar} = Astro.props;
 
-console.log(botonIA)
+interface interfazCategoria{
+  order: number,
+  name: string,
+  id: string,
+  father: string,
+  categoryName: string,
+}
+
+
+
+
 
 let respuesta = await fetchProductos();
-//console.log(respuesta)
-let arrayCategorias: any[] = respuesta.data.Categories;
+//console.log(respuesta.data.Categories)
+
+let arrayCategorias: interfazCategoria[] = respuesta.data.Categories;
+
 //console.log(JSON.stringify(arrayCategorias))
 
 let categoriasAnidadas: any = [];
@@ -27,10 +39,12 @@ arrayCategorias.forEach(item => {
 
 //console.log(categoriasAnidadas)
 
+//console.log("mostrar" + mostrar)
 
 ---
 
-{ mostrar==true && 
+<div x-data={`{ mostrar: ${mostrar} }`} x-show="mostrar==true">
+
 
 
 <HamburguesaNav categorias={categoriasAnidadas}/>
@@ -47,7 +61,7 @@ arrayCategorias.forEach(item => {
         viewBox="0 0 32 32"
         class="md:w-10 md:h-10 w-8 h-8  hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer"
         fill="currentColor"
-        @click="$dispatch('toggle-nav1')"
+        x-on:click="$dispatch('toggle-nav1')"
       >
         <path
           d="M5.9 7.9h20.2v2.2H5.9V7.9Zm0 7h20.2v2.2H5.9v-2.2Zm0 7h20.2v2.2H5.9v-2.2Z"
@@ -240,4 +254,5 @@ arrayCategorias.forEach(item => {
     
   });
 </script>
-}
+
+</div>

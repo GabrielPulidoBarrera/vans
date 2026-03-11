@@ -3,7 +3,7 @@ import Accordion from "./GeneralAccordion.astro";
 const { flag, lang, mostrar } = Astro.props;
 ---
 
-{ mostrar==true &&
+<div x-data={`{ mostrar: ${mostrar} }`} x-show="mostrar==true">
 
 
 <footer class="*:bg-neutral-900 text-white bg-neutral-900">
@@ -99,4 +99,4 @@ const { flag, lang, mostrar } = Astro.props;
 
 </footer>
 
-}
+</div>

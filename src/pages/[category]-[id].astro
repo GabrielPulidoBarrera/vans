@@ -13,9 +13,35 @@ import {fetchProductos} from "@utils/fetchProductos.ts";
 
 
 
+interface interfazCategoria{
+  order: number,
+  name: string,
+  id: string,
+  father: string,
+  categoryName: string,
+}
 
+interface interfazProducto{
+  name: string,
+  price: number,
+  description: string,
+  color: string,
+  images: interefazImagen[]
+  id: string
+  tag: string
+  category: interfazCategoriaProducto[]
+}
 
+interface interfazCategoriaProducto{
+  id: string;
+}
 
+interface interefazImagen{
+  alt: string,
+  url: string,
+  width: number,
+  height: number,
+}
 
 
 
@@ -39,29 +65,34 @@ let ArrayTallas = [
 
 
 let respuesta = await fetchProductos();
-let arrayCategorias: any[] = respuesta.data.Categories;
-let encontrado = (arrayCategorias.find((e:any ) => {
+let arrayCategorias: interfazCategoria[] = respuesta.data.Categories;
+
+
+let encontrado = (arrayCategorias.find((e: interfazCategoria ) => {
 return e.id == id}))
-let titulo = encontrado.categoryName
+
+let titulo = encontrado!.categoryName
 
 let arrayTexto = respuesta.data.TickerTexts
 
-let arrayProductos: any[] = respuesta.data.Products;
+let arrayProductos: interfazProducto[] = respuesta.data.Products;
 
+//console.log(arrayProductos[0].category)
 
-let arrayProductosCategoria = arrayProductos.filter((e: any)=>{
-  let encontrado = e.category.find((elemento: any) =>{
+let arrayProductosCategoria = arrayProductos.filter((e: interfazProducto)=>{
+  let encontrado = e.category.find((elemento: interfazCategoriaProducto) =>{
     return (elemento.id == id)
   })
   return encontrado 
 })
 
-console.log(arrayProductosCategoria)
+//console.log(arrayProductosCategoria)
 
 let numeroProductos = arrayProductosCategoria.length
 
 
 
+console.log(arrayProductos[0].images)
 
 
 
@@ -74,13 +105,13 @@ export async function getStaticPaths(){
 
 let respuesta = await fetchProductos();
 //console.log(respuesta)
-let arrayCategorias: any[] = respuesta.data.Categories;
+let arrayCategorias: interfazCategoria[] = respuesta.data.Categories;
 //console.log(arrayCategorias)
 //console.log(JSON.stringify(arrayCategorias))
 
-let rutas: any = [];
+let rutas: object[] = [];
 
-arrayCategorias.map((e: any)=>{
+arrayCategorias.map((e: interfazCategoria)=>{
   rutas.push({ params: { category: e.name, id: e.id } })
 })
 
@@ -101,7 +132,7 @@ return rutas;
 ---
 
 <Layout arrayTexto={arrayTexto} mostrarTicker={true}>
-  <CategoriasMenuSticky titulo={titulo}, numeroProductos={numeroProductos} />
+  <CategoriasMenuSticky titulo={titulo}, numeroProductos={numeroProductos} id={id} arrayCategorias={arrayCategorias}/>
   <div class="flex">
     <CategoriasFiltros ArrayTallas={ArrayTallas} arrayColores={respuesta.data.Colors}/>
     <CategoriasContenedorCard arrayCards={arrayProductosCategoria}>

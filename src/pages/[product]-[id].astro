@@ -30,18 +30,21 @@ export async function getStaticPaths() {
 
   let arrayProductos = respuesta.data.Products;
 
-  let listaProductos: any = [];
 
-  arrayProductos.map((producto: any) => {
+
+
+  let listaProductos: object[] = [];
+
+  arrayProductos.map((producto: interfazIteracion) => {
     listaProductos.push({ params: { product: producto.tag, id: producto.id } });
   });
   return listaProductos;
 }
 
 let tag = product;
-let arrayVariaciones: any = [];
+let arrayVariaciones: interfazIteracion[] = [];
 
-arrayProductos.map((producto: any) => {
+arrayProductos.map((producto: interfazIteracion) => {
   if (producto.tag == tag) {
     arrayVariaciones.push(producto); 
   }

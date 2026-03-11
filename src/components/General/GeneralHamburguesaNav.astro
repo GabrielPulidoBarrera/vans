@@ -45,11 +45,11 @@ const alpineObject = `{
     <div id="principal" x-show="mostrarGeneral" class="flex flex-col h-full">
       <!-- selector -->
       <div>
-        <ul class="p-6 space-y-4 flex" id="categorias">
+        <ul class="p-6 space-y-4 flex gap-2 justify-center align-center" id="categorias">
           <template x-for="category in categoriasAlpine" :key="category.category.id">
             <li>
               <div
-                class="p-1 border-2 border-transparent hover:border-white transition-all duration-200 ease-in-out cursor-pointer"
+                class="px-1 border-2 border-transparent hover:border-white transition-all duration-200 ease-in-out cursor-pointer"
                 :id="category.category.name + 'label'"
                 @click="activeCategory = category.category.name"
                 :class="{ 'bg-white text-black': activeCategory === category.category.name }"

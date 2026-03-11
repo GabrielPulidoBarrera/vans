@@ -9,12 +9,23 @@ interface InterfazArrayCards {
     variations: string[],
     price: number,
     arrayImagenes: Array<HTMLSourceElement>
+    tag: string
   }
 
-//console.log(arrayCards[0].defaultVariation)
+//console.log(arrayCards[0])
+let contador = new Map();
 
+for (let iterable of arrayCards){
+  if(contador.get(iterable.tag)==null){
+    contador.set(iterable.tag, 1);
 
+  }
+  else{
+    contador.set(iterable.tag, (contador.get(iterable.tag)+1));
+  }
+}
 
+//console.log(contador)
 
 ---
 
@@ -27,7 +38,7 @@ interface InterfazArrayCards {
 <CategoriasCard 
 Nombre={Valor.name} 
 Precio={Valor.price} 
-Colores="2" 
+Colores={contador.get(Valor.tag)}
   id = {Valor.id}
   arrayImagenes = {Valor.images} 
   tag = {Valor.tag}/>

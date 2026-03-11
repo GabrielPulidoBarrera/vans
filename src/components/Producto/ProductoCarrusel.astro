@@ -26,8 +26,9 @@ import { Navigation } from 'swiper/modules';
           navigation: {
             prevEl: prevEl as HTMLElement,
             nextEl: nextEl as HTMLElement,
+            disabledClass: 'text-[rgb(207, 207, 206)]'
           },
-    slidesPerView: 1.2,
+    slidesPerView: 1,
     spaceBetween: 16,
     breakpoints: {
       768: {
@@ -59,7 +60,7 @@ import { Navigation } from 'swiper/modules';
     <!-- Flecha derecha -->
     <button aria-label="Imagen siguiente" id="rightArrow">
       <svg
-        class="w-6 h-6"
+        class="w-6 h-6 "
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
       >

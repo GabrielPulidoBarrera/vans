@@ -1,9 +1,33 @@
 ---
-const { titulo, numeroProductos } = Astro.props;
+const { titulo, numeroProductos, id, arrayCategorias } = Astro.props;
+
+let texto = ""
+let padre = id
+
+
+//console.log(arrayCategorias)
+
+while (padre!=null){
+
+  
+  let find = arrayCategorias.find((e: any)=>{
+    return e.id == padre;
+  })
+  // console.log(find.name)
+  // console.log(texto)
+  texto= find.name+" > "+texto
+  padre=find.father
+}
+
+
+texto = texto.slice(0, -3);
+  
+
+
 ---
 
 <div class="smallText hover:underline text-xs ml-5 text-neutral-500">
-  compra
+  {texto}
 </div>
 <div class="flex frontText sticky z-40 bg-white top-0 items-center">
   <div class="flex flex-col grow">

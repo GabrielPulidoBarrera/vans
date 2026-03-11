@@ -1,13 +1,52 @@
 ---
-const { ArrayProductos, id } =
-  Astro.props;
+const { ArrayProductos, id } = Astro.props;
 
 
 
+interface interfazCategoria{
+  order: number,
+  name: string,
+  id: string,
+  father: string,
+  categoryName: string,
+}
 
-    let ArrayColoresImagenes: any = []
+interface interfazProducto{
+  name: string,
+  price: number,
+  description: string,
+  color: string,
+  images: interefazImagen[]
+  id: string
+  tag: string
+  category: interfazCategoriaProducto[]
+}
 
-    {ArrayProductos.map((producto: any) => {
+interface interfazCategoriaProducto{
+  id: string;
+}
+
+interface interefazImagen{
+  alt: string,
+  url: string,
+  width: number,
+  height: number,
+}
+
+interface interfazColores{
+  imagen: interefazImagen;
+    color: string;
+    id: string;
+}
+
+
+console.log(ArrayProductos);
+
+
+
+    let ArrayColoresImagenes: interfazColores[] = []
+
+    {ArrayProductos.map((producto: interfazProducto) => {
       let objeto = {imagen: producto.images[0], 
         color: producto.color, id: producto.id}
         if(producto.id == id){
@@ -49,12 +88,12 @@ interface interfazImagen{
 
   <!-- Imagenes -->
 
-  <div >
+  <div x-data="{mostrar: false}">
     <div
       class="md:grid md:grid-cols-5 md:gap-1 p-1 md:max-w-7xl mx-auto *:hover:cursor-pointer flex overflow-x-auto w-full" id="image"
     >
 {
-  ArrayColoresImagenesSegmento1.map((imagen: any) => (
+  ArrayColoresImagenesSegmento1.map((imagen: interfazColores) => (
     <img
       class="w-1/7 max-w-1/7 min-w-1/7 md:min-w-full md:max-w-full; md:w-auto md:h-auto border-transparent hover:border-solid border hover:border-black transition-all duration-150 rounded"
       src={imagen.imagen.url}
@@ -68,19 +107,21 @@ interface interfazImagen{
 {
   ArrayColoresImagenes.length > 0 ? (
     <div
-      class="h-auto contifnuar bg-gray-100 hidden md:flex items-center justify-center flex-col hover:bg-gray-200"
+      class="h-auto contifnuar bg-gray-100 hidden md:flex items-center justify-center flex-col hover:bg-gray-200" x-show="mostrar==false" x-on:click="mostrar=true"
     >
       <p>+{ArrayColoresImagenes.length}</p>
-      <div>Mostrar</div>
+      <div  >Mostrar</div>
     </div>
   ) : null
 }
 
 {
-  ArrayColoresImagenes.map((imagen: any) => (
+  ArrayColoresImagenes.map((imagen: interfazColores) => (
     <img
-      class="w-1/7 max-w-1/7 min-w-1/7 md:min-w-full md:w-auto md:h-auto md:hidden escondido border-transparent hover:border-solid border hover:border-black transition-all duration-150 rounded"
-       src={`${imagen.imagen.url}?w=80&q=60&format=auto`}
+    x-show="mostrar==true"
+    x-cloak
+      class="w-1/7 max-w-1/7 min-w-1/7 md:min-w-full md:max-w-full; md:w-auto md:h-auto border-transparent hover:border-solid border hover:border-black transition-all duration-150 rounded"
+      src={imagen.imagen.url}
       alt="placeholder"
       id={imagen.id}
       data-color={imagen.color}
@@ -90,7 +131,8 @@ interface interfazImagen{
 
 
 <div
-  class="h-auto object-contain ocultar hidden escondido bg-gray-100 items-center justify-center flex-col hover:bg-gray-200"
+  class="h-auto object-contain ocultar flex bg-gray-100 items-center justify-center flex-col hover:bg-gray-200" x-show="mostrar==true" @click="mostrar=false" x-cloak
+
 >
   <p>Ocultar</p>
 </div>
@@ -130,8 +172,10 @@ x-data="{}"
         Tabla de tallas
       </div>
     </div>
-    <div class="Sell">
-     <GeneralBotonPago texto="Añade a la cesta"></GeneralBotonPago>
+    <div class="Sell" x-data="{}">
+      <div @click.prevent="$dispatch('open-carrito-menu')"> 
+        <GeneralBotonPago texto="Añade a la cesta"></GeneralBotonPago>
+      </div>
       <GeneralBotonApple></GeneralBotonApple>
 
       <div class="mt-5 payPalText text-xs ">
@@ -172,39 +216,6 @@ x-data="{}"
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-
-let continuar = document.querySelector<HTMLElement>('.continuar');
-let ocultar = document.querySelector<HTMLElement>('.ocultar');
-let escondidos = document.querySelectorAll('.escondido')
-continuar?.addEventListener("click", mostrarMas)
-function mostrarMas(){
-  if (continuar==null){
-    return
-  }
-    continuar.style.display="none";
-    for (let iterable of escondidos){
-      (iterable as HTMLElement).style.display="flex"
-    }
-  }
-if (ocultar!=null){
-
-  ocultar.addEventListener("click", mostrarMenos)
-
-    function mostrarMenos(){
-    if (continuar==null){
-      return
-    }
-    continuar.style.display="none";
-    for (let iterable of escondidos){
-      (iterable as HTMLElement).style.display="none"
-    }
-    continuar.style.display="flex"
-  }
-}
-  
-
-})
 
 
 

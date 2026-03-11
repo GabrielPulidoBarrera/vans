@@ -22,6 +22,7 @@ let queryCards = `query MyQuery {
     name
     price
     description
+    color
     images {
       alt
       url

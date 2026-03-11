@@ -47,7 +47,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
 <div class="space-y-4">
     <div class="flex justify-between">
       <div class="text-xl">Información de contacto</div>
-      <div class="underline text-xs">Inicia Sesion</div>
+      <div class="underline hover:cursor-pointer text-xs">Inicia Sesion</div>
     </div>
     <input
       type="text"
@@ -65,7 +65,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
 
         Doy mi consentimiento para el procesamiento de mis datos personales con
         fines de marketing basados en perfiles, como se describe en la <span
-          class="underline">Politica de privacidad</span
+          class="underline hover:cursor-pointer">Politica de privacidad</span
         > de Vans
       </label>
     </div>
@@ -203,7 +203,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
           ></span
         >
       </div>
-      <div>o <span class="underline">Utiliar mi ubicación</span></div>
+      <div>o <span class="underline hover:cursor-pointer">Utiliar mi ubicación</span></div>
     </div>
 
     <!-- domicilio -->
@@ -249,11 +249,12 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
           />
         </div>
         <div class="flex">
-          <input
-            type="text"
-            placeholder="+34"
-            class="p-2 border border-[rgb(154,154,154)]"
-          />
+<select class=" p-2 border border-[rgb(154,154,154)] shrink" >
+
+      <option value="España" selected>España (+34)</option>
+      <option value="Portugal">Portugal (+351)</option>
+      <option value="Francia">Francia (+33)</option>
+</select>
 
           <input
             type="text"
@@ -269,10 +270,10 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
 
       <div class="space-y-3 mb-10">
         <div
-          class="w-full p-4 border border-[#e5e7eb] focus-within:border-black focus-within:bg-[rgb(248,248,248)] flex"
+          class="border border-[#e5e7eb] focus-within:border-black focus-within:bg-[rgb(248,248,248)] flex"
         >
-          <input type="radio" name="envio" id="estandar" class="flex mr-2" />
-          <label for="estandar" class="flex grow justify-between">
+          <input type="radio" name="envio" id="estandar" class="flex mr-2 ml-4" />
+          <label for="estandar" class="flex grow justify-between w-full p-4 " >
             <div>
               <div>Envío Estándar</div>
               <div class="text-xs">Llega en 4-5 dias laborales</div>
@@ -282,10 +283,10 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
         </div>
 
         <div
-          class="w-full p-4 border border-[#e5e7eb] focus-within:border-black focus-within:bg-[rgb(248,248,248)] flex"
+          class="border border-[#e5e7eb] focus-within:border-black focus-within:bg-[rgb(248,248,248)] flex"
         >
-          <input type="radio" name="envio" id="expres" class="flex mr-2" />
-          <label for="expres" class="flex grow justify-between">
+          <input type="radio" name="envio" id="expres" class="flex mr-2 ml-4" />
+          <label for="expres" class="flex grow justify-between w-full p-4 ">
             <div>
               <div>Envío Exprés</div>
               <div class="text-xs">Llega en 2-4 dias laborales</div>
@@ -360,7 +361,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
     :class="tarjeta == 'applePay' ? 'border-black bg-[rgb(248,248,248)]' : ''"
         @click="tarjeta = 'applePay'"    >
       <input type="radio" name="formaDePago" id="applePay" class="ml-4"/>
-      <label for="applePay" class="flex w-full p-4"
+      <label for="applePay" class="flex w-full py-4"
         ><svg
           class="w-20 h-5"
           xmlns="http://www.w3.org/2000/svg"
@@ -397,9 +398,10 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
       class="w-full border border-[#e5e7eb] flex"
     :class="tarjeta == 'klarna' ? 'border-black bg-[rgb(248,248,248)]' : ''"
         @click="tarjeta = 'klarna'"      >
-        <input type="radio" name="formaDePago" id="klarna" class="ml-4" /><label
+        <input type="radio" name="formaDePago" id="klarna" class="flex ml-4" />
+        <label
           for="klarna"
-          class="flex w-full p-4"
+          class="flex grow w-full p-4"
           ><img class="h-4 w-auto inline" src={klarna.src} />
         </label>
       </div>
@@ -471,11 +473,16 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
 <div x-show="tarjeta != 'applePay' && (categoria == 'recogida' || !igualar)" class="mb-10">
     <div class="text-xl space-y-2 *:gap-2">
       <div class="text-xs">* Campos obligatorios</div>
-      <input
-        type="text"
-        placeholder="País *"
-        class="w-full p-2 border border-[rgb(154,154,154)]"
-      />
+
+
+<select class="w-full p-2 border border-[rgb(154,154,154)]" >
+
+  <option value="" disabled selected>Pais *</option>
+      <option value="España">España</option>
+      <option value="Portugal">Portugal</option>
+      <option value="Francia">Francia</option>
+</select>
+
       <div class="md:flex">
         <input
           type="text"
@@ -511,15 +518,16 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
         />
       </div>
       <div class="flex">
-        <input
-          type="text"
-          placeholder="+34"
-          class="p-2 border border-[rgb(154,154,154)]"
-        />
+<select class=" p-2 border border-[rgb(154,154,154)] shrink" >
+
+      <option value="España" selected>España (+34)</option>
+      <option value="Portugal">Portugal (+351)</option>
+      <option value="Francia">Francia (+33)</option>
+</select>
         <input
           type="text"
           placeholder="Teléfono móvil"
-          class="w-full p-2 border border-[rgb(154,154,154)]"
+          class="w-full p-2 border border-[rgb(154,154,154)] grow"
         />
       </div>
     </div>
@@ -528,7 +536,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
 
     <svg aria-hidden="true" role="img" viewBox="0 0 20 20" height="20" width="20"><g fill="none" fill-rule="evenodd" transform="translate(4, 4) scale(1)"><path class="checkout-icon" d="M10.215 1 4.292 8.558 1.414 5.68 0 7.094l3.676 3.676a.999.999 0 0 0 .707.293l.06-.002c.286-.018.55-.157.727-.381l6.619-8.446L10.215 1Z" fill="#5F6163" style="transition: fill 0.2s ease 0s;"></path></g></svg>
     <div>
-        3 plazos de <span class="font-bold">161,66€</span> sin intereses (0% TAE) con Klarna <span class="underline">Más información</span>
+        3 plazos de <span class="font-bold">161,66€</span> sin intereses (0% TAE) con Klarna <span class="underline hover:cursor-pointer">Más información</span>
     </div>
 
     </div>
@@ -578,10 +586,10 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
   <div class="text-xs">
     <input type="checkbox" name="ToS" id="ToS" />
     <label for="ToS"
-    >Al realizar este pedido, aceptas los <span class="underline"
+    >Al realizar este pedido, aceptas los <span class="underline hover:cursor-pointer"
     >Términos y condiciones</span
-        >, <span class="underline">Política de Devoluciones</span> y la <span
-          class="underline">Política de privacidad</span
+        >, <span class="underline hover:cursor-pointer">Política de Devoluciones</span> y la <span
+          class="underline hover:cursor-pointer">Política de privacidad</span
           > de Vans</label
           >
         </div>
