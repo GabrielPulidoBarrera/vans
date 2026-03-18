@@ -18,106 +18,91 @@ let arrayProductos: any[] = respuesta.data.Products;
   <div class="sticky top-0 z-50" <CheckoutNav></div>
 </Layout>
 <div x-data="objetoAlpineCheckout">
-<div class="sticky top-15 md:hidden w-full z-50">
-  <div
-    class="accordionCarrito bg-[rgb(38,36,36)] text-white max-h-[66vh] mb-5 flex flex-col"
-    
-  >
-    >
+  <div class="sticky top-15 md:hidden w-full z-50">
     <div
-      @click="expanded = ! expanded"
-      class="Open hover:cursor-pointer productBuy ms-6 px-3 py-2 flex justify-between shrink-0"
+      class="accordionCarrito bg-[rgb(38,36,36)] text-white max-h-[66vh] mb-5 flex flex-col"
     >
-      Carrito
-      <svg
-        class="w-6 h-6 transition-all duration-150"
-        :class="{ '-rotate-90': expanded, 'rotate-90': !expanded }"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 32 32"
       >
-        <path
-          fill="currentColor"
-          d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
-        ></path>
-      </svg>
-    </div>
+      <div
+        @click="expanded = ! expanded"
+        class="Open hover:cursor-pointer productBuy ms-6 px-3 py-2 flex justify-between shrink-0"
+      >
+        Carrito
+        <svg
+          class="w-6 h-6 transition-all duration-150"
+          :class="{ '-rotate-90': expanded, 'rotate-90': !expanded }"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+        >
+          <path
+            fill="currentColor"
+            d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
+          ></path>
+        </svg>
+      </div>
 
-    <div
-      x-show="expanded"
-      x-collapse
-      class="mt-4 p-4 space-y-5 overflow-y-auto flex-1 min-h-0 bg-white"
-    >
-      <template x-for="producto in carrito">
-        <CarritoProducto />
-      </template>
-    </div>
-  </div>
-</div>
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="md:flex md:flex-row md:gap-8">
-    <div class="md:w-3/5">
-      <CheckoutLateral />
-    </div>
-
-    <div class="md:w-2/5">
-      <div class="flex flex-col sticky top-20">
-        <div class="hidden md:block">
-
-
-
-
-<div class="accordionsProduct max-h-1/2 overflow-y-scroll">
-  <div @click="expandedCarrito = ! expandedCarrito"
-    
-    class="Open hover:cursor-pointer productBuy ms-6 px-3 py-2 border-b border-[rgb(243,243,243)]  flex justify-between bg-transparent"
-    x-init="console.log(expandedCarrito)"
-  >
-    RESUMEN DE PEDIDO
-<svg
-  class="w-6 h-6 transition-all duration-150 rotate-2"
-  :class="{ '-rotate-90': expandedCarrito, 'rotate-90': !expandedCarrito }"
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 32 32"
->
-  <path
-    fill="currentColor"
-    d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
-  ></path>
-</svg>
-  </div>
-  <div x-show="expandedCarrito" x-collapse  class="Hidden  *:ms-4 mt-4 ml-4 ">
-            <div class="max-h-screen overflow-y-scroll">
-
-
-
-
-              <template x-for="producto in carrito"> 
-                <CarritoProducto />
-              </template>
-
-
-
-
-
-            </div>    <slot></slot>
-  </div>
-</div>
-
-
-
-
-
-
-
-          <CarritoLateral />
-        </div>
+      <div
+        x-show="expanded"
+        x-collapse
+        class="mt-4 p-4 space-y-5 overflow-y-auto flex-1 min-h-0 bg-white"
+      >
+        <template x-for="producto in carrito">
+          <CarritoProducto />
+        </template>
       </div>
     </div>
   </div>
 
-  <CheckoutFooter />
-</div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="md:flex md:flex-row md:gap-8">
+      <div class="md:w-3/5">
+        <CheckoutLateral />
+      </div>
+
+      <div class="md:w-2/5">
+        <div class="flex flex-col sticky top-20">
+          <div class="hidden md:block">
+            <div class="accordionsProduct max-h-1/2 overflow-y-scroll">
+              <div
+                @click="expandedCarrito = ! expandedCarrito"
+                class="Open hover:cursor-pointer productBuy ms-6 px-3 py-2 border-b border-[rgb(243,243,243)] flex justify-between bg-transparent"
+                x-init="console.log(expandedCarrito)"
+              >
+                RESUMEN DE PEDIDO
+                <svg
+                  class="w-6 h-6 transition-all duration-150 rotate-2"
+                  :class="{ '-rotate-90': expandedCarrito, 'rotate-90': !expandedCarrito }"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 32 32"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                x-show="expandedCarrito"
+                x-collapse
+                class="Hidden *:ms-4 mt-4 ml-4"
+              >
+                <div class="max-h-screen overflow-y-scroll">
+                  <template x-for="producto in carrito">
+                    <CarritoProducto />
+                  </template>
+                </div>
+                <slot />
+              </div>
+            </div>
+
+            <CarritoLateral />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <CheckoutFooter />
+  </div>
 </div>
 <script>
   import clonar from "@utils/localStorage";
@@ -129,7 +114,7 @@ let arrayProductos: any[] = respuesta.data.Products;
     carrito = JSON.parse(stored);
   }
 
-Alpine.store('carritoCheckout', carrito)
+  Alpine.store("carritoCheckout", carrito);
 
   let objetoAlpineCheckout = {
     expanded: false,

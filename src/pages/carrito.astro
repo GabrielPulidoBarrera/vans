@@ -6,8 +6,11 @@ import CarritoSuperior from "@components/Carrito/CarritoSuperior.astro";
 import {fetchProductos} from "@utils/fetchProductos.ts";
 import GeneralBotonPago from "@components/General/GeneralBotonPago.astro";
 import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
-import arrayRecomendaciones from "@components/Carrito/arrayProductos.json";
 import ProductoCarrusel from "@components/Producto/ProductoCarrusel.astro";
+import ProductoTallas from "@components/Producto/ProductoTallas.astro";
+
+
+
 
 
 let respuesta = await fetchProductos();
@@ -17,12 +20,18 @@ let arrayTexto = respuesta.data.TickerTexts
 let arrayProductos: any[] = respuesta.data.Products;
 
 
+
+
+
+
+
+
 //console.log(arrayRecomendaciones);
 ---
 
-<Layout arrayTexto={arrayTexto} mostrarTicker={true} botonIA={false}>
+<Layout arrayTexto={arrayTexto} mostrarTicker={true} botonIA={false} mostrarCarrito={false}>
 
-<div x-data="objetoAlpine">
+<div x-data="objetoAlpine",   @open-carrito-menu.window="refreshCarrito">
   
   <div class="md:hidden fixed z-50 w-full bg-white bottom-0 p-4 py-2">
     <GeneralBotonApple></GeneralBotonApple>
@@ -47,13 +56,13 @@ let arrayProductos: any[] = respuesta.data.Products;
 
 
   
-    <template x-for="producto in carrito" >
+    <template x-for="producto in carrito"  >
       <CarritoProducto></CarritoProducto>
     </template>
 
    
     <div class="hidden md:block">
-      <ProductoCarrusel ArrayRecomendaciones={arrayRecomendaciones} />
+      <ProductoCarrusel ArrayRecomendaciones={arrayProductos} />
     </div>
   </div>
   <!-- derecha -->
@@ -74,6 +83,18 @@ let arrayProductos: any[] = respuesta.data.Products;
   </div>
 
 </div>
+
+
+      {arrayProductos.map((Valor: any) => (
+
+  <ProductoTallas
+      tallas={respuesta.data.Sizes[respuesta.data.Sizes.findIndex((e: any) => {
+  return e.tag == Valor.tag;
+})]}
+      producto={Valor}
+      price={Valor.price}
+    />))}
+
   
   </Layout>
   
@@ -95,6 +116,10 @@ let objetoAlpine = {
 
   carrito: carrito,
   pagina: 'carrito',
+    refreshCarrito() {
+    const stored = localStorage.getItem('carrito');
+    this.carrito = stored ? JSON.parse(stored) : [];
+  },
    removeFromCarrito(producto: any) {
     this.carrito = this.carrito.filter((item: any) => 
       !(item.id === producto.id && item.talla === producto.talla && item.color === producto.color)
@@ -106,3 +131,4 @@ Alpine.data('objetoAlpine', () => objetoAlpine)
 
 //  clonar()
 </script>
+

@@ -8,7 +8,6 @@ let encontrado= carrito.find((e) =>{
   })
 
   if(encontrado!=null){
-  console.log('VAMONOS')
 
     encontrado.cantidad=producto.cantidad;    
   }
@@ -21,7 +20,6 @@ let encontrado= carrito.find((e) =>{
 
 })
 
-console.log(carrito)
 "
 
 >
@@ -30,7 +28,7 @@ console.log(carrito)
 
   <div class="text-[rgb(127,89,59)] text-xs" x-show="producto.cantidadMaxima <= 5" x-text="'Quedan '+producto.cantidadMaxima"></div>
   <div class="flex justify-between">
-    <div class="nombre"></div>
+    <div class="nombre" x-text="producto.nombre"></div>
     <div class="precioValor" x-text="producto.cantidad*producto.precio+'€'"></div>
   </div>
   <div class="flex">

@@ -4,13 +4,21 @@ import GeneralCarrusel from "@general/GeneralCarrusel.astro";
 
 const {producto, tallas, Colores } = Astro.props;
 
-console.log(Colores)
+//console.log(Colores)
 
-let Nombre = producto.name;
-let Precio = producto.price;
+
+//console.log("----")
+
+
+//console.log("-----")
+
+let nombre = producto.name;
+let precio = producto.price;
 let arrayImagenes = producto.images;
 let id = producto.id;
+let color = producto.color;
 let tag = producto.tag;
+
 
 interface interfazTalla {
   tag: string;
@@ -34,12 +42,12 @@ URL = "/p/"+URL
 
 <a href={URL} class="card flex flex-col">
   <div class="">
-    <GeneralCarrusel Nombre = {Nombre}, Precio = {Precio}, id={id},  arrayImagenes ={arrayImagenes} tallas={tallas[find]} producto = {producto}/>
+    <GeneralCarrusel nombre = {nombre}, color={color},  precio = {precio}, id={id},  arrayImagenes ={arrayImagenes} tallas={tallas[find]} producto = {producto}/>
   </div>
   <div class=" flex flex-col">
-    <div class="text-gray-800 text-xl">{Nombre}</div>
+    <div class="text-gray-800 text-xl">{nombre}</div>
     <div class="text-sm text-gray-500">{Colores} colores</div>
-    <div class="precio text-gray-900">{Precio}€</div>
+    <div class="precio text-gray-900">{precio}€</div>
   </div>
 </a>
 

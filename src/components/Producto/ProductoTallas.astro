@@ -9,7 +9,8 @@ interface InterfazTallas {
   id: string;
 }
 
-console.log(producto);
+//console.log("ID")
+//console.log(producto.id);
 
 
 
@@ -27,31 +28,32 @@ let objetoServer = {
 
 
 
+// {"color":"Yellow","nombre":"Zapatillas aislantes impermeables Sk8Hi","id":"69a033fdb901ef33e6f370ed","precio":"50","imagen":"https://images.apirocket.io/images/0i8m8q5n/Products/WYHJtd39QG/Sk8Hi-Waterproof-Insulated-Shoes-VANS-Yellow-ALT1.png","talla":20,"cantidad":1,"cantidadMaxima":5}
 
-
-
+//{"color":"blanco","id":"69946842ecbaa043c1ba8636","talla":20,"cantidad":1,"cantidadMaxima":5}
+  //@open-tallas-menu.window="handleOpen"
 
 ---
 
+<div   x-data=`objetoTallas('${producto.id}')`>
+
+
 <div
-  x-data="{expandido: false}"
   x-cloak
-  @open-tallas-menu.window="expandido = !expandido"
   @open-carrito-menu.window="expandido = false"
   class="oscuro fixed bg-black top-0 right-0 w-full h-full z-40 transition-all duration-150"
   :class="expandido ? 'opacity-15 pointer-events-auto' : 'opacity-0 pointer-events-none'"
-  @click="if(expandido) $dispatch('open-tallas-menu')"
+  @click.prevent="if(expandido) expandido = false"
 >
 </div>
 
 <!-- Menu de tallas -->
 <div
-  x-data="objetoTallas"
 
 
 
   x-cloak
-  @open-tallas-menu.window="expandido = !expandido"
+  @open-tallas-menu.window="handleOpen"
   class="tallas fixed flex flex-col bg-white *:text-black md:left-auto -bottom-full w-full h-3/4 md:h-full backdrop-blur-sm z-50 md:w-96 transition-all duration-300 ease-out overflow-y-scroll"
   :class="expandido ? 'md:top-0 md:right-0 translate-x-0 opacity-100 bottom-0 right-auto pointer-events-auto' : 'md:top-0 md:right-0 md:translate-x-full opacity-0 pointer-events-none'"
 >
@@ -65,7 +67,7 @@ let objetoServer = {
         (Talla: InterfazTallas) => (
           //Talla.availability === true ? (
           <button
-            x-on:click={`tallaActual = '${Talla.name}', localStorage.setItem('talla', ${Talla.name});`}
+            x-on:click.prevent={`tallaActual = '${Talla.name}', localStorage.setItem('talla', ${Talla.name});`}
             type="button"
             class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full  transition-colors cursor-pointer"
             x-bind:class={`tallaActual == '${Talla.name}' ? 'bg-black text-white' : 'bg-white text-black'`}
@@ -89,7 +91,7 @@ let objetoServer = {
   </div>
   <div class="flex grow border-b border-gray-200 cursor-pointer">
     <button class="flex grow" id="botonCarrito">
-      <div @click="guardarLocal"
+      <div @click.prevent="guardarLocal"
         class="talla font-medium text-white bg-[rgb(38,36,36)] grow text-center p-3 m-6 cursor-pointer hover:bg-black transition-all duration-150"
       >
         Añade a la cesta
@@ -102,9 +104,10 @@ let objetoServer = {
 import Alpine from "alpinejs";
 
 
-let objetoTallas = {
+Alpine.data('objetoTallas', (id) => ({
   expandido: false,
       tallaActual: '',
+  productId: id,
 guardarLocal() {
   let talla = this.tallaActual;
   let carrito = [];
@@ -139,11 +142,17 @@ else{
 
       this.$dispatch('open-carrito-menu');
       this.expandido = false;
-}
+},
+  handleOpen(event: any) {
+    console.log(event.detail.productId);
+    console.log(this.productId);
+    if (event.detail.productId === this.productId) {
+      this.expandido = !this.expandido;
+    }
+  }
 
-}
+}))
 
 
-Alpine.data('objetoTallas', () => objetoTallas)
 
 </script>

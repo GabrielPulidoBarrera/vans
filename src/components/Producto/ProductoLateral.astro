@@ -42,6 +42,8 @@ interface interfazColores{
 
 //console.log(ArrayProductos);
 
+console.log(id)
+
 
 
     let ArrayColoresImagenes: interfazColores[] = []
@@ -74,8 +76,8 @@ interface interfazImagen{
 
 ---
 
-<div x-data="{mostrar: false
-}" class="right md:min-w-1/4 md:max-w-1/4 px-4 sticky top-20">
+<div x-data=`{mostrar: false, id: '${id}'
+}` class="right md:min-w-1/4 md:max-w-1/4 px-4 sticky top-20">
   
 <div class="">
   <div class="Title">
@@ -155,7 +157,7 @@ interface interfazImagen{
 <div
 
   class="mt-2 px-6 py-4 border border-solid verTallas space-y-4 w-full hover:cursor-pointer flex justify-between items-center text-[rgb(82,82,82)]"
-  @click="$dispatch('open-tallas-menu')"
+  @click="$dispatch('open-tallas-menu', { productId: id })"
 >
   Elige una talla
         <svg
@@ -223,7 +225,6 @@ interface interfazImagen{
 
 <script>
 import Alpine from "alpinejs";
-import { sequence } from "astro:middleware";
 
     Alpine.store('color', document.querySelector('#textoColor')?.textContent )
 
@@ -266,7 +267,7 @@ Array.from(document.querySelectorAll('.productoImagenes')).forEach((elemento) =>
   let nombreSeleccionado = document.querySelector('#nombreProducto')?.textContent;
   let idSeleccionado = objetivo.id;
   let precioSeleccionado = document.querySelector('#precio')?.textContent  // 18
-  let imagenSeleccionada = document.getElementById(objetivo.id)?.children[0].dataset.src.slice(0, -18);
+  let imagenSeleccionada = (document.getElementById(objetivo.id)?.children[0] as any).dataset.src.slice(0, -18);
   let seleccionado = {
     color: colorSeleccionado,
     nombre: nombreSeleccionado,

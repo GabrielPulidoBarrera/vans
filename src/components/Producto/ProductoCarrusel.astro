@@ -11,155 +11,148 @@ interface InterfazArrayRecomendaciones {
   images: InterfazImagenes[];
   tag: string;
   id: string;
+  color: string;
 }
+
 ---
 
-<script>
-  import Swiper from "swiper";
-import { Navigation } from 'swiper/modules';
 
-  const prevEl = document.querySelector('#leftArrow');
-      const nextEl = document.querySelector('#rightArrow');
 
-  const swiper = new Swiper(".carruselProducto", {
-              modules: [Navigation],
-          navigation: {
-            prevEl: prevEl as HTMLElement,
-            nextEl: nextEl as HTMLElement,
-            disabledClass: 'text-[rgb(207, 207, 206)]'
-          },
-    slidesPerView: 1,
-    spaceBetween: 16,
-    breakpoints: {
-      768: {
-        slidesPerView: 6,
-      },
-    },
-  });
-
-  
-</script>
-
-<div class="flex justify-between items-center">
-  <div class="ml-2 text-[rgb(38,36,36)]">También te aconsejamos</div>
-  <div>
-    <!-- Flecha izquierda -->
-    <button aria-label="Imagen anterior" id="leftArrow"> 
-      <svg
-        class="w-6 h-6 rotate-180"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 32 32"
-      >
-        <path
-          fill="currentColor"
-          d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
-        ></path>
-      </svg>
-    </button>
-
-    <!-- Flecha derecha -->
-    <button aria-label="Imagen siguiente" id="rightArrow">
-      <svg
-        class="w-6 h-6 "
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 32 32"
-      >
-        <path
-          fill="currentColor"
-          d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
-        ></path>
-      </svg>
-    </button>
+<!-- Contenedor principal del carrusel (necesario para inicializar Swiper correctamente) -->
+<div class="carruselProducto-container relative w-full h-full overflow-hidden group">
+  <!-- Cabecera con título y flechas de navegación -->
+  <div class="flex justify-between items-center">
+    <div class="ml-2 text-[rgb(38,36,36)]">También te aconsejamos</div>
+    <div>
+      <!-- Flecha izquierda -->
+      <button aria-label="Imagen anterior" class="leftArrow cursor-pointer">
+        <svg
+          class="w-6 h-6 rotate-180"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+        >
+          <path
+            fill="currentColor"
+            d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
+          />
+        </svg>
+      </button>
+      <!-- Flecha derecha -->
+      <button aria-label="Imagen siguiente" class="rightArrow cursor-pointer">
+        <svg
+          class="w-6 h-6"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+        >
+          <path
+            fill="currentColor"
+            d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
-</div>
 
-<!-- Slider main container -->
-<div class="swiper carruselProducto w-full h-full relative">
-  <!-- Additional required wrapper -->
-  <div class="swiper-wrapper w-full h-full relative">
-    <!-- Slides -->
-    {
-      ArrayRecomendaciones.map((Valor: InterfazArrayRecomendaciones) => (
-        <div class="relative swiper-slide">
-          <div class=" aspect-4/5 ">
-            <a href={Valor.tag + "-" + Valor.id}>
-              <img
-                class="w-full h-full p-1"
-                src={`${Valor.images[0].url}?w=700`}
-                alt="Mocasines 1"
-                loading="lazy"
-              />
-            </a>
-          </div>
-          <div>
-            <div class="text-center p-2 w-full wrap-break-word ">
-              <>
+  <!-- Slider principal -->
+  <div class="swiper carruselProducto w-full h-full relative">
+    <div class="swiper-wrapper w-full h-full relative">
+      {
+        ArrayRecomendaciones.map((Valor: InterfazArrayRecomendaciones) => (
+
+        
+          <div
+            class="relative swiper-slide"
+            x-data={`{
+              nombre: ${JSON.stringify(Valor.name)},
+              precio: ${JSON.stringify(Valor.price)},
+              id: ${JSON.stringify(Valor.id)},
+              arrayImagenes: ${JSON.stringify(Valor.images)},
+              color: ${JSON.stringify(Valor.color)},
+              guardarSeleccion() {
+                let seleccionado = {
+                  color: this.color,
+                  nombre: this.nombre,
+                  id: this.id,
+                  precio: this.precio,
+                  imagen: this.arrayImagenes[0]?.url || '',
+                  talla: 20, // valor por defecto (se sobrescribirá en el modal)
+                  cantidad: 1,
+                  cantidadMaxima: 5,
+                };
+                localStorage.setItem('seleccionado', JSON.stringify(seleccionado));
+              }
+            }`}
+          >
+            <div class="aspect-4/5">
+              <a href={`${Valor.tag}-${Valor.id}`}>
+                <img
+                  class="w-full h-full p-1"
+                  src={`${Valor.images[0]?.url}?w=700`}
+                  alt={String(Valor.name)}
+                  loading="lazy"
+                />
+              </a>
+            </div>
+            <div>
+              <div class="text-center p-2 w-full wrap-break-word">
                 <div class="text-wrap wrap-break-word">{Valor.name}</div>
                 <div class="text-xs text-neutral-500 text-wrap wrap-break-word">
                   {Valor.price}€
                 </div>
-              </>
-            </div>
-
-            <button class="absolute right-4 top-9 -translate-y-1/2 z z-20 cursor-pointer p-2 hover:bg-white hidden md:block">
-              <svg
-                class="w-6 h-6"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 32 32"
-                id="close"
+              </div>
+              <!-- Botón "+" con funcionalidad guardar + evento -->
+              <button
+                type="button"
+                class="absolute right-4 top-9 -translate-y-1/2 z-20 cursor-pointer p-2 hover:bg-white hidden md:block"
+                aria-label="Abrir selector de talla"
+                @click.prevent="guardarSeleccion(), $dispatch('open-tallas-menu', { productId: id })"
               >
-                <path
+                <svg
+                  class="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
-                  d="M17.1 5.9v9h9v2.2h-9v9h-2.2v-9h-9v-2.2h9v-9h2.2Z"
-                />
-              </svg>
-            </button>
+                  viewBox="0 0 32 32"
+                >
+                  <path d="M17.1 5.9v9h9v2.2h-9v9h-2.2v-9h-9v-2.2h9v-9h2.2Z" />
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
-      ))
-    }
+        ))
+      }
+    </div>
   </div>
 </div>
-<!-- 
-<div class=" ml-2 text-[rgb(38,36,36)] mt-10">También te aconsejamos</div>
-<div class="carrusel w-full h-full relative">
-  <div class="carrusel w-full h-full relative">
-    <div class="marco w-full h-full overflow-auto">
-      <div class="imagenes flex transition-all duration-150">
 
-         {ArrayRecomendaciones.map((Valor: InterfazArrayRecomendaciones)=>(
-        <div
-          class="relative w-5/6 min-w-5/7 md:w-5/7 md:min-w-1/5 h-full flex flex-col items-center"
-        >
-          <img
-            class="w-full h-full object-contain p-1"
-            src={Valor.variations[Valor.variations.findIndex(iteracion => iteracion.id == Valor.defaultVariation[0].id)].arrayImages[0].url}
-            alt="Mocasines 1"
-          />
-          <p class="text-center p-2 w-full">
-            <div>{Valor.name}</div><div
-              class="text-xs text-neutral-500"
-            >
-              {Valor.price}€
-            </div>
-          </p>
+<script>
+  import Swiper from "swiper";
+  import { Navigation } from "swiper/modules";
 
-                    <button
-    class="absolute right-4 top-9 -translate-y-1/2 z z-20 cursor-pointer p-2 hover:bg-white hidden md:block"
-  >
-    <svg
-      class="w-6 h-6"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 32"
-      id="close"
-    >
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M17.1 5.9v9h9v2.2h-9v9h-2.2v-9h-9v-2.2h9v-9h2.2Z"></path>
-    </svg>
-  </button>
-        </div>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Seleccionamos todos los contenedores de carrusel (puede haber varios)
+    const containers = document.querySelectorAll('.carruselProducto-container');
 
+    containers.forEach(container => {
+      const swiperEl = container.querySelector('.swiper.carruselProducto');
+      const prevEl = container.querySelector('.leftArrow');
+      const nextEl = container.querySelector('.rightArrow');
 
-
-        ))}  -->
+      if (swiperEl && prevEl && nextEl) {
+        new Swiper(swiperEl as HTMLElement, {
+          modules: [Navigation],
+          navigation: {
+            prevEl: prevEl as HTMLElement,
+            nextEl: nextEl as HTMLElement,
+            disabledClass: 'text-[rgb(207,207,206)]',
+          },
+          slidesPerView: 1,
+          spaceBetween: 16,
+          breakpoints: {
+            768: {
+              slidesPerView: 6,
+            },
+          },
+        });
+      }
+    });
+  });
+</script>

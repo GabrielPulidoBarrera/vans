@@ -105,10 +105,27 @@ let find = respuesta.data.Sizes.findIndex((e: interfazTalla) => {
       content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt soluta saepe nemo, fuga impedit cumque quaerat porro accusamus consectetur dolorum, tenetur ratione voluptates blanditiis non voluptas dolor iure! Quas, similique"
     />
 
-    <ProductoCarrusel ArrayRecomendaciones={arrayProductos} />
+    <ProductoCarrusel 
+    ArrayRecomendaciones={arrayProductos}
+    tallas={respuesta.data.Sizes}
+    />
     <ProductoReview reviews={respuesta.data.Reviews} tag={product} />
     <!-- La puntuacion que hay que mandar es SOBRE 100 -->
   </div>
+
+
+      {arrayProductos.map((Valor: any) => (
+
+  <ProductoTallas
+      tallas={respuesta.data.Sizes[respuesta.data.Sizes.findIndex((e: any) => {
+  return e.tag == Valor.tag;
+})]}
+      producto={Valor}
+      price={Valor.price}
+    />))}
+
+
+
 </Layout>
 
 <script>

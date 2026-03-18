@@ -5,8 +5,8 @@ import Footer from "@general/GeneralFooter.astro";
 import GeneralTicker from "@components/General/GeneralTicker.astro";
 import GeneralCarritoLateral from "@components/General/GeneralCarritoLateral.astro";
 
-const {title, lang, flag, arrayTexto, mostrarTicker = false, botonIA = true, mostrar=true} = Astro.props
-
+const {title, lang, flag, arrayTexto, mostrarTicker = false, botonIA = true, mostrar=true, mostrarCarrito=true} = Astro.props
+console.log(mostrarCarrito)
 ---
 
 
@@ -22,7 +22,9 @@ const {title, lang, flag, arrayTexto, mostrarTicker = false, botonIA = true, mos
 
     </slot>
 
-    <GeneralCarritoLateral></GeneralCarritoLateral>
+    <div x-data={`{ mostrarCarrito: ${mostrarCarrito} }`} x-show="mostrarCarrito==true">
+      <GeneralCarritoLateral></GeneralCarritoLateral>
+    </div>
 
   </main>
     <Footer flag={flag}, mostrar={mostrar}/>
