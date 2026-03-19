@@ -31,7 +31,7 @@ let arrayProductos: any[] = respuesta.data.Products;
 
 <Layout arrayTexto={arrayTexto} mostrarTicker={true} botonIA={false} mostrarCarrito={false}>
 
-<div x-data="objetoAlpine",   @open-carrito-menu.window="refreshCarrito">
+<div x-data="objetoAlpineCarrito",   @open-carrito-menu.window="refreshCarrito">
   
   <div class="md:hidden fixed z-50 w-full bg-white bottom-0 p-4 py-2">
     <GeneralBotonApple></GeneralBotonApple>
@@ -112,7 +112,7 @@ if (stored!=null){
 }
 
 
-let objetoAlpine = {
+let objetoAlpineCarrito = {
 
   carrito: carrito,
   pagina: 'carrito',
@@ -127,8 +127,24 @@ let objetoAlpine = {
     localStorage.setItem('carrito', JSON.stringify(this.carrito));
   }
 }
-Alpine.data('objetoAlpine', () => objetoAlpine)
+Alpine.data('objetoAlpineCarrito', () => objetoAlpineCarrito)
 
 //  clonar()
-</script>
 
+
+
+let cantidad = 0;
+let precio = 0;
+    if(!Alpine.store('precioCantidad')){
+
+      carrito.map((e: any) => {
+        cantidad+=1;
+        precio += e.cantidad*e.precio;
+
+      })
+
+      Alpine.store('precioCantidad', { cantidad: cantidad, precio: precio});
+    }
+  ;
+
+</script>

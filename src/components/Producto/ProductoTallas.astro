@@ -91,7 +91,7 @@ let objetoServer = {
   </div>
   <div class="flex grow border-b border-gray-200 cursor-pointer">
     <button class="flex grow" id="botonCarrito">
-      <div @click.prevent="guardarLocal"
+      <div @click.prevent=`guardarLocal; if ($store.precioCantidad) $store.precioCantidad.precio += ${price}; if ($store.precioCantidad) $store.precioCantidad.cantidad += 1 `
         class="talla font-medium text-white bg-[rgb(38,36,36)] grow text-center p-3 m-6 cursor-pointer hover:bg-black transition-all duration-150"
       >
         Añade a la cesta

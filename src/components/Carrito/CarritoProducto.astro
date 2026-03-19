@@ -1,4 +1,7 @@
 
+
+
+
 <div class="carritoProducto p-5 flex flex-col border-b border-[rgb(225,225,225)] objetoProducto"
 x-init="$watch('producto.cantidad', (valor, valorAntiguo) => { 
   const stored = localStorage.getItem('carrito');
@@ -18,7 +21,8 @@ let encontrado= carrito.find((e) =>{
   
 
 
-})
+});
+
 
 "
 
@@ -49,7 +53,7 @@ let encontrado= carrito.find((e) =>{
 
     <!-- Boton menos -->
     <div class="*:border flex *:w-8 *:aspect-square *:border-[rgb(154,154,154)]" x-show="pagina=='carrito'">
-<button @click="if (producto.cantidad > 1) { producto.cantidad-- } else { removeFromCarrito(producto) }" class="text-center">
+<button @click="if (producto.cantidad > 1) { producto.cantidad-- } else { removeFromCarrito(producto); $store.precioCantidad.cantidad-=1 } ($store.precioCantidad.precio=$store.precioCantidad.precio-producto.precio) " class="text-center">
     <span x-show="producto.cantidad != 1">-</span>
     <span x-show="producto.cantidad == 1" x-cloak class=" justify-center flex">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="trash" class="w-4 h-4 fill-current">
@@ -61,7 +65,7 @@ let encontrado= carrito.find((e) =>{
   <!-- Boton mas -->
 
   <div x-text="producto.cantidad" class="flex justify-center items-center"/>
-      <button @click="if (producto.cantidad<producto.cantidadMaxima) producto.cantidad++" 
+      <button @click="if (producto.cantidad<producto.cantidadMaxima) producto.cantidad++, ($store.precioCantidad.precio=$store.precioCantidad.precio+producto.precio)" 
       class="text-center"
       :class="producto.cantidad==producto.cantidadMaxima ? 'bg-[rgb(238,238,238)]' : ''"
       >+</button>
@@ -82,3 +86,11 @@ import Alpine from "alpinejs";
     
   });
 </script> -->
+
+<script>
+// import Alpine from "alpinejs";
+
+
+//   Alpine.store('carrito', {total: 2})
+</script>
+

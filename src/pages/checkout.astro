@@ -15,14 +15,13 @@ let arrayProductos: any[] = respuesta.data.Products;
 ---
 
 <Layout arrayTexto={arrayTexto} title="Checkout" lang="es" mostrar={false}>
-  <div class="sticky top-0 z-50" <CheckoutNav></div>
-</Layout>
+  <div class="sticky top-0 z-50"> <CheckoutNav></CheckoutNav></div>
 <div x-data="objetoAlpineCheckout">
   <div class="sticky top-15 md:hidden w-full z-50">
     <div
       class="accordionCarrito bg-[rgb(38,36,36)] text-white max-h-[66vh] mb-5 flex flex-col"
     >
-      >
+      
       <div
         @click="expanded = ! expanded"
         class="Open hover:cursor-pointer productBuy ms-6 px-3 py-2 flex justify-between shrink-0"
@@ -104,6 +103,7 @@ let arrayProductos: any[] = respuesta.data.Products;
     <CheckoutFooter />
   </div>
 </div>
+</Layout>
 <script>
   import clonar from "@utils/localStorage";
   import Alpine from "alpinejs";
@@ -128,4 +128,21 @@ let arrayProductos: any[] = respuesta.data.Products;
   Alpine.data("objetoAlpineCheckout", () => objetoAlpineCheckout);
 
   //  clonar()
+
+
+
+let cantidad = 0;
+let precio = 0;
+    if(!Alpine.store('precioCantidad')){
+
+      carrito.map((e: any) => {
+        cantidad+=1;
+        precio += e.cantidad*e.precio;
+
+      })
+
+      Alpine.store('precioCantidad', { cantidad: cantidad, precio: precio});
+    }
+  ;
+
 </script>

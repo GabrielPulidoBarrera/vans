@@ -1,0 +1,122 @@
+---
+import Layout from "@layouts/Layout.astro";
+  console.log("ME EJECUTO")
+
+export const POST = async ({ request }) => {
+  console.log("ME EJECUTO")
+  const formData = await request.formData();
+  console.log("ME EJECUTO")
+
+  // --- Helper to convert checkbox 'on' to boolean ---
+  const toBool = (value: any) => value === 'on';
+
+  // --- Extract all fields (with safe defaults) ---
+
+  // Contact & marketing
+  const email = formData.get('email') || '';
+  const ofertas = toBool(formData.get('ofertas'));
+
+  // Delivery method (from hidden input)
+  const categoria = formData.get('categoria') || 'recogida';
+
+  // --- Fields for "recogida" (pick-up) ---
+  const codigoPostalRecogida = formData.get('codigoPostalRecogida') || '';
+
+  // --- Fields for "domicilio" (shipping) ---
+  const shippingNombre = formData.get('shipping_nombre') || '';
+  const shippingApellido = formData.get('shipping_apellido') || '';
+  const shippingDireccion1 = formData.get('shipping_direccion1') || '';
+  const shippingDireccion2 = formData.get('shipping_direccion2') || '';
+  const shippingCiudad = formData.get('shipping_ciudad') || '';
+  const shippingCodigoPostal = formData.get('shipping_codigoPostal') || '';
+  const shippingPrefijo = formData.get('shipping_prefijo') || '+34';
+  const shippingTelefono = formData.get('shipping_telefono') || '';
+
+  // Shipping method (radio)
+  const envio = formData.get('envio') || ''; // 'estandar' or 'expres'
+
+  // --- Payment method (from hidden input) ---
+  const tarjeta = formData.get('tarjeta') || 'tarjeta'; // 'tarjeta', 'applePay', 'klarna', 'paypal'
+
+  // --- Gift card (optional) ---
+  const giftCard = formData.get('giftCard') || '';
+
+  // --- Credit card fields (only present if tarjeta != 'applePay') ---
+  const cardNumber = formData.get('cardNumber') || '';
+  const cardExpiry = formData.get('cardExpiry') || '';
+  const cardCVC = formData.get('cardCVC') || '';
+
+  // --- Billing address fields (if not using same address) ---
+  const billingPais = formData.get('billing_pais') || '';
+  const billingNombre = formData.get('billing_nombre') || '';
+  const billingApellido = formData.get('billing_apellido') || '';
+  const billingDireccion1 = formData.get('billing_direccion1') || '';
+  const billingDireccion2 = formData.get('billing_direccion2') || '';
+  const billingCiudad = formData.get('billing_ciudad') || '';
+  const billingCodigoPostal = formData.get('billing_codigoPostal') || '';
+  const billingPrefijo = formData.get('billing_prefijo') || '+34';
+  const billingTelefono = formData.get('billing_telefono') || '';
+
+  // --- Invoice (factura) fields ---
+  const factura = toBool(formData.get('factura'));
+  const tipoFactura = formData.get('tipoFactura') || 'privado'; // 'privado' or 'empresas'
+  const nif = formData.get('nif') || '';
+  const empresaNombre = formData.get('empresa_nombre') || '';
+  const empresaCif = formData.get('empresa_cif') || '';
+
+  // --- Terms & conditions ---
+  const ToS = toBool(formData.get('ToS'));
+// --- Carrito ---
+  const carrito = formData.get('carrito');
+
+  // --- Now you have all data, you can process the order ---
+  // Examples: save to database, send emails, charge payment, etc.
+
+  console.log(carrito);
+
+
+  // For debugging, you can log the collected data (remove in production)
+  console.log({
+    email,
+    ofertas,
+    categoria,
+    codigoPostalRecogida,
+    shippingNombre,
+    shippingApellido,
+    shippingDireccion1,
+    shippingDireccion2,
+    shippingCiudad,
+    shippingCodigoPostal,
+    shippingPrefijo,
+    shippingTelefono,
+    envio,
+    tarjeta,
+    giftCard,
+    cardNumber,
+    cardExpiry,
+    cardCVC,
+    billingPais,
+    billingNombre,
+    billingApellido,
+    billingDireccion1,
+    billingDireccion2,
+    billingCiudad,
+    billingCodigoPostal,
+    billingPrefijo,
+    billingTelefono,
+    factura,
+    tipoFactura,
+    nif,
+    empresaNombre,
+    empresaCif,
+    ToS,
+  });
+
+  // --- Redirect after successful processing ---
+  return new Response(null, {
+    status: 302,
+    headers: { Location: '/exito' },
+  });
+};
+---
+<!-- This page intentionally left blank – only handles POST -->

@@ -3,13 +3,13 @@ const { cantidad } = Astro.props
 
 ---
 
-<div class="hidden md:block border-b text-2xl border-[rgb(225,225,225)] font-bold pb-2 mb-6">Carrito ({cantidad})</div>
+<div class="hidden md:block border-b text-2xl border-[rgb(225,225,225)] font-bold pb-2 mb-6">Carrito (<span x-text="$store.precioCantidad.cantidad"></span>)</div>
 
 <div class="bg-[rgb(243,243,243)] flex justify-between md:hidden p-5">
     <div>Carrito</div>
     <div class="flex gap-2">
-        <div>9 Producto</div>
+        <div><span x-text="$store.precioCantidad.cantidad"></span> Producto</div>
         <span class="text-[rgb(225,225,225)]">|</span>
-        <div> 1135€</div>
+        <div> <span x-text="$store.precioCantidad.precio"></span>€</div>
     </div>
 </div>
