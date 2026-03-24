@@ -39,6 +39,12 @@ let carritoProductoAlpine = {
 
   carrito: carrito,
   pagina: 'carrito',
+
+
+  
+
+
+
     refreshCarrito() {
     const stored = localStorage.getItem('carrito');
     this.carrito = stored ? JSON.parse(stored) : [];

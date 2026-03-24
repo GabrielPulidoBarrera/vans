@@ -258,9 +258,9 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
             class="p-2 border border-[rgb(154,154,154)] shrink"
             id="prefijoPersona"
           >
-            <option value="España" selected>España (+34)</option>
-            <option value="Portugal">Portugal (+351)</option>
-            <option value="Francia">Francia (+33)</option>
+            <option value="34" selected>España (+34)</option>
+            <option value="351">Portugal (+351)</option>
+            <option value="33">Francia (+33)</option>
           </select>
 
           <input
@@ -493,7 +493,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
     <div class="text-xl space-y-2 *:gap-2">
       <div class="text-xs">* Campos obligatorios</div>
 
-      <select class="w-full p-2 border border-[rgb(154,154,154)]">
+      <select class="w-full p-2 border border-[rgb(154,154,154)]" id="paisFacturacion">
         <option value="" disabled selected>Pais *</option>
         <option value="España">España</option>
         <option value="Portugal">Portugal</option>
@@ -545,9 +545,9 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
           class="p-2 border border-[rgb(154,154,154)] shrink"
           id="prefijoFacturacion"
         >
-          <option value="España" selected>España (+34)</option>
-          <option value="Portugal">Portugal (+351)</option>
-          <option value="Francia">Francia (+33)</option>
+          <option value="34" selected>España (+34)</option>
+          <option value="351">Portugal (+351)</option>
+          <option value="33">Francia (+33)</option>
         </select>
         <input
           type="text"
@@ -953,6 +953,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
         const telefonoFact =
           getInputElement("#telefonoFacturacion")?.value ?? "";
         direccionFacturacion = {
+          pais:  (document.querySelector("#paisFacturacion") as HTMLSelectElement)?.value ?? "",
           nombre: getInputElement("#nombreFacturacion")?.value ?? null,
           apellido: getInputElement("#apellidoFacturacion")?.value ?? null,
           direccion1:
@@ -1001,6 +1002,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
         direccionPersona: direccionPersona,
         direccionFacturacion: direccionFacturacion,
         datosFactura: datosFactura,
+        carrito: localStorage.getItem('carrito'),
       };
 
       console.log("original", JSON.stringify(data));
@@ -1017,6 +1019,8 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
           body: JSON.stringify({data}),
         });
         console.log("Respuesta del servidor:", response);
+          window.location.href = "/exito";
+
       } catch (error) {
         console.error("Error en la petición:", error);
       }
