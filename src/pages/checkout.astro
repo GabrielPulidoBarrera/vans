@@ -47,7 +47,14 @@ let arrayProductos: any[] = respuesta.data.Products;
         class="mt-4 p-4 space-y-5 overflow-y-auto flex-1 min-h-0 bg-white"
       >
       
-        <!-- COMPONENT HERE -->
+        <!-- REEMPLAZAR ESTO CON COMPONENTE -->
+
+<div x-data="objetoAlpineResponsive" class="text-black">
+  <template x-for="producto in carrito" >
+    <CarritoProducto />
+  </template>
+</div>
+
       </div>
     </div>
   </div>
@@ -86,7 +93,7 @@ let arrayProductos: any[] = respuesta.data.Products;
                 class="Hidden *:ms-4 mt-4 ml-4"
               >
                 <div class="max-h-screen overflow-y-scroll">
-        <CarritoProductoContenedor>
+        <CarritoProductoContenedor pagina="checkout">
           
         </CarritoProductoContenedor>
                 </div>
@@ -115,11 +122,23 @@ let arrayProductos: any[] = respuesta.data.Products;
     expandedCarrito: true,
   };
 
-  console.log(objetoAlpineCheckout);
 
   Alpine.data("objetoAlpineCheckout", () => objetoAlpineCheckout);
 
   //  clonar()
+    const stored = localStorage.getItem("carrito");
+ let carrito;
+  if (stored != null) {
+    carrito = JSON.parse(stored);
+  }
+
+  let objetoAlpineResponsive = {
+    carrito: carrito,
+    pagina: "checkout",
+  }
+
+  console.log(objetoAlpineResponsive)
+    Alpine.data("objetoAlpineResponsive", () => objetoAlpineResponsive);
 
 
 

@@ -1,82 +1,101 @@
 ---
 import CarritoProducto from "./CarritoProducto.astro";
+const { pagina } = Astro.props
 
-
+console.log("LA PAGINA ES "+pagina)
 ---
 
-<div x-data="carritoProductoAlpine" @open-carrito-menu.window="refreshCarrito"
+<div class="hidden tipoPagina" id="pagina"></div>
 
-x-init="$watch('carrito', (valor, valorAntiguo) => { subirCarrito(); })
+<div
+  x-data="carritoProductoAlpine"
+  @open-carrito-menu.window="refreshCarrito"
+  x-init="$watch('carrito', (valor, valorAntiguo) => { subirCarrito(); })
 
 
 
 "
 >
-      
-    <template x-for="producto in carrito"  >
-      <CarritoProducto></CarritoProducto>
-    </template>
+  <template x-for="producto in carrito">
+    <CarritoProducto pagina=`${pagina}` />
+  </template>
 </div>
 
-
 <script>
+  import clonar from "@utils/localStorage";
+  import Alpine from "alpinejs";
 
-  import clonar from "@utils/localStorage"
-import Alpine from "alpinejs";
-  
-
-const stored = localStorage.getItem("carrito");
-let carrito
-if (stored!=null){
-  carrito = JSON.parse(stored)
-}
+  const stored = localStorage.getItem("carrito");
+  let carrito;
+  if (stored != null) {
+    carrito = JSON.parse(stored);
+  }
 
   Alpine.store("carritoCheckout", carrito);
 
-
-
-let carritoProductoAlpine = {
-
-  carrito: carrito,
-  pagina: 'carrito',
-
-
-  
-
-
+  let carritoProductoAlpine = {
+    carrito: carrito,
+    pagina: "carrito",
 
     refreshCarrito() {
-    const stored = localStorage.getItem('carrito');
-    this.carrito = stored ? JSON.parse(stored) : [];
-  },
-   removeFromCarrito(producto: any) {
-    this.carrito = this.carrito.filter((item: any) => 
-      !(item.id === producto.id && item.talla === producto.talla && item.color === producto.color)
-    );
-    localStorage.setItem('carrito', JSON.stringify(this.carrito));
-  },
-    subirCarrito(){
-  localStorage.setItem('carrito', JSON.stringify(this.carrito));
+      const stored = localStorage.getItem("carrito");
+      this.carrito = stored ? JSON.parse(stored) : [];
+    },
+    removeFromCarrito(producto: any) {
+      this.carrito = this.carrito.filter(
+        (item: any) =>
+          !(
+            item.id === producto.id &&
+            item.talla === producto.talla &&
+            item.color === producto.color
+          ),
+      );
+      localStorage.setItem("carrito", JSON.stringify(this.carrito));
+    },
+    subirCarrito() {
+      localStorage.setItem("carrito", JSON.stringify(this.carrito));
+    },
+    aumentarCantidad(idProducto: any) {
+      let producto = this.carrito.find((e: any) => {
+        return e.idUnica == idProducto;
+      });
 
-    }
+      if (producto.cantidad < producto.cantidadMaxima) {
+        producto.cantidad++;
+        (Alpine.store("precioCantidad") as any).precio =
+          producto.cantidad * producto.precio;
+      }
+    },
+    reducirCantidad(idProducto: any) {
+      let producto = this.carrito.find((e: any) => {
+        return e.idUnica == idProducto;
+      });
 
-}
-Alpine.data('carritoProductoAlpine', () => carritoProductoAlpine)
+      console.log(producto);
+      console.log((Alpine.store("precioCantidad") as any).cantidad);
+      console.log(producto.cantidad);
+      if (producto.cantidad > 1) {
+        producto.cantidad--;
+      } else {
+        this.removeFromCarrito(producto);
+        (Alpine.store("precioCantidad") as any).cantidad -= 1;
+      }
 
-   
+      (Alpine.store("precioCantidad") as any).precio =
+        producto.cantidad * producto.precio;
+    },
+  };
+  Alpine.data("carritoProductoAlpine", () => carritoProductoAlpine);
 
-let cantidad = 0;
-let precio = 0;
-    if(!Alpine.store('precioCantidad')){
+  let cantidad = 0;
+  let precio = 0;
+  if (!Alpine.store("precioCantidad")) {
+    carrito.map((e: any) => {
+      cantidad += 1;
+      precio += e.cantidad * e.precio;
+    });
 
-      carrito.map((e: any) => {
-        cantidad+=1;
-        precio += e.cantidad*e.precio;
-
-      })
-
-      Alpine.store('precioCantidad', { cantidad: cantidad, precio: precio});
-    }
-  ;
+    Alpine.store("precioCantidad", { cantidad: cantidad, precio: precio });
+  }
 
 </script>

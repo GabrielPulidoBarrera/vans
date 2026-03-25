@@ -134,6 +134,22 @@ let encontrado= carrito.find((e: any) =>{
     encontrado.cantidad+=1;    
   }
 else{ 
+    let unico=true;
+let idUnica = 0;
+do {
+
+  idUnica = Math.floor(Math.random()*1000000000)
+  console.log(idUnica);
+  
+  carrito.map((e: any) => {
+    if(e.idUnica == idUnica){
+      unico = false
+    } 
+  })
+}
+while (!unico)
+
+  objetoServer.idUnica = idUnica;
   carrito.push(objetoServer);
 }
   

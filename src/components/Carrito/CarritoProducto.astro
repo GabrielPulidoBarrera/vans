@@ -1,7 +1,8 @@
+---
+const { pagina } = Astro.props
+console.log("LA PAGINA EN EL ULTIMO COMPONENTEES "+pagina)
 
-
-
-
+---
 <div class="carritoProducto p-5 flex flex-col border-b border-[rgb(225,225,225)] objetoProducto"
 
 
@@ -25,14 +26,15 @@
     <div class="text-[rgb(82,82,82)] ml-2">
       <div class="text-sm color" x-text="'Color: '+producto.color"></div>
       <div class="text-sm talla" x-text="'Talla: '+producto.talla"></div>
-      <div class="text-sm cantidadCheckout" x-show="pagina=='checkout'" x-text="'Cantidad: '+producto.cantidad "></div>
+{   pagina=="checkout" &&    <div class="text-sm cantidadCheckout" x-text="'Cantidad: '+producto.cantidad "></div>}
     </div>
   </div>
   <div class="flex justify-between ml-2 mt-2" >
 
     <!-- Boton menos -->
-    <div class="*:border flex *:w-8 *:aspect-square *:border-[rgb(154,154,154)]" x-show="pagina=='carrito'">
-<button @click="if (producto.cantidad > 1) { producto.cantidad-- } else { removeFromCarrito(producto); $store.precioCantidad.cantidad-=1 } ($store.precioCantidad.precio=$store.precioCantidad.precio-producto.precio) " class="text-center">
+  {pagina=="carrito" && (
+  <div class="*:border flex *:w-8 *:aspect-square *:border-[rgb(154,154,154)]">
+<button x-on:click="reducirCantidad(producto.idUnica)" class="text-center">
     <span x-show="producto.cantidad != 1">-</span>
     <span x-show="producto.cantidad == 1" x-cloak class=" justify-center flex">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="trash" class="w-4 h-4 fill-current">
@@ -44,13 +46,13 @@
   <!-- Boton mas -->
 
   <div x-text="producto.cantidad" class="flex justify-center items-center"/>
-      <button @click="if (producto.cantidad<producto.cantidadMaxima) producto.cantidad++, ($store.precioCantidad.precio=$store.precioCantidad.precio+producto.precio)" 
+      <button x-on:click="aumentarCantidad(producto.idUnica)" 
       class="text-center"
-      :class="producto.cantidad==producto.cantidadMaxima ? 'bg-[rgb(238,238,238)]' : ''"
+      x-bind:class="producto.cantidad==producto.cantidadMaxima ? 'bg-[rgb(238,238,238)]' : ''"
       >+</button>
-    </div>
+    </div>)}
 
-  <div class="underline hover:cursor-pointer text-xs" x-show="pagina=='carrito'">Guardar para despues</div>
+  {   pagina=="carrito" &&  (  <div class="underline hover:cursor-pointer text-xs">Guardar para despues</div>)}
   </div>
   </div>
 

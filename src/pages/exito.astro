@@ -1,11 +1,30 @@
 ---
+import CarritoProducto from "@components/Carrito/CarritoProducto.astro";
+import CarritoProductoContenedor from "@components/Carrito/CarritoProductoContenedor.astro";
 import Layout from "@layouts/Layout.astro";
-
-
 ---
-<Layout>
-    <div>
-        <span class="flex justify-center align-center text-xl">Exito!</span>
 
+<Layout>
+  <div x-data="objetoAlpineExito">
+    <div class="text-xl text-center">Exito!</div>
+        <div class="text-center">Tu codigo de segumiento: (placeholder)</div>
+    <div class="text-center">Tu pedido:</div>
+    <div class="border border-solid border-[rgb(225,225,225)] ">
+
+        <CarritoProductoContenedor pagina="checkout"/>
     </div>
+  </div>
 </Layout>
+
+<script>
+import Alpine from "alpinejs";
+
+  let objetoAlpineExito = {
+    expanded: false,
+    pagina: "checkout",
+    expandedCarrito: true,
+  };
+
+  Alpine.data("objetoAlpineExito", () => objetoAlpineExito);
+  localStorage.setItem('carrito', '');
+</script>

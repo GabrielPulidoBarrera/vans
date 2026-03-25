@@ -42,7 +42,7 @@ import CarritoProductoContenedor from "@components/Carrito/CarritoProductoConten
 <div
   x-data="objetoAlpine"
   x-cloak
-  @open-carrito-menu.window="expandido = !expandido, refrescarObjeto()"
+  @open-carrito-menu.window="expandido = !expandido"
   class="tallas fixed flex flex-col bg-white *:text-black md:left-auto -bottom-full w-full h-3/4 md:h-full backdrop-blur-sm z-50 md:w-96 transition-all duration-300 ease-out overflow-y-scroll"
   :class="expandido ? 'md:top-0 md:right-0 translate-x-0 opacity-100 bottom-0 right-auto pointer-events-auto' : 'md:top-0 md:right-0 md:translate-x-full opacity-0 pointer-events-none'"
 >
@@ -51,7 +51,7 @@ import CarritoProductoContenedor from "@components/Carrito/CarritoProductoConten
   <div class="overflow-y-scroll h-full" id="menuProductos">
 
 
-    <CarritoProductoContenedor>
+    <CarritoProductoContenedor pagina="carrito">
       
     </CarritoProductoContenedor>
 

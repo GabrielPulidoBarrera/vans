@@ -10,7 +10,15 @@ export const POST: APIRoute = async function({ request }) {
 
     const APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN_READWRITE;
 
-    // ---- Default values for optional fields ----
+  const correoRegex =
+    /(?:[a-z0-9!#$%&'*+\x2f=?^_`\x7b-\x7d~\x2d]+(?:\.[a-z0-9!#$%&'*+\x2f=?^_`\x7b-\x7d~\x2d]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9\x2d]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\x2d]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9\x2d]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+  const codigoPostalRegex = /^\d{5}$/; // Solo España
+  const numeroTelefonoRegex = /^[1-9][0-9]{7,14}$/;
+  const cvcRegex = /^[0-9]{3,4}$/;
+    let valido = true;
+
+
+    // ---- Validacion ----
     if (data.direccionPersona == null) {
       data.direccionPersona = {
         direccion1: '', direccion2: '', apellido: '', nombre: '', codigoPostal: '', telefono: '',
@@ -27,7 +35,34 @@ export const POST: APIRoute = async function({ request }) {
       };
     }
 
-    // ---- GraphQL helper with variables support ----
+    if (data.direccionPersona.codigoPostal!='' && codigoPostalRegex.test(data.direccionPersona.codigoPostal)==false){
+      valido = false;
+    }
+
+    if (data.direccionFacturacion.codigoPostal!='' && codigoPostalRegex.test(data.direccionFacturacion.codigoPostal)==false){
+      valido = false;
+    }
+    if (data.direccionFacturacion.telefono!='' && numeroTelefonoRegex.test(data.direccionFacturacion.telefono)==false){
+      valido = false;
+    }
+    if (data.direccionPersona.telefono!='' && numeroTelefonoRegex.test(data.direccionPersona.telefono)==false){
+      valido = false;
+    }
+
+  if (correoRegex.test(data.datosPersona.correo)==false){
+    valido = false;
+  }    
+
+  if (cvcRegex.test(data.datosPago.cvc)==false){
+    valido = false
+  }
+
+if (valido==false) {
+      console.error("error en la validacion de datos");
+      throw new Error(`error en la validacion de datos`);
+    }
+
+
     async function graphql(query: string, variables?: any) {
       const body = variables ? JSON.stringify({ query, variables }) : JSON.stringify({ query });
       const res = await fetch('https://graphql.apirocket.io', {
