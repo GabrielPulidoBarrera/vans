@@ -1,36 +1,48 @@
 ---
-
-interface IntefazImagen{
+interface IntefazImagen {
   url: string;
+}
+
+interface IntefazCategoria {
+  id: string;
+  name: string;
 }
 
 interface InterfazArrayCategorias {
   image: IntefazImagen;
   alt: string;
   name: string;
+  category: IntefazCategoria[];
 }
 
-const {ArrayCategorias} = Astro.props
+const { ArrayCategorias } = Astro.props;
+
+console.log(ArrayCategorias[0].category);
 ---
 
 <div class="mt-4">
-  <div class="flex overflow-x-scroll md:overflow-visible md:grid md:grid-cols-3 gap-1">
-    {ArrayCategorias.map((category: InterfazArrayCategorias) => (
-      <div class="relative w-11/12 md:w-full shrink-0 md:shrink overflow-hidden">
-        <img
-          class="w-full md:hover:-rotate-2 md:hover:scale-110 transition-all duration-150 cursor-pointer"
-          src={category.image.url}
-          alt={category.alt}
-        />
-        <div
-          class="absolute bottom-0 left-0 right-0 h-1/3 bg-linear-to-t from-black/60 to-transparent pointer-events-none"
+  <div
+    class="flex overflow-x-scroll md:overflow-visible md:grid md:grid-cols-3 gap-1"
+  >
+    {
+      ArrayCategorias.map((category: InterfazArrayCategorias) => (
+        <a
+          href={
+            "/c/" + category.category[0].name + "-" + category.category[0].id
+          }
+          class="relative w-11/12 md:w-full shrink-0 md:shrink overflow-hidden"
         >
-        </div>
-        <div class="underline md:underline absolute text-xl md:text-xl text-white bottom-1/12 left-10 right-0">
-          {category.name}
-        </div>
-      </div>
-    ))}
+          <img
+            class="w-full md:hover:-rotate-2 md:hover:scale-110 transition-all duration-150 cursor-pointer"
+            src={category.image.url}
+            alt={category.alt}
+          />
+          <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-linear-to-t from-black/60 to-transparent pointer-events-none"></div>
+          <div class="underline md:underline absolute text-xl md:text-xl text-white bottom-1/12 left-10 right-0">
+            {category.name}
+          </div>
+        </a>
+      ))
+    }
   </div>
 </div>
-

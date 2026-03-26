@@ -12,163 +12,145 @@ interface InterfazTallas {
 //console.log("ID")
 //console.log(producto.id);
 
-
-
-let objetoServer = {
-  cantidadMaxima: 5,
-  nombre: producto.name,
-  precio: price,
-  imagen: producto.images[0].url,
-  color: producto.color,
-  talla: 20,
-  cantidad: 1,
-  id: producto.id
-};
-
-
-
-
 // {"color":"Yellow","nombre":"Zapatillas aislantes impermeables Sk8Hi","id":"69a033fdb901ef33e6f370ed","precio":"50","imagen":"https://images.apirocket.io/images/0i8m8q5n/Products/WYHJtd39QG/Sk8Hi-Waterproof-Insulated-Shoes-VANS-Yellow-ALT1.png","talla":20,"cantidad":1,"cantidadMaxima":5}
 
 //{"color":"blanco","id":"69946842ecbaa043c1ba8636","talla":20,"cantidad":1,"cantidadMaxima":5}
-  //@open-tallas-menu.window="handleOpen"
-
+//@open-tallas-menu.window="handleOpen"
 ---
 
-<div   x-data=`objetoTallas('${producto.id}')`>
+<div x-data=`objetoTallas('${producto.id}')`>
+  <div
+    x-cloak
+    @open-carrito-menu.window="expandido = false"
+    class="oscuro fixed bg-black top-0 right-0 w-full h-full z-40 transition-all duration-150"
+    :class="expandido ? 'opacity-15 pointer-events-auto' : 'opacity-0 pointer-events-none'"
+    @click.prevent="if(expandido) expandido = false"
+  >
+  </div>
 
+  <!-- Menu de tallas -->
+  <div
+    x-cloak
+    @open-tallas-menu.window="handleOpen"
+    class="tallas fixed flex flex-col bg-white *:text-black md:left-auto -bottom-full w-full h-3/4 md:h-full backdrop-blur-sm z-50 md:w-96 transition-all duration-300 ease-out overflow-y-scroll"
+    :class="expandido ? 'md:top-0 md:right-0 translate-x-0 opacity-100 bottom-0 right-auto pointer-events-auto' : 'md:top-0 md:right-0 md:translate-x-full opacity-0 pointer-events-none'"
+  >
+    <div class="title text-xl py-4 px-4 border-b border-gray-200">
+      Elige una talla
+    </div>
 
-<div
-  x-cloak
-  @open-carrito-menu.window="expandido = false"
-  class="oscuro fixed bg-black top-0 right-0 w-full h-full z-40 transition-all duration-150"
-  :class="expandido ? 'opacity-15 pointer-events-auto' : 'opacity-0 pointer-events-none'"
-  @click.prevent="if(expandido) expandido = false"
->
+    <div class="overflow-y-scroll h-full" id="menuTallas">
+      {
+        tallas.attributes.map(
+          (Talla: InterfazTallas) => (
+            //Talla.availability === true ? (
+            <button
+              x-on:click.prevent={`tallaActual = '${Talla.name}', localStorage.setItem('talla', ${Talla.name});`}
+              type="button"
+              class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full  transition-colors cursor-pointer"
+              x-bind:class={`tallaActual == '${Talla.name}' ? 'bg-black text-white' : 'bg-white text-black'`}
+            >
+              <div class="talla font-medium">{Talla.name}</div>
+              <div class="precio">{price}€</div>
+            </button>
+          ),
+          //) : (
+          // <button
+          //   type="button"
+          //   class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full bg-gray-50"
+          // >
+          //   <div class="talla font-medium text-gray-500">{Talla.size}</div>
+          //   <div class="precio text-gray-500 text-sm">Agotado</div>
+          // </button>
+          //)
+        )
+      }
+    </div>
+    <div class="flex grow border-b border-gray-200 cursor-pointer">
+      <button class="flex grow" id="botonCarrito">
+        <div
+          @click.prevent=`guardarLocal; if ($store.precioCantidad) $store.precioCantidad.precio += ${price}; if ($store.precioCantidad) $store.precioCantidad.cantidad += 1 `
+          class="talla font-medium text-white bg-[rgb(38,36,36)] grow text-center p-3 m-6 cursor-pointer hover:bg-black transition-all duration-150"
+        >
+          Añade a la cesta
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    import Alpine from "alpinejs";
+
+    Alpine.data("objetoTallas", (id) => ({
+      expandido: false,
+      tallaActual: "",
+      productId: id,
+      guardarLocal() {
+        let talla = this.tallaActual;
+        let carrito = [];
+        const stored = localStorage.getItem("carrito");
+        if (stored) {
+          try {
+            carrito = JSON.parse(stored);
+          } catch (e) {
+            console.error("Error ", e);
+          }
+        }
+
+        let objetoServer = JSON.parse(localStorage.getItem("seleccionado")!);
+
+        objetoServer.talla = talla;
+
+        interface InterfazCarrito {
+          cantidad: number;
+          cantidadMaxima: number;
+          color: string;
+          imagen: string;
+          precio: number;
+          talla: string;
+          nombre: string;
+          id: string;
+          idUnica: number;
+        }
+
+        let encontrado = carrito.find((e: InterfazCarrito) => {
+          return (
+            e.id == objetoServer.id &&
+            e.talla == objetoServer.talla &&
+            e.color == objetoServer.color
+          );
+        });
+
+        if (encontrado != null) {
+          encontrado.cantidad += 1;
+        } else {
+          let unico = true;
+          let idUnica = 0;
+          do {
+            idUnica = Math.floor(Math.random() * 1000000000);
+            //console.log(idUnica);
+
+            carrito.map((e: InterfazCarrito) => {
+              if (e.idUnica == idUnica) {
+                unico = false;
+              }
+            });
+          } while (!unico);
+
+          objetoServer.idUnica = idUnica;
+          carrito.push(objetoServer);
+        }
+
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+
+        this.$dispatch("open-carrito-menu");
+        this.expandido = false;
+      },
+      handleOpen(event: CustomEvent) {
+        if (event.detail.productId === this.productId) {
+          this.expandido = !this.expandido;
+        }
+      },
+    }));
+  </script>
 </div>
-
-<!-- Menu de tallas -->
-<div
-
-
-
-  x-cloak
-  @open-tallas-menu.window="handleOpen"
-  class="tallas fixed flex flex-col bg-white *:text-black md:left-auto -bottom-full w-full h-3/4 md:h-full backdrop-blur-sm z-50 md:w-96 transition-all duration-300 ease-out overflow-y-scroll"
-  :class="expandido ? 'md:top-0 md:right-0 translate-x-0 opacity-100 bottom-0 right-auto pointer-events-auto' : 'md:top-0 md:right-0 md:translate-x-full opacity-0 pointer-events-none'"
->
-  <div class="title text-xl py-4 px-4 border-b border-gray-200">
-    Elige una talla
-  </div>
-
-  <div class="overflow-y-scroll h-full" id="menuTallas">
-    {
-      tallas.attributes.map(
-        (Talla: InterfazTallas) => (
-          //Talla.availability === true ? (
-          <button
-            x-on:click.prevent={`tallaActual = '${Talla.name}', localStorage.setItem('talla', ${Talla.name});`}
-            type="button"
-            class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full  transition-colors cursor-pointer"
-            x-bind:class={`tallaActual == '${Talla.name}' ? 'bg-black text-white' : 'bg-white text-black'`}
-
-          >
-            <div class="talla font-medium">{Talla.name}</div>
-            <div class="precio">{price}€</div>
-          </button>
-        ),
-        //) : (
-        // <button
-        //   type="button"
-        //   class="py-4 px-4 border-b border-gray-200 border-solid flex justify-between w-full bg-gray-50"
-        // >
-        //   <div class="talla font-medium text-gray-500">{Talla.size}</div>
-        //   <div class="precio text-gray-500 text-sm">Agotado</div>
-        // </button>
-        //)
-      )
-    }
-  </div>
-  <div class="flex grow border-b border-gray-200 cursor-pointer">
-    <button class="flex grow" id="botonCarrito">
-      <div @click.prevent=`guardarLocal; if ($store.precioCantidad) $store.precioCantidad.precio += ${price}; if ($store.precioCantidad) $store.precioCantidad.cantidad += 1 `
-        class="talla font-medium text-white bg-[rgb(38,36,36)] grow text-center p-3 m-6 cursor-pointer hover:bg-black transition-all duration-150"
-      >
-        Añade a la cesta
-      </div>
-    </button>
-  </div>
-</div>
-
-<script>
-import Alpine from "alpinejs";
-
-
-Alpine.data('objetoTallas', (id) => ({
-  expandido: false,
-      tallaActual: '',
-  productId: id,
-guardarLocal() {
-  let talla = this.tallaActual;
-  let carrito = [];
-  const stored = localStorage.getItem('carrito');
-  if (stored) {
-    try {
-      carrito = JSON.parse(stored);
-    } catch (e) {
-      console.error('Error ', e);
-    }
-  }
-
-
-
-  let objetoServer = JSON.parse(localStorage.getItem('seleccionado')!)
-
-  objetoServer.talla=talla;
-  
-let encontrado= carrito.find((e: any) =>{
-    return (e.id==objetoServer.id && e.talla==objetoServer.talla && e.color == objetoServer.color)
-  })
-
-  if(encontrado!=null){
-    encontrado.cantidad+=1;    
-  }
-else{ 
-    let unico=true;
-let idUnica = 0;
-do {
-
-  idUnica = Math.floor(Math.random()*1000000000)
-  console.log(idUnica);
-  
-  carrito.map((e: any) => {
-    if(e.idUnica == idUnica){
-      unico = false
-    } 
-  })
-}
-while (!unico)
-
-  objetoServer.idUnica = idUnica;
-  carrito.push(objetoServer);
-}
-  
-  localStorage.setItem('carrito', JSON.stringify(carrito));
-  
-
-      this.$dispatch('open-carrito-menu');
-      this.expandido = false;
-},
-  handleOpen(event: any) {
-    console.log(event.detail.productId);
-    console.log(this.productId);
-    if (event.detail.productId === this.productId) {
-      this.expandido = !this.expandido;
-    }
-  }
-
-}))
-
-
-
-</script>

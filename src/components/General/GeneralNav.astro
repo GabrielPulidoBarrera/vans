@@ -1,19 +1,15 @@
 ---
 import HamburguesaNav from "@general/GeneralHamburguesaNav.astro";
-import {fetchProductos} from "@utils/fetchProductos.ts";
-const {botonIA, mostrar} = Astro.props;
+import { fetchProductos } from "@utils/fetchProductos.ts";
+const { botonIA, mostrar } = Astro.props;
 
-interface interfazCategoria{
-  order: number,
-  name: string,
-  id: string,
-  father: string,
-  categoryName: string,
+interface interfazCategoria {
+  order: number;
+  name: string;
+  id: string;
+  father: string;
+  categoryName: string;
 }
-
-
-
-
 
 let respuesta = await fetchProductos();
 //console.log(respuesta.data.Categories)
@@ -22,10 +18,15 @@ let arrayCategorias: interfazCategoria[] = respuesta.data.Categories;
 
 //console.log(JSON.stringify(arrayCategorias))
 
-let categoriasAnidadas: any = [];
+interface InterfazCategoriasPadre {
+  category: interfazCategoria;
+  subcategories: interfazCategoria[];
+}
+
+let categoriasAnidadas: InterfazCategoriasPadre[] = [];
 const nodeMap: any = {};
 
-arrayCategorias.forEach(item => {
+arrayCategorias.forEach((item) => {
   const node = { category: item, subcategories: [] };
   nodeMap[item.id] = node;
 
@@ -37,149 +38,144 @@ arrayCategorias.forEach(item => {
   }
 });
 
-//console.log(categoriasAnidadas)
+//console.log(nodeMap)
 
 //console.log("mostrar" + mostrar)
-
 ---
 
 <div x-data={`{ mostrar: ${mostrar} }`} x-show="mostrar==true">
+  <HamburguesaNav categorias={categoriasAnidadas} />
 
-
-
-<HamburguesaNav categorias={categoriasAnidadas}/>
-
-<nav
-  class="sticky top-0 left-0 w-full h-16 flex flex-col bg-white z-40 transition-all duration-150"
->
-  <div class="h-20 grid grid-rows-1 grid-cols-2 md:grid-cols-3">
-    <!--Icono para abrir hamburguesa -->
-    <div class="hidden md:flex items-center hamburguesa pl-3" x-data>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        id="abrirHamburguesa"
-        viewBox="0 0 32 32"
-        class="md:w-10 md:h-10 w-8 h-8  hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer"
-        fill="currentColor"
-        x-on:click="$dispatch('toggle-nav1')"
-      >
-        <path
-          d="M5.9 7.9h20.2v2.2H5.9V7.9Zm0 7h20.2v2.2H5.9v-2.2Zm0 7h20.2v2.2H5.9v-2.2Z"
-        ></path>
-      </svg>
-    </div>
-
-    <!-- Logo -->
-
-    <div class="flex items-center justify-start md:justify-center ml-2 md:ml-0">
-      <a href="/" aria-label="Logo Vans">
+  <nav
+    class="sticky top-0 left-0 w-full h-16 flex flex-col bg-white z-40 transition-all duration-150"
+  >
+    <div class="h-20 grid grid-rows-1 grid-cols-2 md:grid-cols-3">
+      <!--Icono para abrir hamburguesa -->
+      <div class="hidden md:flex items-center hamburguesa pl-3" x-data>
         <svg
           xmlns="http://www.w3.org/2000/svg"
+          id="abrirHamburguesa"
+          viewBox="0 0 32 32"
+          class="md:w-10 md:h-10 w-8 h-8 hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer"
           fill="currentColor"
-          width="67"
-          height="23"
-          viewBox="0 0 25 9"
-          class="h-1/3 md:h-4/11 w-auto hover:-rotate-2 transition-all duration-150 hover:cursor-pointer"
+          x-on:click="$dispatch('toggle-nav1')"
         >
           <path
-            d="m8.84 6.5.67-2.01.66 2H8.84ZM6.3 8.51h1.72l.33-.94h2.28l.33.94h1.7L10.5 2.5H8.67L6.3 8.52Zm8.57-3.04 2.25 3.04h1.4V2.5h-1.62v3.28L14.88 2.5h-1.56v6.02h1.56V5.48ZM0 0l3.03 8.53h1.8L7.6 1.47h17.2L24.95 0H6.27l-2.3 5.85L1.9 0H0Zm24.42 4.2h-1.44c-.14-.36-.3-.63-1.1-.63-.57 0-.8.23-.8.46 0 .25.2.47.81.6l1.3.36c.87.23 1.28.91 1.28 1.63 0 .4-.08.9-.46 1.29-.29.3-.72.69-2.14.69-1.96 0-2.6-1.25-2.6-2h1.52c.15.55.53.76 1.27.76.51 0 .96-.18.96-.58 0-.38-.32-.52-.74-.63l-1.03-.28c-.5-.15-.92-.28-1.21-.53a1.56 1.56 0 0 1 .12-2.45c.47-.35.94-.52 1.7-.52.88 0 1.4.25 1.79.53.35.24.77.83.77 1.3Z"
+            d="M5.9 7.9h20.2v2.2H5.9V7.9Zm0 7h20.2v2.2H5.9v-2.2Zm0 7h20.2v2.2H5.9v-2.2Z"
           ></path>
         </svg>
-      </a>
-    </div>
+      </div>
 
-    <!-- Otros iconos -->
-    <div class="flex justify-end items-center pr-4">
-      <div class="flex gap-3">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 32 32"
-    class="Persona md:w-10 md:h-10 w-8 h-8  hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer order-2 md:order-0"
-    fill="currentColor"
-  >
-    <path
-      fill-rule="evenodd"
-      d="M8 18.73c0-.68.55-1.23 1.23-1.23h13.54c.68 0 1.23.55 1.23 1.23v7.77h-2v-7H10v7H8v-7.77Zm8-5.23a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 2a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"
-      clip-rule="evenodd"
-    ></path>
-  </svg>
+      <!-- Logo -->
 
-  {botonIA==true &&
-  <svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  class="w-10 hidden md:block h-10 hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer"
-  fill="none"
-  id="ai"
-  >
-    <path
-      d="M13.313 11.687c.948.947 2.15 1.593 3.768 2.181-1.617.588-2.82 1.234-3.768 2.181-.947.948-1.593 2.15-2.181 3.768-.588-1.617-1.234-2.82-2.181-3.768-.948-.947-2.15-1.593-3.768-2.181 1.617-.588 2.82-1.234 3.768-2.181.947-.948 1.593-2.15 2.181-3.768.588 1.617 1.234 2.82 2.181 3.768Z"
-      stroke="currentColor"
-      stroke-width="1.25"
-      />
-    <path
-      d="M17.434 10.027c-.257-.607-.553-1.097-.958-1.502-.405-.405-.895-.702-1.502-.958.606-.257 1.096-.554 1.5-.959.406-.405.703-.894.96-1.502.256.607.553 1.097.958 1.502.405.405.895.702 1.502.958-.607.257-1.097.554-1.502.958-.405.405-.701.895-.958 1.503Z"
-      stroke="currentColor"
-      />
-  </svg>
-    }
+      <div
+        class="flex items-center justify-start md:justify-center ml-2 md:ml-0"
+      >
+        <a href="/" aria-label="Logo Vans">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            width="67"
+            height="23"
+            viewBox="0 0 25 9"
+            class="h-1/3 md:h-4/11 w-auto hover:-rotate-2 transition-all duration-150 hover:cursor-pointer"
+          >
+            <path
+              d="m8.84 6.5.67-2.01.66 2H8.84ZM6.3 8.51h1.72l.33-.94h2.28l.33.94h1.7L10.5 2.5H8.67L6.3 8.52Zm8.57-3.04 2.25 3.04h1.4V2.5h-1.62v3.28L14.88 2.5h-1.56v6.02h1.56V5.48ZM0 0l3.03 8.53h1.8L7.6 1.47h17.2L24.95 0H6.27l-2.3 5.85L1.9 0H0Zm24.42 4.2h-1.44c-.14-.36-.3-.63-1.1-.63-.57 0-.8.23-.8.46 0 .25.2.47.81.6l1.3.36c.87.23 1.28.91 1.28 1.63 0 .4-.08.9-.46 1.29-.29.3-.72.69-2.14.69-1.96 0-2.6-1.25-2.6-2h1.52c.15.55.53.76 1.27.76.51 0 .96-.18.96-.58 0-.38-.32-.52-.74-.63l-1.03-.28c-.5-.15-.92-.28-1.21-.53a1.56 1.56 0 0 1 .12-2.45c.47-.35.94-.52 1.7-.52.88 0 1.4.25 1.79.53.35.24.77.83.77 1.3Z"
+            ></path>
+          </svg>
+        </a>
+      </div>
 
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 32 32"
-    class="lupa md:w-10 md:h-10 w-8 h-8  hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer order-3 md:order-0"
-    fill="currentColor"
-  >
-    <path d="M19 17.59 26.41 25 25 26.41 17.59 19 19 17.59Z"></path>
-    <path
-      fill-rule="evenodd"
-      d="M14 20a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 2a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"
-    ></path>
-  </svg>
-<a href="/carrito">
+      <!-- Otros iconos -->
+      <div class="flex justify-end items-center pr-4">
+        <div class="flex gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            class="Persona md:w-10 md:h-10 w-8 h-8 hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer order-2 md:order-0"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 18.73c0-.68.55-1.23 1.23-1.23h13.54c.68 0 1.23.55 1.23 1.23v7.77h-2v-7H10v7H8v-7.77Zm8-5.23a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 2a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"
+              clip-rule="evenodd"></path>
+          </svg>
 
-  <svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 32 32"
-  class="carrito md:w-10 md:h-10 w-8 h-8  hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer order-1 md:order-0"
-  fill="currentColor"
-  >
-  <path
-  d="M12 26a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm12 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
-  ></path>
-  <path
-  fill-rule="evenodd"
-      d="M9 7h16.67c.86 0 1.45.86 1.15 1.66L23.69 17H10.5v-2h11.8l2.26-6H9V7Z"
-      clip-rule="evenodd"
-    ></path>
-    <path
-    fill-rule="evenodd"
-    d="M4 5h5.32l2.22 11.1L9.98 20H25v2H8.84c-.86 0-1.47-.87-1.14-1.69l1.76-4.4L7.68 7H4V5Z"
-    clip-rule="evenodd"
-    ></path>
-  </svg>
-</a>
+          {
+            botonIA == true && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                class="w-10 hidden md:block h-10 hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer"
+                fill="none"
+                id="ai"
+              >
+                <path
+                  d="M13.313 11.687c.948.947 2.15 1.593 3.768 2.181-1.617.588-2.82 1.234-3.768 2.181-.947.948-1.593 2.15-2.181 3.768-.588-1.617-1.234-2.82-2.181-3.768-.948-.947-2.15-1.593-3.768-2.181 1.617-.588 2.82-1.234 3.768-2.181.947-.948 1.593-2.15 2.181-3.768.588 1.617 1.234 2.82 2.181 3.768Z"
+                  stroke="currentColor"
+                  stroke-width="1.25"
+                />
+                <path
+                  d="M17.434 10.027c-.257-.607-.553-1.097-.958-1.502-.405-.405-.895-.702-1.502-.958.606-.257 1.096-.554 1.5-.959.406-.405.703-.894.96-1.502.256.607.553 1.097.958 1.502.405.405.895.702 1.502.958-.607.257-1.097.554-1.502.958-.405.405-.701.895-.958 1.503Z"
+                  stroke="currentColor"
+                />
+              </svg>
+            )
+          }
 
-  <div class="md:hidden hamburguesa order-4 md:order-0" x-data>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 32"
-      id="abrirHamburguesaResponsive"
-      class="hamburguesa md:w-10 md:h-10 w-8 h-8  hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer"
-      fill="currentColor"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            class="lupa md:w-10 md:h-10 w-8 h-8 hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer order-3 md:order-0"
+            fill="currentColor"
+          >
+            <path d="M19 17.59 26.41 25 25 26.41 17.59 19 19 17.59Z"></path>
+            <path
+              fill-rule="evenodd"
+              d="M14 20a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 2a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"
+            ></path>
+          </svg>
+          <a href="/carrito">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 32"
+              class="carrito md:w-10 md:h-10 w-8 h-8 hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer order-1 md:order-0"
+              fill="currentColor"
+            >
+              <path
+                d="M12 26a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm12 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+              ></path>
+              <path
+                fill-rule="evenodd"
+                d="M9 7h16.67c.86 0 1.45.86 1.15 1.66L23.69 17H10.5v-2h11.8l2.26-6H9V7Z"
+                clip-rule="evenodd"></path>
+              <path
+                fill-rule="evenodd"
+                d="M4 5h5.32l2.22 11.1L9.98 20H25v2H8.84c-.86 0-1.47-.87-1.14-1.69l1.76-4.4L7.68 7H4V5Z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </a>
+
+          <div class="md:hidden hamburguesa order-4 md:order-0" x-data>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 32"
+              id="abrirHamburguesaResponsive"
+              class="hamburguesa md:w-10 md:h-10 w-8 h-8 hover:bg-gray-500 transition-all duration-150 p-1 hover:cursor-pointer"
+              fill="currentColor"
               @click="$dispatch('toggle-nav1')"
-
-    >
-      <path
-        d="M5.9 7.9h20.2v2.2H5.9V7.9Zm0 7h20.2v2.2H5.9v-2.2Zm0 7h20.2v2.2H5.9v-2.2Z"
-      ></path>
-    </svg>
-  </div>
-</div>
+            >
+              <path
+                d="M5.9 7.9h20.2v2.2H5.9V7.9Zm0 7h20.2v2.2H5.9v-2.2Zm0 7h20.2v2.2H5.9v-2.2Z"
+              ></path>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
 
 <script>
   //ABRIR MENU HAMBURGUESA
@@ -208,10 +204,9 @@ arrayCategorias.forEach(item => {
     hamburguesa.style.pointerEvents = "auto";
     hamburguesa.style.opacity = "1";
     if (window.innerWidth < 768) {
-    hamburguesa.style.bottom = "0px";
-    }
-    else{
-      hamburguesa.style.left = "0px"
+      hamburguesa.style.bottom = "0px";
+    } else {
+      hamburguesa.style.left = "0px";
     }
     document.addEventListener("click", cerrarMenu);
     cerrar.addEventListener("click", cerrarMenu);
@@ -231,30 +226,26 @@ arrayCategorias.forEach(item => {
       }
       if (window.innerWidth < 768) {
         hamburguesa.style.bottom = 0.25 * -20 + "rem";
-      }
-      else{
+      } else {
         hamburguesa.style.left = 0.25 * -20 + "rem"; //Formula del left en tailwind.
       }
-        hamburguesa.style.opacity = "0";
-        hamburguesa.style.pointerEvents = "none";      
+      hamburguesa.style.opacity = "0";
+      hamburguesa.style.pointerEvents = "none";
     }
   }
 
   //Para que al cambiar la resolucion no se joda
 
-  window.addEventListener('resize', () => {
-    if (hamburguesa==null){
-      return
+  window.addEventListener("resize", () => {
+    if (hamburguesa == null) {
+      return;
     }
-      if (window.innerWidth < 768) {
-        hamburguesa.style.bottom = '0px';
-        hamburguesa.style.left = '';
-      } else {
-        hamburguesa.style.left = '0px';
-        hamburguesa.style.bottom = ''; 
-      }
-    
+    if (window.innerWidth < 768) {
+      hamburguesa.style.bottom = "0px";
+      hamburguesa.style.left = "";
+    } else {
+      hamburguesa.style.left = "0px";
+      hamburguesa.style.bottom = "";
+    }
   });
 </script>
-
-</div>

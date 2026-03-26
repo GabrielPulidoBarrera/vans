@@ -1,96 +1,81 @@
 ---
 import "@styles/global.css";
-const {title, lang } = Astro.props
+const { title, lang } = Astro.props;
 ---
-
 
 <!doctype html>
 <html lang={lang}>
   <head>
-
     <script is:inline>
-      import lozad from 'lozad'
-      import Alpine from 'alpinejs'
-      import collapse from '@alpinejs/collapse'
-
+      import lozad from "lozad";
+      import Alpine from "alpinejs";
+      import collapse from "@alpinejs/collapse";
 
       const observer = lozad(); // lazy loads elements with default selector as '.lozad'
       observer.observe();
-      Alpine.plugin(collapse)
+      Alpine.plugin(collapse);
 
+      import Swiper from "swiper";
+      import { Navigation } from "swiper/modules";
+      import "swiper/css";
+      import "swiper/css/navigation";
+      import "swiper/css/pagination";
 
-import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+      import clonar from "@utils/localStorage";
 
-  import clonar from "@utils/localStorage"
-  
+      const stored = localStorage.getItem("carrito");
+      let carrito;
+      if (stored != null) {
+        carrito = JSON.parse(stored);
+      }
 
-const stored = localStorage.getItem("carrito");
-let carrito
-if (stored!=null){
-  carrito = JSON.parse(stored)
-}
+      Alpine.store("carritoCheckout", carrito);
 
-  Alpine.store("carritoCheckout", carrito);
+      let carritoProductoAlpine = {
+        carrito: carrito,
+        pagina: "carrito",
 
+        init() {
+          //console.log("Component initialized!");
+          this.meterAlpine();
+        },
 
+        meterAlpine() {
+          //console.log("AAAA")
+        },
 
-let carritoProductoAlpine = {
+        refreshCarrito() {
+          const stored = localStorage.getItem("carrito");
+          this.carrito = stored ? JSON.parse(stored) : [];
+        },
+        removeFromCarrito(producto) {
+          this.carrito = this.carrito.filter(
+            (item) =>
+              !(
+                item.id === producto.id &&
+                item.talla === producto.talla &&
+                item.color === producto.color
+              ),
+          );
+          localStorage.setItem("carrito", JSON.stringify(this.carrito));
+        },
+        subirCarrito() {
+          localStorage.setItem("carrito", JSON.stringify(this.carrito));
+        },
+      };
+      Alpine.data("carritoProductoAlpine", () => carritoProductoAlpine);
 
-  carrito: carrito,
-  pagina: 'carrito',
+      let cantidad = 0;
+      let precio = 0;
+      if (!Alpine.store("precioCantidad")) {
+        carrito.map((e) => {
+          cantidad += 1;
+          precio += e.cantidad * e.precio;
+        });
 
-    init() {
-    // This runs automatically when the component is initialized
-    console.log("Component initialized!");
-    this.meterAlpine(); // you can call other methods here
-  },
-
-  meterAlpine(){
-    console.log("AAAA")
-  },
-
-    refreshCarrito() {
-    const stored = localStorage.getItem('carrito');
-    this.carrito = stored ? JSON.parse(stored) : [];
-  },
-   removeFromCarrito(producto: any) {
-    this.carrito = this.carrito.filter((item: any) => 
-      !(item.id === producto.id && item.talla === producto.talla && item.color === producto.color)
-    );
-    localStorage.setItem('carrito', JSON.stringify(this.carrito));
-  },
-    subirCarrito(){
-  localStorage.setItem('carrito', JSON.stringify(this.carrito));
-
-    }
-
-}
-Alpine.data('carritoProductoAlpine', () => carritoProductoAlpine)
-
-   
-
-let cantidad = 0;
-let precio = 0;
-    if(!Alpine.store('precioCantidad')){
-
-      carrito.map((e: any) => {
-        cantidad+=1;
-        precio += e.cantidad*e.precio;
-
-      })
-
-      Alpine.store('precioCantidad', { cantidad: cantidad, precio: precio});
-    }
-  ;
-
-
+        Alpine.store("precioCantidad", { cantidad: cantidad, precio: precio });
+      }
     </script>
-
-
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -99,3 +84,4 @@ let precio = 0;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
+</html>

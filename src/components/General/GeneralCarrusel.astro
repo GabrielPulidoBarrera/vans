@@ -1,11 +1,21 @@
 ---
 import ProductoTallas from "@components/Producto/ProductoTallas.astro";
 
-const { arrayImagenes, nombre, precio, id, tallas, producto, color } = Astro.props;
+const {
+  arrayImagenes,
+  nombre,
+  precio,
+  id,
+  tallas,
+  producto,
+  color,
+  cantidadMaxima,
+} = Astro.props;
 interface interfazArrayImagenes {
   url: string;
 }
 
+console.log(cantidadMaxima);
 
 //  console.log(arrayImagenes)
 
@@ -14,17 +24,11 @@ interface interfazArrayImagenes {
 //console.log("----------")
 //console.log(producto)
 //console.log("----------")
-
 ---
 
-
 <div class="">
-    <ProductoTallas
-      tallas={tallas}
-      producto={producto}
-      price={precio}
-    /></div>
-
+  <ProductoTallas tallas={tallas} producto={producto} price={precio} />
+</div>
 
 <section
   class="carrusel-container relative w-full h-full overflow-hidden group"
@@ -34,6 +38,7 @@ interface interfazArrayImagenes {
     id: ${JSON.stringify(id)},
     arrayImagenes: ${JSON.stringify(arrayImagenes)},
     color: ${JSON.stringify(color)},
+    cantidadMaxima: ${JSON.stringify(cantidadMaxima)},
     guardarSeleccion(){
 
     let seleccionado = {
@@ -44,7 +49,7 @@ interface interfazArrayImagenes {
     imagen: this.arrayImagenes[0].url,
     talla: 20,
     cantidad: 1,
-    cantidadMaxima: 5,
+    cantidadMaxima: this.cantidadMaxima,
 
   }
 
@@ -57,16 +62,18 @@ interface interfazArrayImagenes {
 >
   <div class="swiper carrusel w-full h-full">
     <div class="swiper-wrapper">
-      {arrayImagenes.map((imagen: interfazArrayImagenes) => (
-        <div class="swiper-slide">
-          <img
-            class="w-full min-w-full h-full object-contain p-0 shrink-0"
-            src={`${imagen.url}?w=700&format=auto`}
-            alt=""
-            loading="lazy"
-          />
-        </div>
-      ))}
+      {
+        arrayImagenes.map((imagen: interfazArrayImagenes) => (
+          <div class="swiper-slide">
+            <img
+              class="w-full min-w-full h-full object-contain p-0 shrink-0"
+              src={`${imagen.url}?w=700&format=auto`}
+              alt=""
+              loading="lazy"
+            />
+          </div>
+        ))
+      }
     </div>
   </div>
 
@@ -92,11 +99,7 @@ interface interfazArrayImagenes {
     class="rightArrow absolute -right-10 top-1/2 -translate-y-1/2 z-30 opacity-0 p-2 hover:bg-white group-hover:opacity-100 transition-all duration-200 group-hover:right-1 overflow-hidden cursor-pointer hidden md:block"
     aria-label="Imagen siguiente"
   >
-    <svg
-      class="w-6 h-6"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 32"
-    >
+    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
       <path
         fill="currentColor"
         d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
@@ -105,35 +108,31 @@ interface interfazArrayImagenes {
   </button>
 
   <!-- Boton mas-->
-  <button type="button"
+  <button
+    type="button"
     class="absolute right-4 top-9 -translate-y-1/2 z-20 cursor-pointer p-2 hover:bg-white hidden md:block"
     aria-label="Abrir"
-      @click.prevent="guardarSeleccion(), $dispatch('open-tallas-menu', { productId: id })"
-
+    @click.prevent="guardarSeleccion(), $dispatch('open-tallas-menu', { productId: id })"
   >
-    <svg
-      class="w-6 h-6"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 32"
-    >
+    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
       <path d="M17.1 5.9v9h9v2.2h-9v9h-2.2v-9h-9v-2.2h9v-9h2.2Z"></path>
     </svg>
   </button>
 </section>
 
 <script>
-  import Swiper from 'swiper';
+  import Swiper from "swiper";
 
-import { Navigation } from 'swiper/modules';
+  import { Navigation } from "swiper/modules";
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const containers = document.querySelectorAll('.carrusel-container');
-    
-    containers.forEach(container => {
-      const swiperEl = container.querySelector('.swiper');
-      const prevEl = container.querySelector('.leftArrow');
-      const nextEl = container.querySelector('.rightArrow');
-      
+  document.addEventListener("DOMContentLoaded", () => {
+    const containers = document.querySelectorAll(".carrusel-container");
+
+    containers.forEach((container) => {
+      const swiperEl = container.querySelector(".swiper");
+      const prevEl = container.querySelector(".leftArrow");
+      const nextEl = container.querySelector(".rightArrow");
+
       if (swiperEl && prevEl && nextEl) {
         // Cast a HTMLElement para satisfacer TypeScript
         new Swiper(swiperEl as HTMLElement, {
@@ -151,8 +150,4 @@ import { Navigation } from 'swiper/modules';
       }
     });
   });
-
-
-
-
 </script>

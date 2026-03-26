@@ -1,8 +1,8 @@
 ---
 import CarritoProducto from "./CarritoProducto.astro";
-const { pagina } = Astro.props
+const { pagina } = Astro.props;
 
-console.log("LA PAGINA ES "+pagina)
+//console.log("LA PAGINA ES "+pagina)
 ---
 
 <div class="hidden tipoPagina" id="pagina"></div>
@@ -22,6 +22,18 @@ console.log("LA PAGINA ES "+pagina)
 </div>
 
 <script>
+  interface InterfazCarrito {
+    cantidad: number;
+    cantidadMaxima: number;
+    color: string;
+    imagen: string;
+    precio: number;
+    talla: string;
+    nombre: string;
+    id: string;
+    idUnica: number;
+  }
+
   import clonar from "@utils/localStorage";
   import Alpine from "alpinejs";
 
@@ -41,9 +53,9 @@ console.log("LA PAGINA ES "+pagina)
       const stored = localStorage.getItem("carrito");
       this.carrito = stored ? JSON.parse(stored) : [];
     },
-    removeFromCarrito(producto: any) {
+    removeFromCarrito(producto: InterfazCarrito) {
       this.carrito = this.carrito.filter(
-        (item: any) =>
+        (item: InterfazCarrito) =>
           !(
             item.id === producto.id &&
             item.talla === producto.talla &&
@@ -55,33 +67,36 @@ console.log("LA PAGINA ES "+pagina)
     subirCarrito() {
       localStorage.setItem("carrito", JSON.stringify(this.carrito));
     },
-    aumentarCantidad(idProducto: any) {
-      let producto = this.carrito.find((e: any) => {
+    getProducto(idProducto: Number) {
+      let producto = this.carrito.find((e: InterfazCarrito) => {
         return e.idUnica == idProducto;
       });
+      return producto;
+    },
+
+    aumentarCantidad(idProducto: Number) {
+      let producto = this.getProducto(idProducto);
 
       if (producto.cantidad < producto.cantidadMaxima) {
         producto.cantidad++;
-        (Alpine.store("precioCantidad") as any).precio =
+        (Alpine.store("precioCantidad") as InterfazCarrito).precio =
           producto.cantidad * producto.precio;
       }
     },
-    reducirCantidad(idProducto: any) {
-      let producto = this.carrito.find((e: any) => {
-        return e.idUnica == idProducto;
-      });
+    reducirCantidad(idProducto: Number) {
+      let producto = this.getProducto(idProducto);
 
-      console.log(producto);
-      console.log((Alpine.store("precioCantidad") as any).cantidad);
-      console.log(producto.cantidad);
+      //console.log(producto);
+      //console.log((Alpine.store("precioCantidad") as any).cantidad);
+      //console.log(producto.cantidad);
       if (producto.cantidad > 1) {
         producto.cantidad--;
       } else {
         this.removeFromCarrito(producto);
-        (Alpine.store("precioCantidad") as any).cantidad -= 1;
+        (Alpine.store("precioCantidad") as InterfazCarrito).cantidad -= 1;
       }
 
-      (Alpine.store("precioCantidad") as any).precio =
+      (Alpine.store("precioCantidad") as InterfazCarrito).precio =
         producto.cantidad * producto.precio;
     },
   };
@@ -90,12 +105,11 @@ console.log("LA PAGINA ES "+pagina)
   let cantidad = 0;
   let precio = 0;
   if (!Alpine.store("precioCantidad")) {
-    carrito.map((e: any) => {
+    carrito.map((e: InterfazCarrito) => {
       cantidad += 1;
       precio += e.cantidad * e.precio;
     });
 
     Alpine.store("precioCantidad", { cantidad: cantidad, precio: precio });
   }
-
 </script>

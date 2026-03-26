@@ -1,14 +1,11 @@
 ---
 import GeneralCarrusel from "@general/GeneralCarrusel.astro";
 
-
-const {producto, tallas, Colores } = Astro.props;
+const { producto, tallas, Colores } = Astro.props;
 
 //console.log(Colores)
 
-
 //console.log("----")
-
 
 //console.log("-----")
 
@@ -18,15 +15,13 @@ let arrayImagenes = producto.images;
 let id = producto.id;
 let color = producto.color;
 let tag = producto.tag;
-
+let cantidadMaxima = producto.maxQuantity;
 
 interface interfazTalla {
   tag: string;
 }
 
-
 let URL = encodeURI(`${tag}-${id}`);
-
 
 let find = tallas.findIndex((e: interfazTalla) => {
   //console.log(e)
@@ -35,19 +30,30 @@ let find = tallas.findIndex((e: interfazTalla) => {
 
 //console.log(tallas[find])
 
-
 //console.log(arrayImagenes);
-URL = "/p/"+URL
+URL = "/p/" + URL;
 ---
 
 <a href={URL} class="card flex flex-col">
   <div class="">
-    <GeneralCarrusel nombre = {nombre}, color={color},  precio = {precio}, id={id},  arrayImagenes ={arrayImagenes} tallas={tallas[find]} producto = {producto}/>
+    <GeneralCarrusel
+      nombre={nombre}
+      ,
+      color={color}
+      ,
+      precio={precio}
+      ,
+      id={id}
+      ,
+      arrayImagenes={arrayImagenes}
+      tallas={tallas[find]}
+      producto={producto}
+      cantidadMaxima={cantidadMaxima}
+    />
   </div>
-  <div class=" flex flex-col">
+  <div class="flex flex-col">
     <div class="text-gray-800 text-xl">{nombre}</div>
     <div class="text-sm text-gray-500">{Colores} colores</div>
     <div class="precio text-gray-900">{precio}€</div>
   </div>
 </a>
-

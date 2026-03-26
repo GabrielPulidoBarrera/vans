@@ -12,6 +12,7 @@ interface InterfazArrayRecomendaciones {
   tag: string;
   id: string;
   color: string;
+  maxQuantity: number
 }
 
 ---
@@ -68,6 +69,7 @@ interface InterfazArrayRecomendaciones {
               id: ${JSON.stringify(Valor.id)},
               arrayImagenes: ${JSON.stringify(Valor.images)},
               color: ${JSON.stringify(Valor.color)},
+              cantidadMaxima: ${JSON.stringify(Valor.maxQuantity)},
               guardarSeleccion() {
                 let seleccionado = {
                   color: this.color,
@@ -77,7 +79,8 @@ interface InterfazArrayRecomendaciones {
                   imagen: this.arrayImagenes[0]?.url || '',
                   talla: 20, // valor por defecto (se sobrescribirá en el modal)
                   cantidad: 1,
-                  cantidadMaxima: 5,
+                  cantidadMaxima: this.cantidadMaxima,
+
                 };
                 localStorage.setItem('seleccionado', JSON.stringify(seleccionado));
               }

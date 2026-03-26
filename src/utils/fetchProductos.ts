@@ -19,6 +19,7 @@ let queryCards = `query MyQuery {
     }
   }
   Products {
+    maxQuantity
     name
     price
     description

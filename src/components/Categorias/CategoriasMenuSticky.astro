@@ -1,29 +1,30 @@
 ---
 const { titulo, numeroProductos, id, arrayCategorias } = Astro.props;
 
-let texto = ""
-let padre = id
+let texto = "";
+let padre = id;
 
+interface interfazCategoria {
+  order: number;
+  name: string;
+  id: string;
+  father: string;
+  categoryName: string;
+}
 
 //console.log(arrayCategorias)
 
-while (padre!=null){
-
-  
-  let find = arrayCategorias.find((e: any)=>{
+while (padre != null) {
+  let find = arrayCategorias.find((e: interfazCategoria) => {
     return e.id == padre;
-  })
+  });
   // console.log(find.name)
   // console.log(texto)
-  texto= find.name+" > "+texto
-  padre=find.father
+  texto = find.name + " > " + texto;
+  padre = find.father;
 }
 
-
 texto = texto.slice(0, -3);
-  
-
-
 ---
 
 <div class="smallText hover:underline text-xs ml-5 text-neutral-500">

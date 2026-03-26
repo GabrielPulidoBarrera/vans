@@ -1,299 +1,304 @@
 ---
 const { ArrayProductos, id } = Astro.props;
 
-
-
-interface interfazCategoria{
-  order: number,
-  name: string,
-  id: string,
-  father: string,
-  categoryName: string,
+interface interfazCategoria {
+  order: number;
+  name: string;
+  id: string;
+  father: string;
+  categoryName: string;
 }
 
-interface interfazProducto{
-  name: string,
-  price: number,
-  description: string,
-  color: string,
-  images: interefazImagen[]
-  id: string
-  tag: string
-  category: interfazCategoriaProducto[]
+interface interfazProducto {
+  name: string;
+  price: number;
+  description: string;
+  color: string;
+  images: interefazImagen[];
+  id: string;
+  tag: string;
+  category: interfazCategoriaProducto[];
 }
 
-interface interfazCategoriaProducto{
+interface interfazCategoriaProducto {
   id: string;
 }
 
-interface interefazImagen{
-  alt: string,
-  url: string,
-  width: number,
-  height: number,
+interface interefazImagen {
+  alt: string;
+  url: string;
+  width: number;
+  height: number;
 }
 
-interface interfazColores{
+interface interfazColores {
   imagen: interefazImagen;
-    color: string;
-    id: string;
+  color: string;
+  id: string;
 }
-
 
 //console.log(ArrayProductos);
 
-console.log(id)
+//console.log(id)
 
+let ArrayColoresImagenes: interfazColores[] = [];
 
+{
+  ArrayProductos.map((producto: interfazProducto) => {
+    let objeto = {
+      imagen: producto.images[0],
+      color: producto.color,
+      id: producto.id,
+    };
+    if (producto.id == id) {
+      ArrayColoresImagenes.unshift(objeto);
+    } else {
+      ArrayColoresImagenes.push(objeto);
+    }
+  });
+}
 
-    let ArrayColoresImagenes: interfazColores[] = []
+let producto = ArrayProductos.find((e: any) => {
+  console.log(e.id);
+  console.log(id);
+  return e.id == id;
+});
 
-    {ArrayProductos.map((producto: interfazProducto) => {
-      let objeto = {imagen: producto.images[0], 
-        color: producto.color, id: producto.id}
-        if(producto.id == id){
-          ArrayColoresImagenes.unshift(objeto);
-        }
-        else{
-          ArrayColoresImagenes.push(objeto);
-        }
-    })}
+console.log(producto);
+//    console.log(ArrayProductos.length)
 
-
-    let Precio = ArrayProductos[0].price;
-    let Nombre = ArrayProductos[0].name
-    let Descripcion = ArrayProductos[0].description
-    let Categoria = "Zapatilla"
+let Precio = producto.price;
+let Nombre = producto.name;
+let Descripcion = producto.description;
+let Categoria = "Zapatilla";
+let cantidadMaxima = producto.maxQuantity;
 let ArrayColoresImagenesSegmento1 = ArrayColoresImagenes.splice(0, 9);
-import paypal from "@assets/paypal.svg"
+import paypal from "@assets/paypal.svg";
 import GeneralBotonPago from "@components/General/GeneralBotonPago.astro";
 import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
 
-interface interfazImagen{
+interface interfazImagen {
   url: string;
 }
-
-
 ---
 
-<div x-data=`{mostrar: false, id: '${id}'
-}` class="right md:min-w-1/4 md:max-w-1/4 px-4 sticky top-20">
-  
-<div class="">
-  <div class="Title">
-    <div class="categoryRoute text-xs text-right">
-      Compra &gt; {Categoria}
-    </div>
-    <div class="nombreProducto text-xl" id="nombreProducto">{Nombre}</div>
-    <div class="smallText text-xs text-[rgb(112,112,112)]">{Descripcion}</div>
-    <span class="precio"><span id="precio">{Precio}</span>€</span>
-  </div>
-
-  <!-- Imagenes -->
-
-  <div >
-    <div
-      class="md:grid md:grid-cols-5 md:gap-1 p-1 md:max-w-7xl mx-auto *:hover:cursor-pointer flex overflow-x-auto w-full" id="image"
-    >
-{
-  ArrayColoresImagenesSegmento1.map((imagen: interfazColores) => (
-    <img
-    class="w-1/7 max-w-1/7 min-w-1/7 md:min-w-full md:max-w-full; md:w-auto md:h-auto border-transparent hover:border-solid border hover:border-black transition-all duration-150 rounded"
-    src={imagen.imagen.url}
-    alt="placeholder"
-    id={imagen.id}
-    data-color={imagen.color}
-      
-    />
-  ))
-}
-
-{
-  ArrayColoresImagenes.length > 0 ? (
-    <div
-      class="h-auto contifnuar bg-gray-100 hidden md:flex items-center justify-center flex-col hover:bg-gray-200" x-show="mostrar==false" x-on:click="mostrar=true"
-    >
-      <p>+{ArrayColoresImagenes.length}</p>
-      <div  >Mostrar</div>
-    </div>
-  ) : null
-}
-
-{
-  ArrayColoresImagenes.map((imagen: interfazColores) => (
-    <img
-    x-show="mostrar==true"
-    x-cloak
-      class="w-1/7 max-w-1/7 min-w-1/7 md:min-w-full md:max-w-full; md:w-auto md:h-auto border-transparent hover:border-solid border hover:border-black transition-all duration-150 rounded"
-      src={imagen.imagen.url}
-      alt="placeholder"
-      id={imagen.id}
-      data-color={imagen.color}
-    />
-  ))
-}
-
-
 <div
-  class="h-auto object-contain ocultar flex bg-gray-100 items-center justify-center flex-col hover:bg-gray-200" x-show="mostrar==true" @click="mostrar=false" x-cloak
-
+  x-data=`{mostrar: false, id: '${id}'
+}`
+  class="right md:min-w-1/4 md:max-w-1/4 px-4 sticky top-20"
 >
-  <p>Ocultar</p>
-</div>
-
-
-
+  <div class="">
+    <div class="Title">
+      <div class="categoryRoute text-xs text-right">
+        Compra &gt; {Categoria}
+      </div>
+      <div class="nombreProducto text-xl" id="nombreProducto">{Nombre}</div>
+      <div class="smallText text-xs text-[rgb(112,112,112)]">{Descripcion}</div>
+      <span class="precio"><span id="precio">{Precio}</span>€</span>
+      <span class="hidden" id="cantidadMaxima">{cantidadMaxima}</span>
     </div>
-    <div class="text-xs">
-  Color: <span id="textoColor">{ArrayColoresImagenesSegmento1[0].color}</span>
-</div>
 
+    <!-- Imagenes -->
 
-
-    <!-- Botones -->
-
-    <div class="Size">
-      <p class="mt-2">Talla</p>
-<div
-
-  class="mt-2 px-6 py-4 border border-solid verTallas space-y-4 w-full hover:cursor-pointer flex justify-between items-center text-[rgb(82,82,82)]"
-  @click="$dispatch('open-tallas-menu', { productId: id })"
->
-  Elige una talla
-        <svg
-          class="w-6 h-6 rotate-90 transition-all duration-150"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 32 32"
-        >
-          <path
-            fill="currentColor"
-            d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
-          ></path>
-        </svg>
-      </div>
-
-      <div class="my-4 tableLink text-xs hover:cursor-pointer underline">
-        Tabla de tallas
-      </div>
-    </div>
-    <div class="Sell">
-      <div @click.prevent="$dispatch('open-carrito-menu')"> 
-        <GeneralBotonPago texto="Añade a la cesta"></GeneralBotonPago>
-      </div>
-      <GeneralBotonApple></GeneralBotonApple>
-
-      <div class="mt-5 payPalText text-xs ">
-        Compra ahora y paga después con <img class="h-4 w-auto inline" src={paypal.src}> 
-        <a
-          class="underline hover:cursor-pointer">Más Información</a
-        >
-      </div>
+    <div>
       <div
-        class="Reserva my-4 px-6 py-4 bg-gray-100 underline hover:cursor-pointer flex"
+        class="md:grid md:grid-cols-5 md:gap-1 p-1 md:max-w-7xl mx-auto *:hover:cursor-pointer flex overflow-x-auto w-full"
+        id="image"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M18 8.25H6V20.25H18V8.25ZM4.5 6.75V21.75H19.5V6.75H4.5Z"
-            fill="black"></path>
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M7.5 6.5625C7.5 4.59499 9.09499 3 11.0625 3H12.9375C14.905 3 16.5 4.59499 16.5 6.5625V8.25H7.5V6.5625ZM11.0625 4.5C9.92341 4.5 9 5.42341 9 6.5625V6.75H15V6.5625C15 5.42341 14.0766 4.5 12.9375 4.5H11.0625Z"
-            fill="black"></path>
-          <path
-            d="M7.5 11.25C7.51156 11.3052 10.4131 20.25 10.4131 20.25H12.1448L14.8113 12.8075H19.125L19.2506 11.2508H13.5381L11.3248 17.4221L9.33264 11.25H7.5Z"
-            fill="black"></path>
-        </svg>
+        {
+          ArrayColoresImagenesSegmento1.map((imagen: interfazColores) => (
+            <img
+              class="w-1/7 max-w-1/7 min-w-1/7 md:min-w-full md:max-w-full; md:w-auto md:h-auto border-transparent hover:border-solid border hover:border-black transition-all duration-150 rounded"
+              src={imagen.imagen.url}
+              alt="placeholder"
+              id={imagen.id}
+              data-color={imagen.color}
+            />
+          ))
+        }
 
-        <p class="ml-2 text-[rgb(38,36,36)]">Reserva en tienda</p>
+        {
+          ArrayColoresImagenes.length > 0 ? (
+            <div
+              class="h-auto contifnuar bg-gray-100 hidden md:flex items-center justify-center flex-col hover:bg-gray-200"
+              x-show="mostrar==false"
+              x-on:click="mostrar=true"
+            >
+              <p>+{ArrayColoresImagenes.length}</p>
+              <div>Mostrar</div>
+            </div>
+          ) : null
+        }
+
+        {
+          ArrayColoresImagenes.map((imagen: interfazColores) => (
+            <img
+              x-show="mostrar==true"
+              x-cloak
+              class="w-1/7 max-w-1/7 min-w-1/7 md:min-w-full md:max-w-full; md:w-auto md:h-auto border-transparent hover:border-solid border hover:border-black transition-all duration-150 rounded"
+              src={imagen.imagen.url}
+              alt="placeholder"
+              id={imagen.id}
+              data-color={imagen.color}
+            />
+          ))
+        }
+
+        <div
+          class="h-auto object-contain ocultar flex bg-gray-100 items-center justify-center flex-col hover:bg-gray-200"
+          x-show="mostrar==true"
+          @click="mostrar=false"
+          x-cloak
+        >
+          <p>Ocultar</p>
+        </div>
+      </div>
+      <div class="text-xs">
+        Color: <span id="textoColor"
+          >{ArrayColoresImagenesSegmento1[0].color}</span
+        >
+      </div>
+
+      <!-- Botones -->
+
+      <div class="Size">
+        <p class="mt-2">Talla</p>
+        <div
+          class="mt-2 px-6 py-4 border border-solid verTallas space-y-4 w-full hover:cursor-pointer flex justify-between items-center text-[rgb(82,82,82)]"
+          @click="$dispatch('open-tallas-menu', { productId: id })"
+        >
+          Elige una talla
+          <svg
+            class="w-6 h-6 rotate-90 transition-all duration-150"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+          >
+            <path
+              fill="currentColor"
+              d="M9.91 24.96 19.37 16 9.9 7.04l1.5-1.58L22.54 16 11.41 26.54l-1.5-1.58Z"
+            ></path>
+          </svg>
+        </div>
+
+        <div class="my-4 tableLink text-xs hover:cursor-pointer underline">
+          Tabla de tallas
+        </div>
+      </div>
+      <div class="Sell">
+        <div @click.prevent="$dispatch('open-tallas-menu', { productId: id })">
+          <GeneralBotonPago texto="Añade a la cesta" />
+        </div>
+        <GeneralBotonApple />
+
+        <div class="mt-5 payPalText text-xs">
+          Compra ahora y paga después con <img
+            class="h-4 w-auto inline"
+            src={paypal.src}
+          />
+          <a class="underline hover:cursor-pointer">Más Información</a>
+        </div>
+        <div
+          class="Reserva my-4 px-6 py-4 bg-gray-100 underline hover:cursor-pointer flex"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M18 8.25H6V20.25H18V8.25ZM4.5 6.75V21.75H19.5V6.75H4.5Z"
+              fill="black"></path>
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M7.5 6.5625C7.5 4.59499 9.09499 3 11.0625 3H12.9375C14.905 3 16.5 4.59499 16.5 6.5625V8.25H7.5V6.5625ZM11.0625 4.5C9.92341 4.5 9 5.42341 9 6.5625V6.75H15V6.5625C15 5.42341 14.0766 4.5 12.9375 4.5H11.0625Z"
+              fill="black"></path>
+            <path
+              d="M7.5 11.25C7.51156 11.3052 10.4131 20.25 10.4131 20.25H12.1448L14.8113 12.8075H19.125L19.2506 11.2508H13.5381L11.3248 17.4221L9.33264 11.25H7.5Z"
+              fill="black"></path>
+          </svg>
+
+          <p class="ml-2 text-[rgb(38,36,36)]">Reserva en tienda</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-
-</div>
-
 
 <script>
-import Alpine from "alpinejs";
+  import Alpine from "alpinejs";
 
-    Alpine.store('color', document.querySelector('#textoColor')?.textContent )
+  Alpine.store("color", document.querySelector("#textoColor")?.textContent);
 
+  let selectorImagen = document.querySelector("#image");
+  selectorImagen?.addEventListener("click", cambiarImagen);
 
-let selectorImagen = document.querySelector('#image')
-selectorImagen?.addEventListener("click", cambiarImagen)
+  function cambiarImagen(e: Event) {
+    if (e.target == null || (e.target as HTMLElement).closest("img") == null) {
+      return;
+    }
 
-function cambiarImagen(e: Event){
-  if (e.target==null || (e.target as HTMLElement).closest('img')==null){
-    return
+    Array.from(document.querySelectorAll(".productoImagenes")).forEach(
+      (elemento) => {
+        elemento.classList.remove("flex");
+        elemento.classList.remove("md:grid");
+        elemento.classList.add("hidden");
+      },
+    );
+
+    let colorSeleccionado = document.querySelector("#textoColor")?.textContent;
+
+    let objetivo = (e.target as HTMLElement).closest("img");
+    let textoColor = document.querySelector<HTMLElement>("#textoColor");
+
+    if (textoColor == null || objetivo == null) {
+      return;
+    }
+    let objetivoImagen = document.getElementById(objetivo.id);
+    objetivoImagen?.classList.remove("hidden");
+    objetivoImagen?.classList.add("flex");
+    objetivoImagen?.classList.add("md:grid");
+    if (objetivo.dataset.color != null) {
+      let colorEncontrado = objetivo.dataset.color;
+      textoColor.textContent = colorEncontrado;
+      Alpine.store("color", colorEncontrado);
+      Alpine.store("id", objetivo.id);
+      colorSeleccionado = colorEncontrado;
+    }
+
+    let nombreSeleccionado =
+      document.querySelector("#nombreProducto")?.textContent;
+    let idSeleccionado = objetivo.id;
+    let precioSeleccionado = document.querySelector("#precio")?.textContent;
+    let cantidadMaximaSeleccionado =
+      document.querySelector("#cantidadMaxima")?.textContent;
+    let imagenSeleccionada = (
+      document.getElementById(objetivo.id)?.children[0] as any
+    ).dataset.src.slice(0, -18);
+    let seleccionado = {
+      color: colorSeleccionado,
+      nombre: nombreSeleccionado,
+      id: idSeleccionado,
+      precio: precioSeleccionado,
+      imagen: imagenSeleccionada,
+      talla: 20,
+      cantidad: 1,
+      cantidadMaxima: cantidadMaximaSeleccionado,
+    };
+    let seleccionadoString = JSON.stringify(seleccionado);
+    localStorage.setItem("seleccionado", seleccionadoString);
   }
-
-Array.from(document.querySelectorAll('.productoImagenes')).forEach((elemento) => {
-  elemento.classList.remove('flex');
-  elemento.classList.remove('md:grid');
-  elemento.classList.add('hidden');
-});
-
-    let colorSeleccionado = document.querySelector('#textoColor')?.textContent
-
-
-  let objetivo = (e.target as HTMLElement).closest('img');
-  let textoColor = document.querySelector<HTMLElement>('#textoColor');
-
-  if (textoColor==null || objetivo==null){
-    return
-  }
-  let objetivoImagen = (document.getElementById(objetivo.id));
-  objetivoImagen?.classList.remove("hidden")
-  objetivoImagen?.classList.add("flex");
-  objetivoImagen?.classList.add("md:grid");
-  if( objetivo.dataset.color != null){
-  let colorEncontrado = objetivo.dataset.color   
-    textoColor.textContent=colorEncontrado
-    Alpine.store('color', colorEncontrado )
-    Alpine.store('id', objetivo.id)
-    colorSeleccionado = colorEncontrado
-  }
-
-  let nombreSeleccionado = document.querySelector('#nombreProducto')?.textContent;
-  let idSeleccionado = objetivo.id;
-  let precioSeleccionado = document.querySelector('#precio')?.textContent  // 18
-  let imagenSeleccionada = (document.getElementById(objetivo.id)?.children[0] as any).dataset.src.slice(0, -18);
-  let seleccionado = {
-    color: colorSeleccionado,
-    nombre: nombreSeleccionado,
-    id: idSeleccionado,
-    precio: precioSeleccionado,
-    imagen: imagenSeleccionada,
-    talla: 20,
-    cantidad: 1,
-    cantidadMaxima: 5,
-
-  }
-  let seleccionadoString = JSON.stringify(seleccionado)
-  localStorage.setItem('seleccionado', seleccionadoString); 
-
- 
-
-}
-
 </script>
-
-
 
 <style>
   /* este style es necesario para que al cambiar de pc a responsive sin recargar la pagina el estilo se aplique correctamente. */
   @media (max-width: 767px) {
-    .continuar, .ocultar {
+    .continuar,
+    .ocultar {
       display: none !important;
     }
     img.escondido {
