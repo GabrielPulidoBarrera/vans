@@ -250,35 +250,43 @@ interface interfazImagen {
       },
     );
 
-    let colorSeleccionado = document.querySelector("#textoColor")?.textContent;
+          let objetivo = (e.target as HTMLElement).closest("img");
 
-    let objetivo = (e.target as HTMLElement).closest("img");
-    let textoColor = document.querySelector<HTMLElement>("#textoColor");
-
-    if (textoColor == null || objetivo == null) {
-      return;
-    }
-    let objetivoImagen = document.getElementById(objetivo.id);
-    objetivoImagen?.classList.remove("hidden");
-    objetivoImagen?.classList.add("flex");
-    objetivoImagen?.classList.add("md:grid");
-    if (objetivo.dataset.color != null) {
-      let colorEncontrado = objetivo.dataset.color;
-      textoColor.textContent = colorEncontrado;
-      Alpine.store("color", colorEncontrado);
-      Alpine.store("id", objetivo.id);
-      colorSeleccionado = colorEncontrado;
+        actualizarSeleccionado(objetivo);
     }
 
-    let nombreSeleccionado =
-      document.querySelector("#nombreProducto")?.textContent;
-    let idSeleccionado = objetivo.id;
-    let precioSeleccionado = document.querySelector("#precio")?.textContent;
-    let cantidadMaximaSeleccionado =
-      document.querySelector("#cantidadMaxima")?.textContent;
-    let imagenSeleccionada = (
-      document.getElementById(objetivo.id)?.children[0] as any
-    ).dataset.src.slice(0, -18);
+    function actualizarSeleccionado(objetivo: any){
+
+            let textoColor = document.querySelector<HTMLElement>("#textoColor");
+
+      let colorSeleccionado = document.querySelector("#textoColor")?.textContent;
+      
+
+        
+        if (textoColor == null || objetivo == null) {
+          return;
+        }
+        let objetivoImagen = document.getElementById(objetivo.id);
+        objetivoImagen?.classList.remove("hidden");
+        objetivoImagen?.classList.add("flex");
+        objetivoImagen?.classList.add("md:grid");
+        if (objetivo.dataset.color != null) {
+          let colorEncontrado = objetivo.dataset.color;
+          textoColor.textContent = colorEncontrado;
+          Alpine.store("color", colorEncontrado);
+          Alpine.store("id", objetivo.id);
+          colorSeleccionado = colorEncontrado;
+        }
+        
+        let nombreSeleccionado =
+        document.querySelector("#nombreProducto")?.textContent;
+        let idSeleccionado = objetivo.id;
+        let precioSeleccionado = document.querySelector("#precio")?.textContent;
+        let cantidadMaximaSeleccionado =
+        document.querySelector("#cantidadMaxima")?.textContent;
+        let imagenSeleccionada = (
+          document.getElementById(objetivo.id)?.children[0] as any
+        ).dataset.src.slice(0, -18);
     let seleccionado = {
       color: colorSeleccionado,
       nombre: nombreSeleccionado,
@@ -292,6 +300,11 @@ interface interfazImagen {
     let seleccionadoString = JSON.stringify(seleccionado);
     localStorage.setItem("seleccionado", seleccionadoString);
   }
+  
+
+  actualizarSeleccionado(document.querySelector(".productoImagenes"))
+
+
 </script>
 
 <style>
