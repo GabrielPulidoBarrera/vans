@@ -58,7 +58,7 @@ let ArrayColoresImagenes: interfazColores[] = [];
   });
 }
 
-let producto = ArrayProductos.find((e: any) => {
+let producto = ArrayProductos.find((e: interfazProducto) => {
   console.log(e.id);
   console.log(id);
   return e.id == id;

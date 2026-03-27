@@ -1018,8 +1018,10 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
           },
           body: JSON.stringify({data}),
         });
-        console.log("Respuesta del servidor:", response);
-          window.location.href = "/exito";
+          const result = await response.json();
+
+        console.log("Respuesta del servidor:", result);
+          window.location.href = "/exito?codigo="+result.data.codigoPedidoResultado;
 
       } catch (error) {
         console.error("Error en la petición:", error);

@@ -15,12 +15,15 @@
     "alpinejs": "^3.15.8",
     "astro": "^5.16.15",
     "lozad": "^1.16.0",
+    "nodemailer": "^8.0.4",
     "swiper": "^12.1.2",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@types/alpinejs": "^3.13.11",
     "@types/alpinejs__collapse": "^3.13.4",
-    "@types/lozad": "^1.16.4"
+    "@types/lozad": "^1.16.4",
+    "@types/node": "^25.5.0",
+    "@types/nodemailer": "^7.0.11"
   }
 }

@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import nodemailer from "nodemailer";
 
 export const prerender = false;
 
@@ -124,6 +125,51 @@ if (orderResult.errors) {
   console.error("Order creation errors:", orderResult.errors);
   throw new Error(`Order creation failed: ${JSON.stringify(orderResult.errors)}`);
 }
+else{
+
+
+
+// Create a transporter using SMTP
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "gabrielpulidobarrera@gmail.com",
+    pass: import.meta.env.PASS_EMAIL,
+  },
+});
+
+try {
+  await transporter.verify();
+  console.log("Server is ready to take our messages");
+} catch (err) {
+  console.error("Verification failed:", err);
+}
+
+try {
+
+  console.log(correo);
+
+  let texto = "Tu codido de pedido es "+codigoPedido
+  let textoHtml = "<b>"+texto+"</b>"
+
+  const info = await transporter.sendMail({
+    from: '"gabrielpulidobarrera" <gabrielpulidobarrera@gmail.com>', // sender address
+    to: correo, // list of recipients
+    subject: "Hello", // subject line
+    text: texto, // plain text body
+    html: textoHtml, // HTML body
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  // Preview URL is only available when using an Ethereal test account
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+} catch (err) {
+  console.error("Error while sending mail:", err);
+}
+
+
+}
+
 
 
 // ---- Respuesta ----
@@ -132,9 +178,10 @@ return new Response(
     success: true,
     message: 'Order created successfully',
     data: {
+      codigoPedidoResultado: codigoPedido,
     },
   }),
-  { status: 200, headers: { 'Content-Type': 'application/json' } }
+  { status: 200, headers: { 'Content-Type': 'application/json' }  }
 );
   } catch (error: any) {
     console.error("Error in POST handler:", error);

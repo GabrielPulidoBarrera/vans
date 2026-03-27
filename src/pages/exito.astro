@@ -1,13 +1,16 @@
 ---
+export const prerender = false
 import CarritoProducto from "@components/Carrito/CarritoProducto.astro";
 import CarritoProductoContenedor from "@components/Carrito/CarritoProductoContenedor.astro";
 import Layout from "@layouts/Layout.astro";
+const codigo = Astro.url.searchParams.get('codigo');
+console.log(codigo)
 ---
 
 <Layout>
   <div x-data="objetoAlpineExito">
     <div class="text-xl text-center">Exito!</div>
-        <div class="text-center">Tu codigo de segumiento: (placeholder)</div>
+        <div class="text-center">Tu codigo de segumiento: {codigo}</div>
     <div class="text-center">Tu pedido:</div>
     <div class="border border-solid border-[rgb(225,225,225)] ">
 
