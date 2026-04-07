@@ -1,6 +1,6 @@
 ---
-
-const {category, id } = Astro.props;
+export const prerender = false
+const {category, id } = Astro.params;
 
 import CategoriasMenuSticky from "@components/Categorias/CategoriasMenuSticky.astro";
 import Layout from "@layouts/Layout.astro";
@@ -101,31 +101,31 @@ let numeroProductos = arrayProductosCategoria.length
 
 
 
-export async function getStaticPaths(){
+// export async function getStaticPaths(){
 
-let respuesta = await fetchProductos();
-//console.log(respuesta)
-let arrayCategorias: interfazCategoria[] = respuesta.data.Categories;
-//console.log(arrayCategorias)
-//console.log(JSON.stringify(arrayCategorias))
+// let respuesta = await fetchProductos();
+// //console.log(respuesta)
+// let arrayCategorias: interfazCategoria[] = respuesta.data.Categories;
+// //console.log(arrayCategorias)
+// //console.log(JSON.stringify(arrayCategorias))
 
-let rutas: object[] = [];
+// let rutas: object[] = [];
 
-arrayCategorias.map((e: interfazCategoria)=>{
-  let slug = e.name+"-"+e.id;
-  rutas.push({ 
-    params: { 
-      slug
-    },
-    props: {
-      category: e.name, 
-      id: e.id } 
-  })
-})
+// arrayCategorias.map((e: interfazCategoria)=>{
+//   let slug = e.name+"-"+e.id;
+//   rutas.push({ 
+//     params: { 
+//       slug
+//     },
+//     props: {
+//       category: e.name, 
+//       id: e.id } 
+//   })
+// })
 
-return rutas;
+// return rutas;
 
-}
+// }
 
 
 

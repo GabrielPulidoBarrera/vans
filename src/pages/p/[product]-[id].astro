@@ -1,5 +1,6 @@
 ---
-const { product, id } = Astro.props;
+export const prerender = false
+const { product, id } = Astro.params;
 
 import Layout from "@layouts/Layout.astro";
 import ProductoImagenes from "@producto/ProductoImagenes.astro";
@@ -25,24 +26,24 @@ let arrayProductos: interfazIteracion[] = respuesta.data.Products;
 
 let arrayTexto = respuesta.data.TickerTexts;
 
-export async function getStaticPaths() {
-  let respuesta = await fetchProductos();
+// export async function getStaticPaths() {
+//   let respuesta = await fetchProductos();
 
-  let arrayProductos = respuesta.data.Products;
+//   let arrayProductos = respuesta.data.Products;
 
 
   
-  let listaProductos: object[] = [];
+//   let listaProductos: object[] = [];
   
-  arrayProductos.map((producto: interfazIteracion) => {
-    let slug = producto.tag+'-'+producto.id
-    listaProductos.push({ 
-      params: {slug},
-      props: { product: producto.tag, id: producto.id }
-    });
-  });
-  return listaProductos;
-}
+//   arrayProductos.map((producto: interfazIteracion) => {
+//     let slug = producto.tag+'-'+producto.id
+//     listaProductos.push({ 
+//       params: {slug},
+//       props: { product: producto.tag, id: producto.id }
+//     });
+//   });
+//   return listaProductos;
+// }
 
 let tag = product;
 let arrayVariaciones: interfazIteracion[] = [];
