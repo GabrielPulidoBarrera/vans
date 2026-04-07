@@ -14,7 +14,7 @@ export default defineConfig({
   },
 
   integrations: [alpinejs()],
-
+  output: 'server',
   adapter: node({
     mode: 'standalone'
   })
