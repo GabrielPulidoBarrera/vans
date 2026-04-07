@@ -1,4 +1,5 @@
 ---
+
 import Layout from "@layouts/Layout.astro";
 import CarritoProducto from "@carrito/CarritoProducto.astro";
 import CarritoLateral from "@carrito/CarritoLateral.astro";
@@ -6,13 +7,10 @@ import CheckoutFooter from "@carrito/CheckoutFooter.astro";
 import CheckoutNav from "@carrito/CheckoutNav.astro";
 import CheckoutLateral from "@components/Carrito/CheckoutLateral.astro";
 import { fetchProductos } from "@utils/fetchProductos.ts";
-import GeneralAccordion from "@components/General/GeneralAccordion.astro";
 import CarritoProductoContenedor from "@components/Carrito/CarritoProductoContenedor.astro";
 
 let respuesta = await fetchProductos();
-let arrayCategorias: any[] = respuesta.data.Categories;
 let arrayTexto = respuesta.data.TickerTexts;
-let arrayProductos: any[] = respuesta.data.Products;
 ---
 
 <Layout arrayTexto={arrayTexto} title="Checkout" lang="es" mostrar={false}>
