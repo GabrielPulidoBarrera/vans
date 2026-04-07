@@ -1,7 +1,10 @@
 export async function fetchProductos(){
 
 
-const APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
+let APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
+if (!APIROCKET_ECOMMERCE_TOKEN){
+  APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN
+}
 
 
 let queryCards = `query MyQuery {

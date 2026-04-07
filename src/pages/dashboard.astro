@@ -1,0 +1,179 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+let APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
+if (!APIROCKET_ECOMMERCE_TOKEN) {
+    APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN;
+}
+
+let myQuery = `query MyQuery {
+  Orders {
+    correo
+    codigoPedido
+    cart
+    sent
+    id
+  }
+}
+
+
+
+
+`;
+
+async function fetchApirocket(query: String) {
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${APIROCKET_ECOMMERCE_TOKEN}`,
+        },
+        body: JSON.stringify({ query }),
+    };
+
+    const data = await fetch("https://graphql.apirocket.io", options).then(
+        (response) => response.json(),
+    );
+    console.log(data);
+    return data;
+}
+
+let orders = (await fetchApirocket(myQuery)).data.Orders;
+console.log(orders);
+
+interface apirocketInterfaz {
+    id: string;
+    correo: string;
+    carrito: string;
+    sent: boolean;
+    codigoPedido: number;
+}
+---
+
+<Layout>
+    <table class="w-full *:text-center">
+        <thead>
+            <th>Correo</th>
+            <th>codigo de pedido</th>
+            <th>enviado</th>
+            <th>enviar</th>
+            <th>borrar</th>
+        </thead>
+        <tbody>
+            {
+                orders.map((data: apirocketInterfaz) => (
+                    <tr>
+                        <td>{data.correo}</td>
+                        <td>{data.codigoPedido}</td>
+                        <td id="enviado">
+                            {data.sent && "true"}
+                            {!data.sent && "false"}
+                        </td>
+                        <td id="enviar">
+                            {" "}
+                            <button type="button" id={data.id}>
+                                enviar
+                            </button>
+                        </td>
+                        <td id="borrar">
+                            <button type="button" id={data.id}>
+                                borrar
+                            </button>
+                        </td>
+                    </tr>
+                ))
+            }
+        </tbody>
+    </table>
+</Layout>
+
+<script>
+    async function eventoDelegadoEnviar(e: Event) {
+        let td = (e.target as HTMLElement).closest("td");
+        if (!td) {
+            return;
+        }
+        if (td.id != "enviar") {
+            return;
+        }
+        let boton = td.querySelector("button");
+        if (boton) {
+            console.log();
+            if (boton.id == null) {
+                return;
+            }
+            let id = boton.id;
+            try {
+                const response = await fetch("/api/sendOrder", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id }),
+                });
+                const result = await response.json();
+
+                console.log("Respuesta del servidor:", result);
+
+                if (result) {
+                    //Cambio el texto de false a true
+                    if (boton.parentElement == null) {
+                        return;
+                    }
+                    if (boton.parentElement.parentElement == null) {
+                        return;
+                    }
+                    let textoEnviar =
+                        boton.parentElement.parentElement.querySelector(
+                            "#enviado",
+                        );
+                    if (!textoEnviar) {
+                        return;
+                    }
+                    textoEnviar.textContent = "true";
+                }
+            } catch (error) {
+                console.error("Error en la petición:", error);
+            }
+        }
+    }
+    document.addEventListener("click", eventoDelegadoEnviar);
+
+    async function eventoDelegadoBorrar(e: Event) {
+        let td = (e.target as HTMLElement).closest("td");
+        if (!td) {
+            return;
+        }
+        if (td.id != "borrar") {
+            return;
+        }
+        let boton = td.querySelector("button");
+        if (boton) {
+            console.log();
+            if (boton.id == null) {
+                return;
+            }
+            let id = boton.id;
+            try {
+                const response = await fetch("/api/deleteOrder", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id }),
+                });
+                const result = await response.json();
+
+                console.log("Respuesta del servidor:", result);
+
+                if (result) {
+                    //Cambio el texto de false a true
+                    boton.parentElement?.parentElement?.remove();
+                }
+            } catch (error) {
+                console.error("Error en la petición:", error);
+            }
+        }
+    }
+    document.addEventListener("click", eventoDelegadoBorrar);
+</script>

@@ -20,6 +20,10 @@ interface interfazIteracion {
   price: number;
 }
 
+interface interfazProductos{
+  id: string;
+}
+
 let respuesta = await fetchProductos();
 let arrayProductos: interfazIteracion[] = respuesta.data.Products;
 
@@ -54,7 +58,7 @@ arrayProductos.map((producto: interfazIteracion) => {
 });
 
 
-let producto = respuesta.data.Products.find((e: any) => {
+let producto = respuesta.data.Products.find((e: interfazProductos) => {
   return e.id == id;
 })
 
