@@ -1,7 +1,7 @@
 export async function nuevaOrden(carrito: any, nombre: any){
 
 
-const APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN;
+const APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
 
 
 let queryCards = `mutation MyMutation {
