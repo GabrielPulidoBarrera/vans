@@ -1,6 +1,5 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import CarritoProducto from "@carrito/CarritoProducto.astro";
 import CarritoLateral from "@carrito/CarritoLateral.astro";
 import CarritoSuperior from "@components/Carrito/CarritoSuperior.astro";
 import {fetchProductos} from "@utils/fetchProductos.ts";
@@ -15,7 +14,6 @@ import CarritoProductoContenedor from "@components/Carrito/CarritoProductoConten
 
 
 let respuesta = await fetchProductos();
-let arrayCategorias: any[] = respuesta.data.Categories;
 let arrayTexto = respuesta.data.TickerTexts
 
 let arrayProductos: any[] = respuesta.data.Products;
