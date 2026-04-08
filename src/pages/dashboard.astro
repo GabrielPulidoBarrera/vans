@@ -13,8 +13,10 @@ let myQuery = `query MyQuery {
     cart
     sent
     id
+    createdAt
   }
 }
+
 
 
 
@@ -47,6 +49,7 @@ interface apirocketInterfaz {
     carrito: string;
     sent: boolean;
     codigoPedido: number;
+    createdAt:string
 }
 
 
@@ -63,24 +66,32 @@ interface apirocketInterfaz {
 ---
 
 <Layout>
+
+    <input type="checkbox" name="mostrarEnvio" id="mostrarEnvio" checked> <label for="mostrarEnvio">Mostrar enviado</label>
+
+
     <table class="w-full *:text-center">
         <thead class="bg-gray-200">
             <th>Correo</th>
             <th>codigo de pedido</th>
-            <th>enviado</th>
+            <th id="envio">enviado</th>
+            <th id="fecha">fecha</th>
             <th>enviar</th>
             <th>borrar</th>
         </thead>
         <tbody>
             {
                 orders.map((data: apirocketInterfaz) => (
+
+
                     <tr>
                         <td>{data.correo}</td>
                         <td>{data.codigoPedido}</td>
-                        <td id="enviado">
+                        <td class="enviado" id="enviado">
                             {data.sent && "true"}
                             {!data.sent && "false"}
                         </td>
+                        <td class="fecha">{data.createdAt}</td>
                         <td id="enviar">
                             {" "}
                             <button type="button" id={data.id}>
@@ -93,13 +104,18 @@ interface apirocketInterfaz {
                             </button>
                         </td>
                     </tr>
+
+                    
                 ))
             }
         </tbody>
     </table>
+
+
 </Layout>
 
 <script>
+    let tbody = document.querySelector('tbody')
     async function eventoDelegadoEnviar(e: Event) {
         let td = (e.target as HTMLElement).closest("td");
         if (!td) {
@@ -188,4 +204,150 @@ interface apirocketInterfaz {
         }
     }
     document.addEventListener("click", eventoDelegadoBorrar);
+
+    let creciente = false;
+    let selectorFecha = document.querySelector('#fecha')
+    selectorFecha?.addEventListener("click", ordenarPorFecha);
+
+
+
+
+    function ordenarPorFecha(){
+        if (!tbody){
+            return
+        }
+        let fechas = document.querySelectorAll('.fecha')
+        let fechasArray = Array.from(fechas);
+        console.log(fechasArray)
+
+        if (creciente == false){
+
+            
+            fechasArray.sort((fecha1: any, fecha2:any) => {
+                fecha1 = Date.parse(fecha1.textContent);
+                fecha2 = Date.parse(fecha2.textContent);
+                
+                
+                 console.log(fecha1);
+                 console.log(fecha2)
+                
+                if (fecha1>fecha2){
+                    console.log("return 1")
+                    return 1;
+                }
+                if (fecha1==fecha2){
+                    console.log("return 0")
+            return 0;
+        }
+        if (fecha1<fecha2){
+            console.log("return -1")
+            return -1
+        }
+    })
+    console.log(fechas)
+    enviadoCreciente = false
+    creciente = true;
+}
+    else{
+        fechasArray.reverse()
+        enviadoCreciente = false
+        creciente = false;
+    }
+
+    for (let iterable of fechasArray){
+        
+        tbody.append(iterable.parentElement)
+    }
+}
+
+
+
+    let enviadoCreciente = false;
+    let selectorEnvio = document.querySelector('#envio')
+    selectorEnvio?.addEventListener("click", ordenarPorEnvio);
+
+
+    function ordenarPorEnvio(){
+        if (!tbody){
+            return
+        }
+        let enviado = document.querySelectorAll('.enviado')
+        let enviadoArray = Array.from(enviado);
+
+        if (enviadoCreciente == false){
+
+            
+            enviadoArray.sort((fila1: any, fila2:any) => {
+
+
+
+                if (fila1.textContent.trim()=='true'){
+                    fila1 = true;
+                }
+                else{
+                    fila1 = false
+                }
+                if (fila2.textContent.trim()=='true'){
+                    fila2 = true;
+                }
+                else{
+                    fila2 = false
+                }
+
+                
+                //console.log(fila1);
+                //console.log(fila2)
+                
+                
+                if (fila1>fila2){
+                    console.log("return 1")
+                    return 1;
+                }
+                if (fila1==fila2){
+                    console.log("return 0")
+            return 0;
+        }
+        if (fila1<fila2){
+            console.log("return -1")
+            return -1
+        }
+    })
+    enviadoCreciente = true;
+    creciente = false;
+}
+    else{
+        enviadoArray.reverse()
+        creciente = false;
+        enviadoCreciente = false;
+    }
+
+    for (let iterable of enviadoArray){
+        
+        tbody.append(iterable.parentElement)
+    }
+}
+
+let mostrarEnvioCheckbox = document.querySelector('#mostrarEnvio') as HTMLInputElement;;
+if (mostrarEnvioCheckbox){
+    mostrarEnvioCheckbox.addEventListener("change", mostrarEnvio);
+}
+
+function mostrarEnvio(){
+    console.log(mostrarEnvioCheckbox.checked)
+        let enviado = document.querySelectorAll('.enviado')
+        let enviadoArray = Array.from(enviado);
+    enviadoArray.map((envio: any) => {
+        if (envio.textContent.trim()=='true'){
+            if (!mostrarEnvioCheckbox.checked){
+                console.log("nya")
+                envio.parentElement.style.display="none";
+            }
+            else{
+                envio.parentElement.style.display="";
+            }
+        }
+    }) 
+}
+
+
 </script>
