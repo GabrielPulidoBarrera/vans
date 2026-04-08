@@ -34,12 +34,12 @@ async function fetchApirocket(query: String) {
     const data = await fetch("https://graphql.apirocket.io", options).then(
         (response) => response.json(),
     );
-    console.log(data);
+    //console.log(data);
     return data;
 }
 
 let orders = (await fetchApirocket(myQuery)).data.Orders;
-console.log(orders);
+//console.log(orders);
 
 interface apirocketInterfaz {
     id: string;
@@ -48,11 +48,23 @@ interface apirocketInterfaz {
     sent: boolean;
     codigoPedido: number;
 }
+
+
+
+//for (let iterable of orders){
+    //iterable.cart = JSON.parse(iterable.cart); 
+    //iterable.cart.carrito = JSON.parse(iterable.cart.carrito); 
+    //console.log()
+//console.log(iterable.cart.carrito)
+//}
+
+//console.log(orders);
+
 ---
 
 <Layout>
     <table class="w-full *:text-center">
-        <thead>
+        <thead class="bg-gray-200">
             <th>Correo</th>
             <th>codigo de pedido</th>
             <th>enviado</th>
