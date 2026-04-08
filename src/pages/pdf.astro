@@ -1,0 +1,10 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+const codigo = Astro.url.searchParams.get('codigo');
+---
+<Layout mostrar={false}>
+
+  <div class="text-xl text-center">Exito!</div>
+  <div class="text-center">Tu codigo de segumiento: {codigo}</div>
+</Layout>

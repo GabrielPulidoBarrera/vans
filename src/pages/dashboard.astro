@@ -66,9 +66,10 @@ interface apirocketInterfaz {
 ---
 
 <Layout>
+    
 
-    <input type="checkbox" name="mostrarEnvio" id="mostrarEnvio" checked> <label for="mostrarEnvio">Mostrar enviado</label>
-
+    <div><input type="checkbox" name="mostrarEnvio" id="mostrarEnvio" checked> <label for="mostrarEnvio">Mostrar enviado</label></div>
+    <div><input type="text" name="buscar" id="buscar" class="border-solid border "> <label for="buscar">Buscar</label> </div>
 
     <table class="w-full *:text-center">
         <thead class="bg-gray-200">
@@ -347,6 +348,14 @@ function mostrarEnvio(){
             }
         }
     }) 
+}
+
+let buscar = document.querySelector('#buscar')
+buscar?.addEventListener("change", buscarTabla)
+
+function buscarTabla(){
+    let texto = buscar.value;
+    console.log(texto)
 }
 
 

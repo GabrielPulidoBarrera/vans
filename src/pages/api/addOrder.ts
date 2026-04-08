@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import nodemailer from "nodemailer";
+import puppeteer from 'puppeteer';
 
 export const prerender = false;
 
@@ -148,8 +149,32 @@ try {
   console.error("Verification failed:", err);
 }
 
+
+
+
 try {
 
+const requestUrl = new URL(request.url);
+const baseUrl = requestUrl.origin;
+const homeUrl = new URL('/pdf?codigo='+codigoPedido, baseUrl); 
+
+
+const browser = await puppeteer.launch();
+const page = await browser.newPage();
+await page.goto(homeUrl.href, {
+  waitUntil: 'load',
+});
+// Saves the PDF to hn.pdf.
+await page.pdf({
+  path: 'src/pdfs/pdf.pdf',
+});
+
+await browser.close();
+
+
+
+
+  
   console.log(correo);
 
   let texto = "Tu codido de pedido es "+codigoPedido
@@ -161,6 +186,12 @@ try {
     subject: "Hello", // subject line
     text: texto, // plain text body
     html: textoHtml, // HTML body
+    attachments: [
+      {
+        filename: "pdf.pdf",
+        path: "src/pdfs/pdf.pdf"
+      }
+    ]
   });
 
   console.log("Message sent: %s", info.messageId);
