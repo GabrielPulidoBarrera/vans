@@ -155,8 +155,8 @@ interface apirocketInterfaz {
         seleccion.map((fila: any) => {
             let boton = fila.querySelector("button");
             enviarPedido(boton);
-            crearDialog("El producto ha sido asignado como enviado");
         });
+        crearDialog("El producto ha sido asignado como enviado");
     }
 
     async function enviarPedido(boton: any) {
