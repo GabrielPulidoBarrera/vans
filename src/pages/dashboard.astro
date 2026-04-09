@@ -216,13 +216,14 @@ interface apirocketInterfaz {
         }
         let boton = td.querySelector("button");
         borrarPedido(boton);
+        crearDialog("El producto ha sido eliminado");
     }
 
     async function borrarSeleccion() {
         seleccion.map((fila: any) => {
             let boton = fila.querySelector("button");
             borrarPedido(boton);
-            crearDialog("El producto ha sido asignado como enviado");
+            crearDialog("El producto ha sido eliminado");
         });
     }
 
@@ -249,7 +250,6 @@ interface apirocketInterfaz {
                 if (result) {
                     //Cambio el texto de false a true
                     boton.parentElement?.parentElement?.remove();
-                    crearDialog("El producto ha sido eliminado");
                 }
             } catch (error) {
                 console.error("Error en la petición:", error);
