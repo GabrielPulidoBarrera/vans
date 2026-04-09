@@ -77,6 +77,13 @@ interface apirocketInterfaz {
         <label for="buscar">Buscar</label>
     </div>
 
+    <div>
+        <button type="button" id="enviarSeleccion">enviar seleccion</button>
+    </div>
+    <div>
+        <button type="button" id="borrarSeleccion">borrar seleccion</button>
+    </div>
+
     <table class="w-full *:text-center">
         <thead class="bg-gray-200">
             <th>Correo</th>
@@ -97,13 +104,19 @@ interface apirocketInterfaz {
                             {!data.sent && "false"}
                         </td>
                         <td class="fecha">{data.createdAt}</td>
-                        <td id="enviar">
+                        <td
+                            id="enviar"
+                            class="hover:bg-green-500 hover:cursor-pointer *:hover:cursor-pointer"
+                        >
                             {" "}
                             <button type="button" id={data.id}>
                                 enviar
                             </button>
                         </td>
-                        <td id="borrar">
+                        <td
+                            id="borrar"
+                            class="hover:bg-red-500 hover:cursor-pointer *:hover:cursor-pointer"
+                        >
                             <button type="button" id={data.id}>
                                 borrar
                             </button>
@@ -120,17 +133,34 @@ interface apirocketInterfaz {
 
     //             ***** ENVIAR PEDIDO *****           //
 
+    let botonEnviarTodos = document.querySelector("#enviarSeleccion");
+    botonEnviarTodos?.addEventListener("click", enviarSeleccion);
+
     async function eventoDelegadoEnviar(e: Event) {
         let td = (e.target as HTMLElement).closest("td");
         if (!td) {
             return;
         }
+        console.log(td.id);
         if (td.id != "enviar") {
             return;
         }
+
         let boton = td.querySelector("button");
+        enviarPedido(boton);
+        crearDialog("El producto ha sido asignado como enviado");
+    }
+
+    async function enviarSeleccion() {
+        seleccion.map((fila: any) => {
+            let boton = fila.querySelector("button");
+            enviarPedido(boton);
+            crearDialog("El producto ha sido asignado como enviado");
+        });
+    }
+
+    async function enviarPedido(boton: any) {
         if (boton) {
-            console.log();
             if (boton.id == null) {
                 return;
             }
@@ -163,16 +193,18 @@ interface apirocketInterfaz {
                         return;
                     }
                     textoEnviar.textContent = "true";
-                    crearDialog("El producto ha sido asignado como enviado");
                 }
             } catch (error) {
                 console.error("Error en la petición:", error);
             }
         }
     }
+
     document.addEventListener("click", eventoDelegadoEnviar);
 
     //             ***** BORRAR PEDIDO *****           //
+    let botonBorrarTodos = document.querySelector("#borrarSeleccion");
+    botonBorrarTodos?.addEventListener("click", borrarSeleccion);
 
     async function eventoDelegadoBorrar(e: Event) {
         let td = (e.target as HTMLElement).closest("td");
@@ -183,11 +215,24 @@ interface apirocketInterfaz {
             return;
         }
         let boton = td.querySelector("button");
+        borrarPedido(boton);
+    }
+
+    async function borrarSeleccion() {
+        seleccion.map((fila: any) => {
+            let boton = fila.querySelector("button");
+            borrarPedido(boton);
+            crearDialog("El producto ha sido asignado como enviado");
+        });
+    }
+
+    async function borrarPedido(boton: any) {
         if (boton) {
             console.log();
             if (boton.id == null) {
                 return;
             }
+
             let id = boton.id;
             try {
                 const response = await fetch("/api/deleteOrder", {
@@ -211,6 +256,7 @@ interface apirocketInterfaz {
             }
         }
     }
+
     document.addEventListener("click", eventoDelegadoBorrar);
 
     let creciente = false;
@@ -407,4 +453,25 @@ interface apirocketInterfaz {
             dialog.close();
         });
     }
+
+    //             ***** SELECCIONAR MULTIPLES TABLAS *****           //
+    let seleccion: any[] = [];
+    async function eventoDelegadoSeleccionar(e: Event) {
+        let tr = (e.target as HTMLElement).closest("tr");
+        if (!tr) {
+            seleccion.map((fila: any) => {
+                fila.style.backgroundColor = "";
+            });
+            seleccion = [];
+            return;
+        }
+        console.log("hola!");
+
+        tr.style.backgroundColor = "lightblue";
+        if (!seleccion.includes(tr)) {
+            seleccion.push(tr);
+        }
+    }
+
+    document.addEventListener("click", eventoDelegadoSeleccionar);
 </script>
