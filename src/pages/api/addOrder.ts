@@ -178,10 +178,8 @@ const page = await browser.newPage();
 await page.goto(homeUrl.href, {
   waitUntil: 'load',
 });
-// Saves the PDF to hn.pdf.
-await page.pdf({
-  path: 'src/pdfs/pdf.pdf',
-});
+
+const pdfBuffer = await page.pdf({ format: 'A4' });
 
 await browser.close();
 
@@ -202,8 +200,8 @@ await browser.close();
     html: textoHtml, // HTML body
     attachments: [
       {
-        filename: "pdf.pdf",
-        path: "src/pdfs/pdf.pdf"
+      filename: `pedido-${codigoPedido}.pdf`,
+      content: pdfBuffer,
       }
     ]
   });
