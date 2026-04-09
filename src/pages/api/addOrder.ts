@@ -14,6 +14,15 @@ let APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN_READWRITE;
 if (!APIROCKET_ECOMMERCE_TOKEN){
   APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN_READWRITE
 }
+let PASS_TOKEN = process.env.PASS_EMAIL
+if (!PASS_TOKEN){
+  PASS_TOKEN = import.meta.env.PASS_EMAIL;
+}
+
+let EMAIL_TOKEN = process.env.CORREO_EMAIL
+if (!EMAIL_TOKEN){
+  EMAIL_TOKEN = import.meta.env.CORREO_EMAIL;
+}
 
   const correoRegex =
     /(?:[a-z0-9!#$%&'*+\x2f=?^_`\x7b-\x7d~\x2d]+(?:\.[a-z0-9!#$%&'*+\x2f=?^_`\x7b-\x7d~\x2d]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9\x2d]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\x2d]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9\x2d]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
@@ -134,11 +143,14 @@ else{
 
 
 // Create a transporter using SMTP
+
+
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "gabrielpulidobarrera@gmail.com",
-    pass: import.meta.env.PASS_EMAIL,
+    pass: PASS_TOKEN,
   },
 });
 
