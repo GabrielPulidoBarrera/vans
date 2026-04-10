@@ -92,7 +92,7 @@ if (valido==false) {
       return response;
     }
 
-    // ---- Peticion 1 ----
+    // ---- Peticion 1 (Recuperar todos lso codigos de pedido para asegurarme que no este duplicado)----
     const firstMutation = `
       query MyQuery {
   Orders {
@@ -119,14 +119,16 @@ if (valido==false) {
     })==false)
 
     let correo = data.datosPersona.correo;
+    let nombre = data.datosPersona.nombre + " " + data.datosPersona.apellido 
+    let telefono = data.datosPersona.telefono;
 
 
 
-// ---- Peticion 2 ----
+// ---- Peticion 2 (añadimos los datos a la base de datos) ----
 const secondMutation = `
   mutation MyMutation($cart: String!) {
   __typename
-  OrdersCreate(input: {cart: $cart, codigoPedido: "${codigoPedido}", correo: "${correo}"}) {
+  OrdersCreate(input: {cart: $cart, codigoPedido: "${codigoPedido}", correo: "${correo}", name: "${nombre}", telephone: "${telefono}"}) {
     id
   }
 }
