@@ -1,13 +1,48 @@
 ---
+import CarritoProducto from "@components/Carrito/CarritoProducto.astro";
+import CarritoProductoContenedor from "@components/Carrito/CarritoProductoContenedor.astro";
 import Layout from "@layouts/Layout.astro";
+import { fetchApirocket } from "@utils/fetchProductos";
+import type { parse } from "astro:schema";
 
 const codigo = Astro.url.searchParams.get('codigo');
+
+
+let myQuery = `query MyQuery {
+  Orders(filter: {codigoPedido: {matches: {contains: "${codigo}"}}}) {
+    cart
+  }
+}
+
+`;
+
+let respuesta = await fetchApirocket(myQuery)
+
+//console.log(respuesta.data.Orders[0].cart)
+
+let respuestaParseada = JSON.parse(respuesta.data.Orders[0].cart)
+console.log(respuestaParseada)
+
+let carrito = respuestaParseada.carrito
+
+import "@styles/global.css";
+
 ---
-<Layout mostrar={false}>
 
   <div class="text-xl text-center">Exito!</div>
   <div class="text-center">Tu codigo de segumiento: {codigo}</div>
 
-  <div class="text-xl text-center">Gracias por comprar con nosotros</div>
+  <CarritoProductoContenedor pagina="checkout"></CarritoProductoContenedor>
 
-</Layout>
+  <div class="text-xl text-center">Gracias por comprar con nosotros</div>
+  
+
+
+
+<script define:vars={{carrito}}>
+
+  localStorage.setItem("carrito", carrito)
+
+
+
+</script>

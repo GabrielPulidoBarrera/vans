@@ -59,8 +59,17 @@ let queryCards = `query MyQuery {
 
 `
 
+let respuesta = (await fetchApirocket(queryCards))
+
+
+return respuesta;}
+
  
-async function fetchApirocket(query: String) {
+export async function fetchApirocket(query: String) {
+  let APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
+if (!APIROCKET_ECOMMERCE_TOKEN){
+  APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN
+}
 
   const options = {
     method: 'POST',
@@ -74,9 +83,5 @@ async function fetchApirocket(query: String) {
   const data = await fetch('https://graphql.apirocket.io', options).then(response => response.json())
   return data
 }
-let respuesta = (await fetchApirocket(queryCards))
 
 
-return respuesta;
-
-}

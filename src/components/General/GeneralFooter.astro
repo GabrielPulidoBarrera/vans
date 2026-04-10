@@ -3,7 +3,7 @@ import Accordion from "./GeneralAccordion.astro";
 const { flag, lang, mostrar } = Astro.props;
 ---
 
-<div x-data={`{ mostrar: ${mostrar} }`} x-show="mostrar==true">
+<div x-data={`{ mostrarFooter: ${mostrar} }`} x-show="mostrarFooter==true" x-init="console.log('mostrar equivale a '+mostrarFooter)">
 
 
 <footer class="*:bg-neutral-900 text-white bg-neutral-900">

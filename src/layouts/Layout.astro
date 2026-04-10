@@ -1,7 +1,7 @@
 ---
 import GeneralHeader from "../components/General/GeneralHeader.astro";
 import Nav from "@general/GeneralNav.astro";
-import Footer from "@general/GeneralFooter.astro";
+import GeneralFooter from "@general/GeneralFooter.astro";
 import GeneralTicker from "@components/General/GeneralTicker.astro";
 import GeneralCarritoLateral from "@components/General/GeneralCarritoLateral.astro";
 
@@ -36,7 +36,7 @@ const {title, lang, flag, arrayTexto, mostrarTicker = false, botonIA = true, mos
 
     
   </main>
-    <Footer flag={flag}, mostrar={mostrar}/>
+    <GeneralFooter flag={flag}, mostrar={mostrar}/>
 
     <script>
       import lozad from 'lozad'
