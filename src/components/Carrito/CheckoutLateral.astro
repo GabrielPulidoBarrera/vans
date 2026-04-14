@@ -746,6 +746,8 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
     boton?.removeEventListener("click", verificar);
     let cargar = boton?.querySelector(".cargar") as HTMLElement;
     let textoPagar = boton?.querySelector(".textoPagar") as HTMLElement
+    cargar.style.display="block";
+    textoPagar.style.display="none";
 
     console.log("NYAAAAA");
     console.log(cargar);
@@ -1060,7 +1062,7 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
     } else {
       console.log("Formulario inválido, no se envía");
           textoPagar.style.display = "block";
-    cargar.style.display = "hidden";
+    cargar.style.display = "none";
     boton.addEventListener("click", verificar)
     }
   }

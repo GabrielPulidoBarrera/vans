@@ -1,0 +1,217 @@
+---
+import TanstackTable from "@components/dashboard/TanstackTable";
+import Layout from "@layouts/Layout.astro";
+
+
+
+let APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
+if (!APIROCKET_ECOMMERCE_TOKEN) {
+    APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN;
+}
+
+
+let myQuery = `query MyQuery {
+  Orders {
+    correo
+    codigoPedido
+    cart
+    sent
+    id
+    createdAt
+    telephone
+  }
+}
+
+
+
+
+
+`;
+
+async function fetchApirocket(query: String) {
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${APIROCKET_ECOMMERCE_TOKEN}`,
+        },
+        body: JSON.stringify({ query }),
+    };
+
+    const data = await fetch("https://graphql.apirocket.io", options).then(
+        (response) => response.json(),
+    );
+    //console.log(data);
+    return data;
+}
+
+let data = (await fetchApirocket(myQuery)).data.Orders;
+//console.log(data);
+
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+
+data.map((e: any) => {
+    e.createdAt = new Date(Date.parse(e.createdAt)).toLocaleTimeString("es-ES", options)
+})
+
+//let carrito = data.cart
+//console.log(carrito)
+
+
+
+
+---
+<Layout>
+
+    <TanstackTable client:load data={data}></TanstackTable>
+
+</Layout>
+
+<script>
+    let seleccion = [];
+async function eventoDelegadoSeleccionar(e: Event) {
+        let tr = (e.target as HTMLElement).closest("tr");
+        if (!tr) {
+            seleccion.map((fila: any) => {
+                fila.style.backgroundColor = "";
+            });
+            seleccion = [];
+            return;
+        }
+        console.log("hola!");
+
+        tr.style.backgroundColor = "lightblue";
+        if (!seleccion.includes(tr)) {
+            seleccion.push(tr);
+        }
+    }
+
+    document.addEventListener("click", eventoDelegadoSeleccionar)
+
+
+
+function seleccionarObjeto(e: Event){
+    let tr = (e.target as HTMLElement).closest("tr");
+        if (!tr) {
+            return;
+        }
+        let datosExtra = tr.dataset.carrito;
+        datosExtra = JSON.parse(tr.dataset.carrito)
+        let carrito = datosExtra.carrito;
+        carrito = JSON.parse(carrito);
+        console.log(carrito)
+
+        mostrarDialog(tr.id, carrito)
+        
+
+}
+
+
+function mostrarDialog(id: string, carrito: string[]) {
+    let dialog = document.createElement('dialog');
+    let cabecera = document.createElement('div');
+    let carritoContenedor = document.createElement('div');
+    let accionesContenedor = document.createElement('div');
+    
+
+    //Genero la cabecera
+
+    let botonCarrito = document.createElement('button')
+    let botonAcciones = document.createElement('button')
+
+    botonCarrito.classList.add("self-center", "px-8", "py-3", "font-semibold", "rounded", "dark:bg-violet-600", "dark:text-gray-50")
+    botonAcciones.classList.add("self-center", "px-8", "py-3", "font-semibold", "rounded", "dark:bg-violet-600", "dark:text-gray-50")
+
+    botonCarrito.textContent="Carrito"
+    botonAcciones.textContent="Acciones"
+
+
+    botonCarrito.addEventListener("click", () => {
+        carritoContenedor.style.display="block"
+        accionesContenedor.style.display="none"
+    })
+
+    botonAcciones.addEventListener("click", () => {
+        carritoContenedor.style.display="none"
+        accionesContenedor.style.display="block"
+    })
+
+
+
+
+    cabecera.append(botonCarrito, botonAcciones)
+    dialog.append(cabecera);
+
+
+
+
+
+
+  //Genero el carrito
+
+    carrito.map((e: any) => {
+        let entrada = document.createElement("div");
+        entrada.textContent= e.nombre
+        carritoContenedor.append(entrada);
+    })
+    dialog.append(carritoContenedor);
+
+
+    // Genero las acciones
+
+    let botonEnviar = document.createElement('button')
+    botonEnviar.classList.add("self-center", "px-8", "py-3", "font-semibold", "rounded", "dark:bg-violet-600", "dark:text-gray-50")
+    botonEnviar.textContent = "enviar";
+    
+    botonEnviar.addEventListener("click", async ()=>{
+        console.log("HOLAAA")
+        const response = await fetch("/api/sendOrder", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id }),
+                });
+                const result = await response.json();
+                console.log(result)
+                if (result.success){
+                    console.log("yay");
+                }
+    })
+    
+    accionesContenedor.append(botonEnviar);
+    dialog.append(accionesContenedor);
+
+
+
+  //Boton cerrar
+  let button = document.createElement('button')
+
+  button.textContent="cerrar";
+  dialog.append(button);
+  document.querySelector('body')?.append(dialog);
+
+
+
+
+
+  button.classList.add("self-center", "px-8", "py-3", "font-semibold", "rounded", "dark:bg-violet-600", "dark:text-gray-50")
+  button.id = "cerrarDialog"
+  dialog.classList.add("fixed", "inset-0", "m-auto", "w-3/4", "h-3/4", "text-center", "*:m-10" );
+    dialog.showModal();
+
+    button.addEventListener("click", e => {
+        dialog.close()
+    })
+}
+
+
+
+document.addEventListener("click", seleccionarObjeto)
+
+</script>

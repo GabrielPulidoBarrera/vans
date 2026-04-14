@@ -1,20 +1,46 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
+  "include": [
+    ".astro/types.d.ts",
+    "**/*"
+  ],
+  "exclude": [
+    "dist"
+  ],
   "compilerOptions": {
     "paths": {
-      "@components/*": ["./src/components/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@layouts/*": ["./src/layouts/*"],
-      "@styles/*": ["./src/styles/*"],
-      "@producto/*": ["./src/components/Producto/*"],
-      "@general/*": ["./src/components/General/*"],
-      "@categorias/*": ["./src/components/Categorias/*"],
-      "@carrito/*": ["./src/components/Carrito/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@api/*": ["./src/pages/api*"],
-
-    }
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
+      "@styles/*": [
+        "./src/styles/*"
+      ],
+      "@producto/*": [
+        "./src/components/Producto/*"
+      ],
+      "@general/*": [
+        "./src/components/General/*"
+      ],
+      "@categorias/*": [
+        "./src/components/Categorias/*"
+      ],
+      "@carrito/*": [
+        "./src/components/Carrito/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@api/*": [
+        "./src/pages/api*"
+      ]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
   }
 }

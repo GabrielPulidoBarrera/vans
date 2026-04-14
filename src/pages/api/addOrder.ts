@@ -109,7 +109,7 @@ if (valido==false) {
     }
 
 
-    console.log(firstResult.data.Orders);
+    //console.log(firstResult.data.Orders);
 
     let codigoPedido = Math.floor(Math.random() * 1000000000);
     do{
@@ -119,16 +119,20 @@ if (valido==false) {
     })==false)
 
     let correo = data.datosPersona.correo;
-    let nombre = data.datosPersona.nombre + " " + data.datosPersona.apellido 
-    let telefono = data.datosPersona.telefono;
+    let telefono = data.direccionPersona.telefono;
+    if (telefono==''){
+      telefono = data.direccionFacturacion.telefono;
+    }
+    //let codigoPostal = data.direccionPersona.codigoPostal
 
+    //console.log("CODIGO POSTAL "+codigoPostal);
 
 
 // ---- Peticion 2 (añadimos los datos a la base de datos) ----
 const secondMutation = `
   mutation MyMutation($cart: String!) {
   __typename
-  OrdersCreate(input: {cart: $cart, codigoPedido: "${codigoPedido}", correo: "${correo}", name: "${nombre}", telephone: "${telefono}"}) {
+  OrdersCreate(input: {cart: $cart, codigoPedido: "${codigoPedido}", correo: "${correo}", telephone: "${telefono}"}) {
     id
   }
 }
