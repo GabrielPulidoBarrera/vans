@@ -12,7 +12,22 @@ import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    resolve: {
+      alias: {
+        '@components': '/src/components',
+        '@layouts': '/src/layouts',
+        '@assets': '/src/assets',
+        '@styles': '/src/styles',
+        '@producto': '/src/components/Producto',
+        '@general': '/src/components/General',
+        '@categorias': '/src/components/Categorias',
+        '@carrito': '/src/components/Carrito',
+        '@utils': '/src/utils',
+        '@api': '/src/pages/api'
+      }
+    }
+
   },
 
   integrations: [alpinejs(), react()],
