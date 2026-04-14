@@ -12,6 +12,11 @@ RUN npm install
 
 FROM build-deps AS build
 COPY . .
+
+RUN echo "Current directory contents:" && ls -la && \
+    echo "Checking src/components/dashboard:" && ls -la src/components/dashboard/ || echo "Directory missing" && \
+    echo "Searching for TanstackTable:" && find . -name "TanstackTable.tsx" -type f
+
 RUN npm run build
 
 # =============================================
