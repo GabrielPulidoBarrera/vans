@@ -1,392 +1,245 @@
 ---
+import TanstackTable from "../components/Dashboard/TanstackTable.tsx";
 import Layout from "@layouts/Layout.astro";
 
-//console.log(orders);
-
-interface apirocketInterfaz {
-    id: string;
-    correo: string;
-    carrito: string;
-    sent: boolean;
-    codigoPedido: number;
-    createdAt: string;
+let APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
+if (!APIROCKET_ECOMMERCE_TOKEN) {
+    APIROCKET_ECOMMERCE_TOKEN = import.meta.env.APIROCKET_ECOMMERCE_TOKEN;
 }
 
-for (let iterable of orders){
-iterable.cart = JSON.parse(iterable.cart);
-iterable.cart.carrito = JSON.parse(iterable.cart.carrito);
-//console.log(iterable.cart.carrito)
+let myQuery = `query MyQuery {
+  Orders {
+    correo
+    codigoPedido
+    cart
+    sent
+    id
+    createdAt
+    telephone
+  }
 }
 
-//console.log(orders);
+
+
+
+
+`;
+
+async function fetchApirocket(query: String) {
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${APIROCKET_ECOMMERCE_TOKEN}`,
+        },
+        body: JSON.stringify({ query }),
+    };
+
+    const data = await fetch("https://graphql.apirocket.io", options).then(
+        (response) => response.json(),
+    );
+    //console.log(data);
+    return data;
+}
+
+let data = (await fetchApirocket(myQuery)).data.Orders;
+//console.log(data);
+
+const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+};
+
+data.map((e: any) => {
+    e.createdAt = new Date(Date.parse(e.createdAt)).toLocaleTimeString(
+        "es-ES",
+        options,
+    );
+});
+
+//let carrito = data.cart
+//console.log(carrito)
 ---
 
 <Layout>
-    <div>
-        <input type="checkbox" name="mostrarEnvio" id="mostrarEnvio" checked />
-        <label for="mostrarEnvio">Mostrar enviado</label>
-    </div>
-    <div>
-        <input
-            type="text"
-            name="buscar"
-            id="buscar"
-            class="border-solid border"
-        />
-        <label for="buscar">Buscar</label>
-    </div>
-
-    <div>
-        <button type="button" id="enviarSeleccion">enviar seleccion</button>
-    </div>
-    <div>
-        <button type="button" id="borrarSeleccion">borrar seleccion</button>
-    </div>
-
-    <table class="w-full *:text-center">
-        <thead class="bg-gray-200">
-            <th>Correo</th>
-            <th>codigo de pedido</th>
-            <th id="envio">enviado</th>
-            <th id="fecha">fecha</th>
-            <th>enviar</th>
-            <th>borrar</th>
-        </thead>
-        <tbody>
-            {
-                orders.map((data: apirocketInterfaz) => (
-                    <tr class="fila">
-                        <td>{data.correo}</td>
-                        <td>{data.codigoPedido}</td>
-                        <td class="enviado" id="enviado">
-                            {data.sent && "true"}
-                            {!data.sent && "false"}
-                        </td>
-                        <td class="fecha">{data.createdAt}</td>
-                        <td
-                            id="enviar"
-                            class="hover:bg-green-500 hover:cursor-pointer *:hover:cursor-pointer"
-                        >
-                            {" "}
-                            <button type="button" id={data.id}>
-                                enviar
-                            </button>
-                        </td>
-                        <td
-                            id="borrar"
-                            class="hover:bg-red-500 hover:cursor-pointer *:hover:cursor-pointer"
-                        >
-                            <button type="button" id={data.id}>
-                                borrar
-                            </button>
-                        </td>
-                    </tr>
-                ))
-            }
-        </tbody>
-    </table>
+    <TanstackTable client:load data={data} />
 </Layout>
 
 <script>
-    let tbody = document.querySelector("tbody");
+    //     let seleccion = [];
+    // async function eventoDelegadoSeleccionar(e: Event) {
+    //         let tr = (e.target as HTMLElement).closest("tr");
+    //         if (!tr) {
+    //             seleccion.map((fila: any) => {
+    //                 fila.style.backgroundColor = "";
+    //             });
+    //             seleccion = [];
+    //             return;
+    //         }
+    //         console.log("hola!");
 
-    //             ***** ENVIAR PEDIDO *****           //
+    //         tr.style.backgroundColor = "lightblue";
+    //         if (!seleccion.includes(tr)) {
+    //             seleccion.push(tr);
+    //         }
+    //     }
+    //
+    // document.addEventListener("click", eventoDelegadoSeleccionar)
 
-    let botonEnviarTodos = document.querySelector("#enviarSeleccion");
-    botonEnviarTodos?.addEventListener("click", enviarSeleccion);
-
-    async function eventoDelegadoEnviar(e: Event) {
-        let td = (e.target as HTMLElement).closest("td");
-        if (!td) {
+    function seleccionarObjeto(e: Event) {
+        let tr = (e.target as HTMLElement).closest("tr");
+        if (!tr) {
             return;
         }
-        console.log(td.id);
-        if (td.id != "enviar") {
-            return;
-        }
+        let datosExtra = tr.dataset.carrito;
+        datosExtra = JSON.parse(tr.dataset.carrito);
+        let carrito = datosExtra.carrito;
+        carrito = JSON.parse(carrito);
+        console.log(carrito);
 
-        let boton = td.querySelector("button");
-        enviarPedido(boton);
-        crearDialog("El producto ha sido asignado como enviado");
+        mostrarDialog(tr.id, carrito);
     }
 
-    async function enviarSeleccion() {
-        seleccion.map((fila: any) => {
-            let boton = fila.querySelector("button");
-            enviarPedido(boton);
-        });
-        crearDialog("El producto ha sido asignado como enviado");
-    }
-
-    async function enviarPedido(boton: any) {
-        if (boton) {
-            if (boton.id == null) {
-                return;
-            }
-            let id = boton.id;
-            try {
-                const response = await fetch("/api/sendOrder", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ id }),
-                });
-                const result = await response.json();
-
-                console.log("Respuesta del servidor:", result);
-
-                if (result) {
-                    //Cambio el texto de false a true
-                    if (boton.parentElement == null) {
-                        return;
-                    }
-                    if (boton.parentElement.parentElement == null) {
-                        return;
-                    }
-                    let textoEnviar =
-                        boton.parentElement.parentElement.querySelector(
-                            "#enviado",
-                        );
-                    if (!textoEnviar) {
-                        return;
-                    }
-                    textoEnviar.textContent = "true";
-                }
-            } catch (error) {
-                console.error("Error en la petición:", error);
-            }
-        }
-    }
-
-    document.addEventListener("click", eventoDelegadoEnviar);
-
-    //             ***** BORRAR PEDIDO *****           //
-    let botonBorrarTodos = document.querySelector("#borrarSeleccion");
-    botonBorrarTodos?.addEventListener("click", borrarSeleccion);
-
-    async function eventoDelegadoBorrar(e: Event) {
-        let td = (e.target as HTMLElement).closest("td");
-        if (!td) {
-            return;
-        }
-        if (td.id != "borrar") {
-            return;
-        }
-        let boton = td.querySelector("button");
-        borrarPedido(boton);
-        crearDialog("El producto ha sido eliminado");
-    }
-
-    async function borrarSeleccion() {
-        seleccion.map((fila: any) => {
-            let boton = fila.querySelector("button");
-            borrarPedido(boton);
-            crearDialog("El producto ha sido eliminado");
-        });
-    }
-
-    async function borrarPedido(boton: any) {
-        if (boton) {
-            console.log();
-            if (boton.id == null) {
-                return;
-            }
-
-            let id = boton.id;
-            try {
-                const response = await fetch("/api/deleteOrder", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ id }),
-                });
-                const result = await response.json();
-
-                console.log("Respuesta del servidor:", result);
-
-                if (result) {
-                    //Cambio el texto de false a true
-                    boton.parentElement?.parentElement?.remove();
-                }
-            } catch (error) {
-                console.error("Error en la petición:", error);
-            }
-        }
-    }
-
-    document.addEventListener("click", eventoDelegadoBorrar);
-
-    let creciente = false;
-    let selectorFecha = document.querySelector("#fecha");
-    selectorFecha?.addEventListener("click", ordenarPorFecha);
-
-    //             ***** ORDENAR POR FECHA *****           //
-
-    function ordenarPorFecha() {
-        if (!tbody) {
-            return;
-        }
-        let fechas = document.querySelectorAll(".fecha");
-        let fechasArray = Array.from(fechas);
-        console.log(fechasArray);
-
-        if (creciente == false) {
-            fechasArray.sort((fecha1: any, fecha2: any) => {
-                fecha1 = Date.parse(fecha1.textContent);
-                fecha2 = Date.parse(fecha2.textContent);
-
-                console.log(fecha1);
-                console.log(fecha2);
-
-                if (fecha1 > fecha2) {
-                    console.log("return 1");
-                    return 1;
-                }
-                if (fecha1 == fecha2) {
-                    console.log("return 0");
-                    return 0;
-                } else {
-                    console.log("return -1");
-                    return -1;
-                }
-            });
-            console.log(fechas);
-            enviadoCreciente = false;
-            creciente = true;
-        } else {
-            fechasArray.reverse();
-            enviadoCreciente = false;
-            creciente = false;
-        }
-
-        for (let iterable of fechasArray) {
-            if (!iterable.parentElement) {
-                return;
-            }
-            tbody.append(iterable.parentElement);
-        }
-    }
-
-    let enviadoCreciente = false;
-    let selectorEnvio = document.querySelector("#envio");
-    selectorEnvio?.addEventListener("click", ordenarPorEnvio);
-
-    //             ***** ORDENAR POR ENVIO *****           //
-
-    function ordenarPorEnvio() {
-        if (!tbody) {
-            return;
-        }
-        let enviado = document.querySelectorAll(".enviado");
-        let enviadoArray = Array.from(enviado);
-
-        if (enviadoCreciente == false) {
-            enviadoArray.sort((fila1: any, fila2: any) => {
-                if (fila1.textContent.trim() == "true") {
-                    fila1 = true;
-                } else {
-                    fila1 = false;
-                }
-                if (fila2.textContent.trim() == "true") {
-                    fila2 = true;
-                } else {
-                    fila2 = false;
-                }
-
-                //console.log(fila1);
-                //console.log(fila2)
-
-                if (fila1 > fila2) {
-                    console.log("return 1");
-                    return 1;
-                }
-                if (fila1 == fila2) {
-                    console.log("return 0");
-                    return 0;
-                } else {
-                    console.log("return -1");
-                    return -1;
-                }
-            });
-            enviadoCreciente = true;
-            creciente = false;
-        } else {
-            enviadoArray.reverse();
-            creciente = false;
-            enviadoCreciente = false;
-        }
-
-        for (let iterable of enviadoArray) {
-            if (!iterable.parentElement) {
-                return;
-            }
-            tbody.append(iterable.parentElement);
-        }
-    }
-
-    let mostrarEnvioCheckbox = document.querySelector(
-        "#mostrarEnvio",
-    ) as HTMLInputElement;
-    if (mostrarEnvioCheckbox) {
-        mostrarEnvioCheckbox.addEventListener("change", mostrarEnvio);
-    }
-
-    //             ***** ESCONDER ENVIADOS *****           //
-
-    function mostrarEnvio() {
-        console.log(mostrarEnvioCheckbox.checked);
-        let enviado = document.querySelectorAll(".enviado");
-        let enviadoArray = Array.from(enviado);
-        enviadoArray.map((envio: any) => {
-            if (envio.textContent.trim() == "true") {
-                if (!mostrarEnvioCheckbox.checked) {
-                    console.log("nya");
-                    envio.parentElement.style.display = "none";
-                } else {
-                    envio.parentElement.style.display = "";
-                }
-            }
-        });
-    }
-
-    let buscar = document.querySelector("#buscar");
-    buscar?.addEventListener("change", buscarTabla);
-
-    //             ***** BUSCAR EN TABLA *****           //
-
-    function buscarTabla() {
-        if (!buscar) {
-            return;
-        }
-        let texto = (buscar as HTMLInputElement).value;
-        console.log(texto);
-        //Escondo todas las filas
-        let filas = document.querySelectorAll(".fila");
-        let filasArray = Array.from(filas);
-        filasArray.map((fila: any) => {
-            console.log(fila);
-            fila.style.display = "none";
-            let elementos = fila.querySelectorAll("td");
-            let elementosArray = Array.from(elementos);
-            elementosArray.map((elemento: any) => {
-                if (elemento.textContent.includes(texto)) {
-                    fila.style.display = "";
-                }
-            });
-        });
-    }
-
-    function crearDialog(texto: string) {
+    function mostrarDialog(id: string, carrito: string[]) {
         let dialog = document.createElement("dialog");
-        let p = document.createElement("p");
-        let button = document.createElement("button");
-        button.textContent = "cerrar";
-        p.textContent = texto;
-        dialog.append(p);
-        dialog.append(button);
+
         document.querySelector("body")?.append(dialog);
+
+        let cabecera = document.createElement("div");
+        let carritoContenedor = document.createElement("div");
+        let accionesContenedor = document.createElement("div");
+
+        //Genero la cabecera
+
+        let botonCarrito = document.createElement("button");
+        let botonAcciones = document.createElement("button");
+
+        botonCarrito.classList.add(
+            "self-center",
+            "px-8",
+            "py-3",
+            "font-semibold",
+            "rounded",
+            "dark:bg-violet-600",
+            "dark:text-gray-50",
+        );
+        botonAcciones.classList.add(
+            "self-center",
+            "px-8",
+            "py-3",
+            "font-semibold",
+            "rounded",
+            "dark:bg-gray-200",
+            "dark:text-black",
+        );
+
+        botonCarrito.textContent = "Carrito";
+        botonAcciones.textContent = "Acciones";
+
+        botonCarrito.addEventListener("click", () => {
+            carritoContenedor.style.display = "block";
+            accionesContenedor.style.display = "none";
+
+            botonCarrito.classList.replace(
+                "dark:bg-gray-200",
+                "dark:bg-violet-600",
+            );
+            botonCarrito.classList.replace(
+                "dark:text-black",
+                "dark:text-gray-50",
+            );
+
+            botonAcciones.classList.replace(
+                "dark:bg-violet-600",
+                "dark:bg-gray-200",
+            );
+            botonAcciones.classList.replace(
+                "dark:text-gray-50",
+                "dark:text-black",
+            );
+        });
+
+        botonAcciones.addEventListener("click", () => {
+            carritoContenedor.style.display = "none";
+            accionesContenedor.style.display = "block";
+            botonAcciones.classList.replace(
+                "dark:bg-gray-200",
+                "dark:bg-violet-600",
+            );
+            botonAcciones.classList.replace(
+                "dark:text-black",
+                "dark:text-gray-50",
+            );
+
+            botonCarrito.classList.replace(
+                "dark:bg-violet-600",
+                "dark:bg-gray-200",
+            );
+            botonCarrito.classList.replace(
+                "dark:text-gray-50",
+                "dark:text-black",
+            );
+        });
+
+        cabecera.append(botonCarrito, botonAcciones);
+        dialog.append(cabecera);
+
+        //Genero el carrito
+
+        carrito.map((e: any) => {
+            let entrada = document.createElement("div");
+            entrada.textContent = e.nombre;
+            carritoContenedor.append(entrada);
+        });
+        dialog.append(carritoContenedor);
+
+        // Genero las acciones
+
+        let botonEnviar = document.createElement("button");
+        botonEnviar.classList.add(
+            "self-center",
+            "px-8",
+            "py-3",
+            "font-semibold",
+            "rounded",
+            "dark:bg-violet-600",
+            "dark:text-gray-50",
+        );
+        botonEnviar.textContent = "enviar";
+
+        botonEnviar.addEventListener("click", async () => {
+            console.log("HOLAAA");
+            const response = await fetch("/api/sendOrder", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id }),
+            });
+            const result = await response.json();
+            console.log(result);
+            if (result.success) {
+                console.log("yay");
+            }
+        });
+
+        accionesContenedor.append(botonEnviar);
+        dialog.append(accionesContenedor);
+        accionesContenedor.style.display = "none";
+
+
+        //Boton cerrar
+        let button = document.createElement("button");
+
+        button.textContent = "cerrar";
+
+        let pie = document.createElement("div");
+        pie.classList.add("absolute", "bottom-0", "right-0", "left-0");
+        pie.append(button);
+        dialog.append(pie);
+
         button.classList.add(
             "self-center",
             "px-8",
@@ -396,15 +249,16 @@ iterable.cart.carrito = JSON.parse(iterable.cart.carrito);
             "dark:bg-violet-600",
             "dark:text-gray-50",
         );
-
+        button.id = "cerrarDialog";
         dialog.classList.add(
             "fixed",
             "inset-0",
             "m-auto",
-            "w-1/2",
-            "h-1/4",
+            "w-3/4",
+            "h-3/4",
             "text-center",
             "*:m-10",
+            "relative",
         );
         dialog.showModal();
 
@@ -413,24 +267,5 @@ iterable.cart.carrito = JSON.parse(iterable.cart.carrito);
         });
     }
 
-    //             ***** SELECCIONAR MULTIPLES TABLAS *****           //
-    let seleccion: any[] = [];
-    async function eventoDelegadoSeleccionar(e: Event) {
-        let tr = (e.target as HTMLElement).closest("tr");
-        if (!tr) {
-            seleccion.map((fila: any) => {
-                fila.style.backgroundColor = "";
-            });
-            seleccion = [];
-            return;
-        }
-        console.log("hola!");
-
-        tr.style.backgroundColor = "lightblue";
-        if (!seleccion.includes(tr)) {
-            seleccion.push(tr);
-        }
-    }
-
-    document.addEventListener("click", eventoDelegadoSeleccionar);
+    document.addEventListener("click", seleccionarObjeto);
 </script>
