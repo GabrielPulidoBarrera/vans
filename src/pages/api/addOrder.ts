@@ -184,7 +184,7 @@ const browser = await puppeteer.launch({
 const page = await browser.newPage();
 
 await page.goto(homeUrl.href, {
-  waitUntil: 'load',
+  waitUntil: 'networkidle0',
 });
 
 const pdfBuffer = await page.pdf({ format: 'A4' });
