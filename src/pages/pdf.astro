@@ -5,8 +5,7 @@ import Layout from "@layouts/Layout.astro";
 import { fetchApirocket } from "@utils/fetchProductos";
 import type { parse } from "astro:schema";
 
-const codigo = Astro.url.searchParams.get('codigo');
-
+const codigo = Astro.url.searchParams.get("codigo");
 
 let myQuery = `query MyQuery {
   Orders(filter: {codigoPedido: {matches: {contains: "${codigo}"}}}) {
@@ -16,33 +15,39 @@ let myQuery = `query MyQuery {
 
 `;
 
-let respuesta = await fetchApirocket(myQuery)
+let respuesta = await fetchApirocket(myQuery);
 
 //console.log(respuesta.data.Orders[0].cart)
 
-let respuestaParseada = JSON.parse(respuesta.data.Orders[0].cart)
-console.log(respuestaParseada)
+let respuestaParseada = JSON.parse(respuesta.data.Orders[0].cart);
+console.log(respuestaParseada);
 
-let carrito = respuestaParseada.carrito
+let carrito = respuestaParseada.carrito;
 
 import "@styles/global.css";
-
 ---
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>PDF</title>
+  </head>
 
   <div class="text-xl text-center">Exito!</div>
   <div class="text-center">Tu codigo de segumiento: {codigo}</div>
 
-  <CarritoProductoContenedor pagina="checkout"></CarritoProductoContenedor>
+  <CarritoProductoContenedor pagina="checkout" />
 
   <div class="text-xl text-center">Gracias por comprar con nosotros</div>
-  
 
 
 
-<script define:vars={{carrito}}>
-
-  localStorage.setItem("carrito", carrito)
-
-
-
-</script>
+  <script define:vars={{ carrito }}>
+    localStorage.setItem("carrito", carrito);
+  </script>
+</html>
