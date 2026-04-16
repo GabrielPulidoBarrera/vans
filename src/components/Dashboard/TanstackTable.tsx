@@ -7,7 +7,7 @@ import { useState } from 'react';
 //const data = [{ id: 1, name: 'Ada' }]
 const columns = [{ accessorKey: 'correo', header: 'Correo' }, { accessorKey: 'codigoPedido', header: 'codigo de pedido' }, { accessorKey: 'sent', header: 'Enviado' }, { accessorKey: 'createdAt', header: 'fecha de creacion' }, { accessorKey: 'telephone', header: 'Telefono' }]
 
-export default function SimpleTable({ data }) {
+export default function SimpleTable({ data }: any) {
   const [globalFilter, setGlobalFilter] = useState<any>([])
   const table = useReactTable({
     data, columns, getCoreRowModel: getCoreRowModel(), getFilteredRowModel: getFilteredRowModel(), state: { globalFilter, }, onGlobalFilterChange: setGlobalFilter, getSortedRowModel: getSortedRowModel(), getPaginationRowModel: getPaginationRowModel(),
@@ -17,7 +17,7 @@ export default function SimpleTable({ data }) {
   })
 
   return (
-    <div class="w-full text-center" >
+    <div className="w-full text-center" >
 
       <input id="textoBuscar"
         type="text"
@@ -26,8 +26,8 @@ export default function SimpleTable({ data }) {
         placeholder="Search all columns..."
       />
 
-      <table class="border-solid border-gray-200 w-9/10 mx-auto ">
-        <thead class="bg-gray-200">
+      <table className="border-solid border-gray-200 w-9/10 mx-auto ">
+        <thead className="bg-gray-200">
           {table.getHeaderGroups().map((hg) => (
             <tr id={hg.id} key={hg.id} >
               {hg.headers.map((header) => (
@@ -40,9 +40,9 @@ export default function SimpleTable({ data }) {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr id={row.original.id} key={row.id} data-carrito={row.original.cart} class="border-y-solid border border-gray-200 *:py-3 hover:bg-red-300">
+            <tr id={typeof row.original.id === 'string' ? row.original.id : row.id} key={row.id} data-carrito={row.original.cart} className="border-y-solid border border-gray-200 *:py-3 hover:bg-red-300">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td key={cell.id} id={cell.column.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
@@ -53,7 +53,7 @@ export default function SimpleTable({ data }) {
 
       </table>
 
-      <div class="flex text-center justify-center gap-4">
+      <div className="flex text-center justify-center gap-4">
         <button
           onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}

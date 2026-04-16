@@ -201,15 +201,15 @@ await browser.close();
   let textoHtml = "<b>"+texto+"</b>"
 
   const info = await transporter.sendMail({
-    from: '"gabrielpulidobarrera" <gabrielpulidobarrera@gmail.com>', // sender address
-    to: correo, // list of recipients
-    subject: "Hello", // subject line
-    text: texto, // plain text body
-    html: textoHtml, // HTML body
+    from: '"gabrielpulidobarrera" <gabrielpulidobarrera@gmail.com>',
+    to: correo,
+    subject: "Tu pedido", 
+    text: texto,
+    html: textoHtml,
     attachments: [
       {
       filename: `pedido-${codigoPedido}.pdf`,
-      content: pdfBuffer,
+      content: Buffer.from(pdfBuffer),
       }
     ]
   });

@@ -1,4 +1,5 @@
 ---
+import { Interface } from "node:readline";
 import TanstackTable from "../components/Dashboard/TanstackTable.tsx";
 import Layout from "@layouts/Layout.astro";
 
@@ -18,12 +19,12 @@ let myQuery = `query MyQuery {
     telephone
   }
 }
-
-
-
-
-
 `;
+
+interface InterfazFecha{
+    createdAt: string
+}
+
 
 async function fetchApirocket(query: String) {
     const options = {
@@ -45,17 +46,10 @@ async function fetchApirocket(query: String) {
 let data = (await fetchApirocket(myQuery)).data.Orders;
 //console.log(data);
 
-const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-};
 
-data.map((e: any) => {
-    e.createdAt = new Date(Date.parse(e.createdAt)).toLocaleTimeString(
+data.map((e: InterfazFecha) => {
+    e.createdAt = new Date(Date.parse(e.createdAt)).toLocaleString(
         "es-ES",
-        options,
     );
 });
 
@@ -88,21 +82,29 @@ data.map((e: any) => {
     //
     // document.addEventListener("click", eventoDelegadoSeleccionar)
 
+       interface InterfazCarrito {
+    nombre: string;
+  }
+
+
     function seleccionarObjeto(e: Event) {
         let tr = (e.target as HTMLElement).closest("tr");
         if (!tr) {
             return;
         }
         let datosExtra = tr.dataset.carrito;
-        datosExtra = JSON.parse(tr.dataset.carrito);
-        let carrito = datosExtra.carrito;
-        carrito = JSON.parse(carrito);
+        if (datosExtra==null){
+            return
+        }
+        let datosExtraParseado = JSON.parse(datosExtra);
+        let carritoRaw = datosExtraParseado.carrito;
+        let carrito = JSON.parse(carritoRaw);
         console.log(carrito);
 
         mostrarDialog(tr.id, carrito);
     }
 
-    function mostrarDialog(id: string, carrito: string[]) {
+    function mostrarDialog(id: string, carrito: InterfazCarrito[]) {
         let dialog = document.createElement("dialog");
 
         document.querySelector("body")?.append(dialog);
@@ -188,7 +190,7 @@ data.map((e: any) => {
 
         //Genero el carrito
 
-        carrito.map((e: any) => {
+        carrito.map((e) => {
             let entrada = document.createElement("div");
             entrada.textContent = e.nombre;
             carritoContenedor.append(entrada);
@@ -211,6 +213,7 @@ data.map((e: any) => {
 
         botonEnviar.addEventListener("click", async () => {
             console.log("HOLAAA");
+            botonEnviar.disabled = true
             const response = await fetch("/api/sendOrder", {
                 method: "POST",
                 headers: {
@@ -221,7 +224,23 @@ data.map((e: any) => {
             const result = await response.json();
             console.log(result);
             if (result.success) {
-                console.log("yay");
+                botonEnviar.textContent="Enviado con exito!";
+                let fila = document.getElementById(id);
+                if (fila==null){
+                    return
+                }
+                let celda = fila.querySelector('#sent')
+                if(celda==null){
+                    return
+                }
+
+                celda.textContent="true";
+            }
+            else{
+                botonEnviar.textContent="Error al enviarlo"
+                botonEnviar.disabled = false
+
+            
             }
         });
 

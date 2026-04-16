@@ -1063,6 +1063,9 @@ import GeneralBotonApple from "@components/General/GeneralBotonApple.astro";
       console.log("Formulario inválido, no se envía");
           textoPagar.style.display = "block";
     cargar.style.display = "none";
+    if (!boton){
+      return;
+    }
     boton.addEventListener("click", verificar)
     }
   }
