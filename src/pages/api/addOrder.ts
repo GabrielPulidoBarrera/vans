@@ -178,10 +178,12 @@ try {
  const baseUrl = requestUrl.origin;
  const homeUrl = new URL('/pdf?codigo='+codigoPedido, baseUrl); 
 
-  let responseEmail = await fetch("https://n8n.gabrielpulido.xyz/webhook-test/de1d9ac2-412f-4402-93d8-c7b5e7763e17", {
+//Si la URL fuese a cambiar, este codigo se joderia. 
+
+  let responseEmail = await fetch("https://n8n.gabrielpulido.xyz/webhook-test/de1d9ac2-412f-4402-93d8-c7b5e7763e17", { 
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ urlPedido: homeUrl }),
+    body: JSON.stringify({ codigoPedido: codigoPedido }),
   });
           console.log(responseEmail);
 
