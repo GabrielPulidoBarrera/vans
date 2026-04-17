@@ -173,38 +173,44 @@ else{
 
 try {
 
-const requestUrl = new URL(request.url);
-const baseUrl = requestUrl.origin;
-const homeUrl = new URL('/pdf?codigo='+codigoPedido, baseUrl); 
+
+ const requestUrl = new URL(request.url);
+ const baseUrl = requestUrl.origin;
+ const homeUrl = new URL('/pdf?codigo='+codigoPedido, baseUrl); 
+
+  let responseEmail = await fetch("https://n8n.gabrielpulido.xyz/webhook-test/de1d9ac2-412f-4402-93d8-c7b5e7763e17", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ urlPedido: homeUrl }),
+  });
+          console.log(responseEmail);
 
 
-const browser = await puppeteer.launch({
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  headless: true
-});
-const page = await browser.newPage();
 
-await page.goto(homeUrl.href, {
-  waitUntil: 'networkidle0',
-});
 
-const pdfBuffer = await page.pdf({ format: 'A4' });
-const pdfBufferAsBase64 = Buffer.from(pdfBuffer).toString('base64');
 
-await browser.close();
-const pdfData = Buffer.from(pdfBuffer);
-const pdfBase64 = Buffer.from(pdfBuffer).toString('base64');
+
+// const browser = await puppeteer.launch({
+//   args: ['--no-sandbox', '--disable-setuid-sandbox'],
+//   headless: true
+// });
+// const page = await browser.newPage();
+
+// await page.goto(homeUrl.href, {
+//   waitUntil: 'networkidle0',
+// });
+
+// const pdfBuffer = await page.pdf({ format: 'A4' });
+// const pdfBufferAsBase64 = Buffer.from(pdfBuffer).toString('base64');
+
+// await browser.close();
+// const pdfData = Buffer.from(pdfBuffer);
+// const pdfBase64 = Buffer.from(pdfBuffer).toString('base64');
 
 
         // Después de obtener pdfBuffer
 
 // Enviar el buffer directamente, sin envolver en JSON
-let responseEmail = await fetch("https://n8n.gabrielpulido.xyz/webhook/de1d9ac2-412f-4402-93d8-c7b5e7763e17", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ pdfBase64: pdfBase64, filename: `pedido-${codigoPedido}.pdf`, destinatario: correo }),
-});
-        console.log(responseEmail);
 
   
   // console.log(correo);
