@@ -1,39 +1,67 @@
-<!-----
-Mostrar pedido en el pdf
-mirar n8n ()
-revisar que el dominio funcione en condiciones
-https://resend.com/
-sacar mas datos del json a la raiz
-modal
+---
+import Layout from "@layouts/Layout.astro";
 
 
 
-traefik.enable=true
 
-traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
-traefik.http.middlewares.proteger.basicauth.users=test:$2y$12$ci.4U63YX83CwkyUrjqxAucnmi2xXOIlEF6T/KdP9824f1Rf1iyNG
-
-
-traefik.http.middlewares.gzip.compress=true
-traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.entryPoints=http
-traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.middlewares=gzip
-traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.rule=Host(`gabrielpulido.xyz`) && PathPrefix(`/`)
-traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.service=http-0-g8j2c2f2bybipympaoqsmf0n
-
-traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.entryPoints=http
-traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.middlewares=gzip,proteger
-traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.rule=Host(`gabrielpulido.xyz`) && PathPrefix(`/dashboard`)
-traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.service=http-0-g8j2c2f2bybipympaoqsmf0n
-
-traefik.http.services.http-0-g8j2c2f2bybipympaoqsmf0n.loadbalancer.server.port=3000
+// Mostrar pedido en el pdf
+// mirar n8n ()
+// revisar que el dominio funcione en condiciones
+// https://resend.com/
+// sacar mas datos del json a la raiz
+// modal
+//pdfmonkey
 
 
-caddy_0.encode=zstd gzip
-caddy_0.handle_path.0_reverse_proxy={{upstreams 3000}}
-caddy_0.handle_path=/*
-caddy_0.header=-Server
-caddy_0.try_files={path} /index.html /index.php
-caddy_0=http://gabrielpulido.xyz
-caddy_ingress_network=coolify
+// traefik.enable=true
 
---- -->
+// traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+// traefik.http.middlewares.proteger.basicauth.users=test:$2y$12$ci.4U63YX83CwkyUrjqxAucnmi2xXOIlEF6T/KdP9824f1Rf1iyNG
+
+
+// traefik.http.middlewares.gzip.compress=true
+// traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.entryPoints=http
+// traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.middlewares=gzip
+// traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.rule=Host(`gabrielpulido.xyz`) && PathPrefix(`/`)
+// traefik.http.routers.http-0-g8j2c2f2bybipympaoqsmf0n.service=http-0-g8j2c2f2bybipympaoqsmf0n
+
+// traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.entryPoints=http
+// traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.middlewares=gzip,proteger
+// traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.rule=Host(`gabrielpulido.xyz`) && PathPrefix(`/dashboard`)
+// traefik.http.routers.dashboard-g8j2c2f2bybipympaoqsmf0n.service=http-0-g8j2c2f2bybipympaoqsmf0n
+
+// traefik.http.services.http-0-g8j2c2f2bybipympaoqsmf0n.loadbalancer.server.port=3000
+
+
+// caddy_0.encode=zstd gzip
+// caddy_0.handle_path.0_reverse_proxy={{upstreams 3000}}
+// caddy_0.handle_path=/*
+// caddy_0.header=-Server
+// caddy_0.try_files={path} /index.html /index.php
+// caddy_0=http://gabrielpulido.xyz
+// caddy_ingress_network=coolify
+
+//re_5VA3az2t_9qDA3vHTwhRkeea3fBX6URPX
+
+---
+
+<Layout>
+    <button type="button" id="boton">Enviar email</button>
+</Layout>
+
+<script>
+    let boton = document.querySelector('#boton')
+    boton?.addEventListener("click", email)
+    async function email(){
+        console.log("Hola!")
+        let response = await fetch("https://n8n.gabrielpulido.xyz/webhook-test/de1d9ac2-412f-4402-93d8-c7b5e7763e17", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify("Hola!"),
+        });
+        console.log(response);
+    }
+
+</script>

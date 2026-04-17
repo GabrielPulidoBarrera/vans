@@ -2,6 +2,7 @@
 import { Interface } from "node:readline";
 import TanstackTable from "../components/Dashboard/TanstackTable.tsx";
 import Layout from "@layouts/Layout.astro";
+import CarritoProductoContenedor from "@components/Carrito/CarritoProductoContenedor.astro";
 
 let APIROCKET_ECOMMERCE_TOKEN = process.env.APIROCKET_ECOMMERCE_TOKEN;
 if (!APIROCKET_ECOMMERCE_TOKEN) {
@@ -59,9 +60,34 @@ data.map((e: InterfazFecha) => {
 
 <Layout>
     <TanstackTable client:load data={data} />
+
+
+
+<div>
+
+    <!-- <CarritoProductoContenedor>
+
+    </CarritoProductoContenedor>
+    
+</div>
+
+<button type="button" id="botonTest">botonTest</button>
+ -->
+
 </Layout>
 
+
+
+
 <script>
+
+let botonTest = document.querySelector('#botonTest');
+botonTest?.addEventListener("click", recargar)
+function recargar(){
+        window.dispatchEvent(new CustomEvent('refreshCarrito'));
+
+}
+
     //     let seleccion = [];
     // async function eventoDelegadoSeleccionar(e: Event) {
     //         let tr = (e.target as HTMLElement).closest("tr");

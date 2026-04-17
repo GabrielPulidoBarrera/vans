@@ -10,6 +10,7 @@ const { pagina } = Astro.props;
 <div
   x-data="carritoProductoAlpine"
   @open-carrito-menu.window="refreshCarrito"
+  @refreshCarrito="refreshCarrito"
   x-init="$watch('carrito', (valor, valorAntiguo) => { subirCarrito(); })
 
 

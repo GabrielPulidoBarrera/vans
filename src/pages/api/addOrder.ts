@@ -152,20 +152,21 @@ else{
 
 
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "gabrielpulidobarrera@gmail.com",
-    pass: PASS_TOKEN,
-  },
-});
 
-try {
-  await transporter.verify();
-  console.log("Server is ready to take our messages");
-} catch (err) {
-  console.error("Verification failed:", err);
-}
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: "gabrielpulidobarrera@gmail.com",
+//     pass: PASS_TOKEN,
+//   },
+// });
+
+// try {
+//   await transporter.verify();
+//   console.log("Server is ready to take our messages");
+// } catch (err) {
+//   console.error("Verification failed:", err);
+// }
 
 
 
@@ -188,35 +189,46 @@ await page.goto(homeUrl.href, {
 });
 
 const pdfBuffer = await page.pdf({ format: 'A4' });
+const pdfBufferAsBase64 = Buffer.from(pdfBuffer).toString('base64');
 
 await browser.close();
+const pdfData = Buffer.from(pdfBuffer);
+const pdfBase64 = Buffer.from(pdfBuffer).toString('base64');
 
 
+        // Después de obtener pdfBuffer
 
+// Enviar el buffer directamente, sin envolver en JSON
+let responseEmail = await fetch("https://n8n.gabrielpulido.xyz/webhook/de1d9ac2-412f-4402-93d8-c7b5e7763e17", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ pdfBase64: pdfBase64, filename: `pedido-${codigoPedido}.pdf`, destinatario: correo }),
+});
+        console.log(responseEmail);
 
   
-  console.log(correo);
+  // console.log(correo);
 
-  let texto = "Tu codido de pedido es "+codigoPedido
-  let textoHtml = "<b>"+texto+"</b>"
+  // let texto = "Tu codido de pedido es "+codigoPedido
+  // let textoHtml = "<b>"+texto+"</b>"
 
-  const info = await transporter.sendMail({
-    from: '"gabrielpulidobarrera" <gabrielpulidobarrera@gmail.com>',
-    to: correo,
-    subject: "Tu pedido", 
-    text: texto,
-    html: textoHtml,
-    attachments: [
-      {
-      filename: `pedido-${codigoPedido}.pdf`,
-      content: Buffer.from(pdfBuffer),
-      }
-    ]
-  });
+  // const info = await transporter.sendMail({
+  //   from: '"gabrielpulidobarrera" <gabrielpulidobarrera@gmail.com>',
+  //   to: correo,
+  //   subject: "Tu pedido", 
+  //   text: texto,
+  //   html: textoHtml,
+  //   attachments: [
+  //     {
+  //     filename: `pedido-${codigoPedido}.pdf`,
+  //     content: Buffer.from(pdfBuffer),
+  //     }
+  //   ]
+  // });
 
-  console.log("Message sent: %s", info.messageId);
-  // Preview URL is only available when using an Ethereal test account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  // console.log("Message sent: %s", info.messageId);
+  // // Preview URL is only available when using an Ethereal test account
+  // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 } catch (err) {
   console.error("Error while sending mail:", err);
 }
